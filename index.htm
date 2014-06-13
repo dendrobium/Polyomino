@@ -1,6 +1,6 @@
 <!DOCTYPE html><html><head><title>Polyomino</title><meta charset="UTF-8">
 <style>*{position:absolute;margin:0px;}</style></head>
-<body bgcolor="000000"><canvas id="canvas" width="400" height="400"></canvas>
+<body bgcolor="000000"><canvas id="canvas" width="256" height="256"></canvas>
 <script type="text/javascript">
 
 /*+==========================================================================+*\
@@ -13,13 +13,131 @@
 
 // TODO: grid = 30x30
 
-var canvas=document.getElementById("canvas");
-var gfx=canvas.getContext("2d");
-var ww=canvas.width;
-var wh=canvas.height;
+var canvas = document.getElementById("canvas");
+var gfx = canvas.getContext("2d");
+var ww = canvas.width;
+var wh = canvas.height;
 var tick,elapsed;
-
 var print = console.log;
+function rfloat(x){return Math.random()*x;}
+function rInt(x){return Math.floor(Math.random()*x);}
+
+//============================================================================//
+
+function setFillColor(r,g,b){gfx.fillStyle="rgb("+Math.floor(255*r)+","+Math.floor(255*g)+","+Math.floor(255*b)+")";}
+function setStrokeColor(r,g,b){gfx.strokeStyle="rgb("+Math.floor(255*r)+","+Math.floor(255*g)+","+Math.floor(255*b)+")";}
+
+function renderRect(x0,y0,x1,y1){
+	gfx.beginPath();
+	gfx.moveTo(x0,y0);
+	gfx.lineTo(x0,y1);
+	gfx.lineTo(x1,y1);
+	gfx.lineTo(x1,y0);
+	gfx.fill();
+}
+
+function renderLine(x0,y0,x1,y1){
+	gfx.beginPath();
+	gfx.moveTo(x0,y0);
+	gfx.lineTo(x1,y1);
+	gfx.stroke();
+}
+
+//============================================================================//
+
+var minoColor = ["#f00","#0f0","#00f","#0ff","#f0f","#0ff","#fff"];
+var cellSize = 16;
+
+var grid;
+var blockId;
+var floating;
+var score;
+
+function newId(){return ++blockId;}
+
+var cell = function(id,order){
+	this.id = id;
+	this.order = order;
+}
+
+function getCell(x,y){
+	if(x<0)return null;
+	if(y<0)return null;
+	if(x>=grid.w)return null;
+	if(y>=grid.h)return null;
+	return grid[x][y];
+}
+
+function dropNewPoly(){
+	var x,y;
+	while(true){
+		x = rInt(grid.w);
+		y = rInt(grid.h);
+		if(!grid[x][y])break;
+	}
+
+	grid[x][y] = new cell(newId(),1);
+	// TODO: add support for random dominoes
+}
+
+function generatePoly(x,y,order){
+	// clear everything in bounding box
+	for(var i=x;i<x+order;++i)
+	for(var j=y;j<y+order;++j)
+		grid[i][j] = null;
+
+	while(true){
+		// generate random polyomino
+		var id = newId();
+		var i=x+rInt(order);
+		var j=y+rInt(order);
+		grid[i][j] = new cell(id,order);
+		for(var count=1;count<order;++count)while(true){
+			i=x+rInt(order);
+			j=y+rInt(order);
+			if(grid[i][j])continue;
+			var u = getCell(i  ,j-1) !== null;
+			var d = getCell(i  ,j+1) !== null;
+			var l = getCell(i-1,j  ) !== null;
+			var r = getCell(i+1,j  ) !== null;
+			if(!(u||d||l||r))continue;
+			grid[i][j] = new cell(id,order);
+			break;
+		}
+
+		// TODO: assure poly has no holes
+		// TODO:   pick random empty cell
+		// TODO:   floodfill from it, mark visited
+		// TODO:   iterate over bounding box
+		// TODO:   if cell === null, hole exists, continue outer loop
+		break;
+	}
+
+	// TODO: recalculate truncated order values
+	// TODO:   iterate over grid
+	// TODO:   for each nonnull cell, floodfill from cell, maintaining visit count
+	// TODO:   if visit count != cell order, floodfill from cell using id setting order to visit count
+}
+
+function detectSquares(){
+	for(var x=0;x<grid.w;++x)
+	outer:for(var y=0;y<grid.h;++y)
+	if(grid[x][y]){
+		// TODO: OUT OF BOUNDS ERRORS
+		var n = grid[x][y].order;
+		for(var i=x;i<x+n+1;++i)
+		for(var j=y;j<y+n+1;++i)
+	}
+	// TODO: for x in grid.w
+	// TODO: outer:for y in grid.h
+	// TODO: if cell[x][y] exists
+	// TODO:   n = cell.order
+	// TODO:   for i in n+1
+	// TODO:   for j in n+1
+	// TODO:   if cell[x+i][y+j].order !== n
+	// TODO:     continue outer;
+	// TODO:   generatePoly(x,y,x+n+1,y+n+1)
+}
 
 function update(){
 	requestAnimationFrame(update);
@@ -27,19 +145,37 @@ function update(){
 	elapsed = currentTick-tick;
 	tick = currentTick;
 
-	gfx.clearRect(0,0,ww,wh);
-	gfx.fillStyle = "#ff0000";
-	gfx.beginPath();
-	gfx.moveTo(10,10);
-	gfx.lineTo(ww-10,10);
-	gfx.lineTo(ww-10,wh-10);
-	gfx.lineTo(10,wh-10);
-	gfx.fill();
+	gfx.lineWidth = 2;
+	setStrokeColor(0.1,0.1,0.1);
+	for(var i=0;i<=grid.w;++i)renderLine(i*cellSize,0,i*cellSize,grid.h*cellSize);
+	for(var j=0;j<=grid.h;++j)renderLine(0,j*cellSize,grid.w*cellSize,j*cellSize);
+
+	for(var i=0;i<grid.w;++i)
+	for(var j=0;j<grid.h;++j)
+	if(grid[i][j]){
+		gfx.fillStyle = minoColor[grid[i][j].order-1];
+		renderRect(i*cellSize+1,j*cellSize+1,(i+1)*cellSize-1,(j+1)*cellSize-1);
+	}
 }
 
-(function main(){
-	tick = new Date().getTime();
-	update();
-})();
+function newGame(){
+	grid = [];
+	grid.w = 6;
+	grid.h = 6;
+	for(var i=0;i<grid.w;++i){
+		grid[i] = [];
+		for(var j=0;j<grid.h;++j)grid[i][j] = null;
+	}
+
+	blockId = 0;
+	for(var i=0;i<4;++i)dropNewPoly();
+	generatePoly(0,0,grid.w);
+}
+
+function init(){/* XXX: precaching polyminoes goes here */}
+
+//============================================================================//
+
+(function main(){newGame();tick=new Date().getTime();update();})();
 
 </script></body></html>

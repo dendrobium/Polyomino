@@ -1,0 +1,45 @@
+<!DOCTYPE html><html><head><title>Polyomino</title><meta charset="UTF-8">
+<style>*{position:absolute;margin:0px;}</style></head>
+<body bgcolor="000000"><canvas id="canvas" width="400" height="400"></canvas>
+<script type="text/javascript">
+
+/*+==========================================================================+*\
+                   ___  ____  ____  ______  __  ________  ______ 
+                  / _ \/ __ \/ /\ \/ / __ \/  |/  /  _/ |/ / __ \
+                 / ___/ /_/ / /__\  / /_/ / /|_/ // //    / /_/ /
+                /_/   \____/____//_/\____/_/  /_/___/_/|_/\____/ 
+
+\*+==========================================================================+*/
+
+// TODO: grid = 30x30
+
+var canvas=document.getElementById("canvas");
+var gfx=canvas.getContext("2d");
+var ww=canvas.width;
+var wh=canvas.height;
+var tick,elapsed;
+
+var print = console.log;
+
+function update(){
+	requestAnimationFrame(update);
+	var currentTick = new Date().getTime();
+	elapsed = currentTick-tick;
+	tick = currentTick;
+
+	gfx.clearRect(0,0,ww,wh);
+	gfx.fillStyle = "#ff0000";
+	gfx.beginPath();
+	gfx.moveTo(10,10);
+	gfx.lineTo(ww-10,10);
+	gfx.lineTo(ww-10,wh-10);
+	gfx.lineTo(10,wh-10);
+	gfx.fill();
+}
+
+(function main(){
+	tick = new Date().getTime();
+	update();
+})();
+
+</script></body></html>

@@ -94,24 +94,25 @@ function newId(){return ++blockId;}
 
 //==  VERIFICATION FUNCTIONS  ================================================//
 
+function recurse(visited,x,y,c,f){
+	var e = board.getCell(x,y);
+	if(!e || c.id !== e.id)return;
+	if(visited.getCell(x,y))return;
+	visited.setCell(x,y,true);
+	if(f)f(e);
+	recurse(visited,x,y-1,c,f);
+	recurse(visited,x,y+1,c,f);
+	recurse(visited,x-1,y,c,f);
+	recurse(visited,x+1,y,c,f);
+};
+
 function recalculateIds(){
 	var visited = new grid(board.size);
 	for(var i=0;i<board.size;++i)
 	for(var j=0;j<board.size;++j){
 		var c = board.getCell(i,j);
 		if(!c)continue;
-		var recurse = function(x,y){
-			var e = board.getCell(x,y);
-			if(!e || c.id !== e.id)return;
-			if(visited.getCell(x,y))return;
-			visited.setCell(x,y,true);
-			recurse(x,y-1);
-			recurse(x,y+1);
-			recurse(x-1,y);
-			recurse(x+1,y);
-		};
-
-		recurse(i,j);
+		recurse(visited,i,j,c);
 		var id = newId();
 		for(var x=0;x<board.size;++x)
 		for(var y=0;y<board.size;++y){
@@ -129,26 +130,14 @@ function recalculateOrder(){
 		if(!c)continue;
 
 		// determine real order of cell
-		var visited,count = 0;
-		var recurse = function(x,y,f){
-			var e = board.getCell(x,y);
-			if(!e || c.id !== e.id)return;
-			if(visited.getCell(x,y))return;
-			visited.setCell(x,y,true);
-			f(e);
-			recurse(x,y-1,f);
-			recurse(x,y+1,f);
-			recurse(x-1,y,f);
-			recurse(x+1,y,f);
-		};
-
-		visited = new grid(board.size,board.size);
-		recurse(i,j,function(c){++count;});
+		var count = 0;
+		recurse(new grid(board.size,board.size),
+		        i,j,c,function(e){++count;});
 
 		// if counted order doesnt match assigned order,reassign
 		if(count === c.order)continue;
-		visited = new grid(board.size,board.size);
-		recurse(i,j,function(c){c.order = count;});
+		recurse(new grid(board.size,board.size),
+		        i,j,c,function(e){e.order = count;});
 	}
 }
 
@@ -186,11 +175,17 @@ function placeNewPoly(){
 
 	var id = newId();
 	board.setCell(x,y,new cell(id,1));
+	var formDomino = function(i,j){
+		if(board.getCell(i,j) !== null)return;
+		board.setCell(i,j,new cell(id,2));
+		board.getCell(x,y).order = 2;
+	}
+
 	switch(rInt(4)){
-		case 0:if(board.getCell(x,y-1) === null){board.setCell(x,y-1,new cell(id,2));board.getCell(x,y).order = 2;}break;
-		case 1:if(board.getCell(x,y+1) === null){board.setCell(x,y+1,new cell(id,2));board.getCell(x,y).order = 2;}break;
-		case 2:if(board.getCell(x-1,y) === null){board.setCell(x-1,y,new cell(id,2));board.getCell(x,y).order = 2;}break;
-		case 3:if(board.getCell(x+1,y) === null){board.setCell(x+1,y,new cell(id,2));board.getCell(x,y).order = 2;}break;
+		case 0:formDomino(x,y-1);break;
+		case 1:formDomino(x,y+1);break;
+		case 2:formDomino(x-1,y);break;
+		case 3:formDomino(x+1,y);break;
 	}
 
 	detectSquares();

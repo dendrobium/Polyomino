@@ -9,6 +9,9 @@
                  / ___/ /_/ / /__\  / /_/ / /|_/ // //    / /_/ /
                 /_/   \____/____//_/\____/_/  /_/___/_/|_/\____/ 
 
+// TODO: optimize everything, pretty much all verification algos are extremely inefficient
+// TODO: GET RID OF THE UNNECESSARY RECURSION XXX XXX XXX XXX XXX XXX XXX XXX
+
 \*+==========================================================================+*/
 
 var canvas = document.getElementById("canvas");
@@ -23,7 +26,6 @@ function rInt(x){return Math.floor(Math.random()*x);}
 //==  MISC RENDERING  ========================================================//
 
 function setFillColor(r,g,b){gfx.fillStyle="rgb("+Math.floor(255*r)+","+Math.floor(255*g)+","+Math.floor(255*b)+")";}
-function setStrokeColor(r,g,b){gfx.strokeStyle="rgb("+Math.floor(255*r)+","+Math.floor(255*g)+","+Math.floor(255*b)+")";}
 
 function hsv(h,s,v){
 	var r,g,b,i,f,p,q,t;
@@ -50,13 +52,6 @@ function renderRect(x0,y0,x1,y1){
 	gfx.lineTo(x1,y1);
 	gfx.lineTo(x1,y0);
 	gfx.fill();
-}
-
-function renderLine(x0,y0,x1,y1){
-	gfx.beginPath();
-	gfx.moveTo(x0,y0);
-	gfx.lineTo(x1,y1);
-	gfx.stroke();
 }
 
 //==  GRID RELATED  ==========================================================//
@@ -91,11 +86,109 @@ var goldenAngle = 0.381966;
 var board,blockId,floating,score;
 var mouse,dragging,mouseDX,mouseDY,downGX,downGY,mouseGX,mouseGY;
 var goalFloatX,goalFloatY,floatX,floatY;
-var cellSize = 32;
+var cs = 32;
 
 function newId(){return ++blockId;}
 
-//==  GAME FUNCTIONS  ========================================================//
+//==  VERIFICATION FUNCTIONS  ================================================//
+
+function recalculateIds(){
+	// detect sliced polys, reassign new ids
+	var visited = new grid(board.size);
+	for(var i=0;i<board.size;++i)
+	for(var j=0;j<board.size;++j){
+		var c = board[i][j];
+		if(c){
+			var recurse = function(x,y){
+				if(x<0||y<0||x>=visited.size||y>=visited.size)return;
+				if(!board[x][y])return;
+				if(board[i][j].id !== board[x][y].id)return;
+				if(visited[x][y])return;
+				visited[x][y] = true;
+				recurse(x,y-1);
+				recurse(x,y+1);
+				recurse(x-1,y);
+				recurse(x+1,y);
+			};
+
+			recurse(i,j);
+			var id = newId();
+			for(var x=0;x<board.size;++x)
+			for(var y=0;y<board.size;++y){
+				var chk = board[x][y];
+				if(chk&&chk.id === c.id&&!visited[x][y])
+					chk.id = id;
+			}
+		}
+	}
+}
+
+function recalculateOrder(){
+	for(var i=0;i<board.size;++i)
+	for(var j=0;j<board.size;++j)
+	if(board[i][j]){
+		// determine real order of cell
+		var count = 0;
+		var visited = new grid(board.size,board.size);
+		var recurse = function(x,y){
+			if(x<0||y<0||x>=visited.size||y>=visited.size)return;
+			if(!board[x][y])return;
+			if(board[i][j].id !== board[x][y].id)return;
+			if(visited[x][y])return;
+			visited[x][y] = true;
+			++count;
+			recurse(x,y-1);
+			recurse(x,y+1);
+			recurse(x-1,y);
+			recurse(x+1,y);
+		};
+
+		recurse(i,j);
+
+		// if counted order doesnt match assigned order,reassign
+		if(count != board[i][j].order){
+			var visited = new grid(board.size,board.size);
+			var recurse = function(x,y){
+				if(x<0||y<0||x>=visited.size||y>=visited.size)return;
+				if(!board[x][y])return;
+				if(board[i][j].id !== board[x][y].id)return;
+				if(visited[x][y])return;
+				visited[x][y] = true;
+				board[x][y].order = count;
+				recurse(x,y-1);
+				recurse(x,y+1);
+				recurse(x-1,y);
+				recurse(x+1,y);
+			};
+
+			recurse(i,j);
+		}
+	}
+}
+
+function detectSquares(){
+	var squareCount = 0;
+	for(var x=0;x<board.size;++x)
+	outer:for(var y=0;y<board.size;++y)
+	if(board[x][y]){
+		var n = board[x][y].order;
+		if(x+n>=board.size||y+n>=board.size)continue outer;
+		for(var i=x;i<x+n+1;++i)
+		for(var j=y;j<y+n+1;++j){
+			var c = board.getCell(i,j);
+			if(!c)continue outer;
+			if(c.order !== n)continue outer;
+		}squareToPoly(x,y,n+1);
+		++squareCount;
+	}
+
+	// placing these here rather than right after squareToPoly allows for comboing
+	recalculateIds();
+//	recalculateOrder();
+	if(squareCount>0)detectSquares();
+}
+
+//==  GENERATION FUNCTIONS  ==================================================//
 
 function placeNewPoly(){
 	var x,y;
@@ -113,6 +206,8 @@ function placeNewPoly(){
 		case 2:if(board.getCell(x-1,y) === null){board[x-1][y] = new cell(id,2);board.getCell(x,y).order = 2;}break;
 		case 3:if(board.getCell(x+1,y) === null){board[x+1][y] = new cell(id,2);board.getCell(x,y).order = 2;}break;
 	}
+
+	detectSquares();
 }
 
 function squareToPoly(x,y,order){
@@ -168,148 +263,61 @@ function squareToPoly(x,y,order){
 	}
 }
 
-// TODO: GET RID OF THE RECURSION XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX
-// TODO: DETECT POLYS GETTING SLICED IN HALF, MAKE NEW ID'S
-function recalculateOrder(){
-	for(var i=0;i<board.size;++i)
-	for(var j=0;j<board.size;++j)
-	if(board[i][j] !== null){
-		// determine real order of cell
-		var count = 0;
-		var visited = new grid(board.size,board.size);
-		var recurse = function(x,y){
-			if(x<0||y<0||x>=visited.size||y>=visited.size)return;
-			if(!board[x][y])return;
-			if(board[i][j].id !== board[x][y].id)return;
-			if(visited[x][y])return;
-			visited[x][y] = true;
-			++count;
-			recurse(x,y-1);
-			recurse(x,y+1);
-			recurse(x-1,y);
-			recurse(x+1,y);
-		};
+//==  MAIN LOOP  =============================================================//
 
-		recurse(i,j);
-
-		// if counted order doesnt match assigned order,reassign
-		if(count != board[i][j].order){
-			var visited = new grid(board.size,board.size);
-			var recurse = function(x,y){
-				if(x<0||y<0||x>=visited.size||y>=visited.size)return;
-				if(!board[x][y])return;
-				if(board[i][j].id !== board[x][y].id)return;
-				if(visited[x][y])return;
-				visited[x][y] = true;
-				board[x][y].order = count;
-				recurse(x,y-1);
-				recurse(x,y+1);
-				recurse(x-1,y);
-				recurse(x+1,y);
-			};
-
-			recurse(i,j);
+// TODO: fix border aliasing
+function renderGrid(g){
+	for(var i=0;i<g.size;++i)
+	for(var j=0;j<g.size;++j){
+		var c = g[i][j];
+		if(c){
+			hsv((c.order*goldenAngle)%1,1,0.7);
+			renderRect(i*cs+1,j*cs+1,(i+1)*cs-1,(j+1)*cs-1);
+			var right = g.getCell(i+1,j);
+			if(right&&right.id === c.id)renderRect((i+1)*cs-1,j*cs+1,(i+1)*cs+1,(j+1)*cs-1);
+			var down = g.getCell(i,j+1);
+			if(down&&down.id === c.id)renderRect(i*cs+1,(j+1)*cs-1,(i+1)*cs-1,(j+1)*cs+1);
 		}
 	}
-}
 
-function detectSquares(){
-	for(var x=0;x<board.size;++x)
-	outer:for(var y=0;y<board.size;++y)
-	if(board[x][y]){
-		var n = board[x][y].order;
-		if(x+n>=board.size||y+n>=board.size)continue outer;
-		for(var i=x;i<x+n+1;++i)
-		for(var j=y;j<y+n+1;++j){
-			var c = board.getCell(i,j);
-			if(!c)continue outer;
-			if(c.order !== n)continue outer;
+	for(var i=0;i<g.size;++i)
+	for(var j=0;j<g.size;++j){
+		var c = g[i][j];
+		if(c){
+			hsv((c.order*goldenAngle)%1,1,1);
+			renderRect(i*cs+3,j*cs+3,(i+1)*cs-3,(j+1)*cs-3);
+			var right = g.getCell(i+1,j);
+			if(right&&right.id === c.id)renderRect((i+1)*cs-3,j*cs+3,(i+1)*cs+3,(j+1)*cs-3);
+			var down = g.getCell(i,j+1);
+			if(down&&down.id === c.id)renderRect(i*cs+3,(j+1)*cs-3,(i+1)*cs-3,(j+1)*cs+3);
 		}
-		squareToPoly(x,y,n+1);
-	}recalculateOrder(); // placing this here rather than right after squareToPoly allows for comboing
-	// TODO: recursively detectSquares AFTER a recalculateOrder IF it did successfully reassign any order
-	// TODO: recursively detectSquares AFTER a squareToPoly (exit cond?)
+	}
 }
 
 function update(){
-	requestAnimationFrame(update);
+	requestAnimationFrame(update); // TODO: DONT RENDER IF NOTHINGS MOVING
 	var currentTick = new Date().getTime();
 	elapsed = currentTick-tick;
 	tick = currentTick;
-
-	// clear canvas
 	gfx.clearRect(0,0,ww,wh);
 
 	// render dot grid
-	setFillColor(0.2,0.2,0.2);
-	for(var i=0;i<board.size;++i)
-	for(var j=0;j<board.size;++j)
-		renderRect(i*cellSize+13,j*cellSize+13,(i+1)*cellSize-13,(j+1)*cellSize-13);
-
-	setFillColor(0.4,0.4,0.4);
-	for(var i=0;i<board.size;++i)
-	for(var j=0;j<board.size;++j)
-		renderRect(i*cellSize+15,j*cellSize+15,(i+1)*cellSize-15,(j+1)*cellSize-15);
-
-	// render polyominoes
 	for(var i=0;i<board.size;++i)
 	for(var j=0;j<board.size;++j){
-		var cell = board[i][j];
-		if(cell){
-			hsv((cell.order*goldenAngle)%1,1,0.7);
-			renderRect(i*cellSize+1,j*cellSize+1,(i+1)*cellSize-1,(j+1)*cellSize-1);
-			var right = board.getCell(i+1,j);
-			if(right&&right.id === cell.id)renderRect((i+1)*cellSize-1,j*cellSize+1,(i+1)*cellSize+1,(j+1)*cellSize-1);
-			var down = board.getCell(i,j+1);
-			if(down&&down.id === cell.id)renderRect(i*cellSize+1,(j+1)*cellSize-1,(i+1)*cellSize-1,(j+1)*cellSize+1);
-		}
+		setFillColor(0.2,0.2,0.2);
+		renderRect(i*cs+13,j*cs+13,(i+1)*cs-13,(j+1)*cs-13);
+		setFillColor(0.4,0.4,0.4);
+		renderRect(i*cs+15,j*cs+15,(i+1)*cs-15,(j+1)*cs-15);
 	}
 
-	for(var i=0;i<board.size;++i)
-	for(var j=0;j<board.size;++j){
-		var cell = board[i][j];
-		if(cell){
-			hsv((cell.order*goldenAngle)%1,1,1);
-			renderRect(i*cellSize+3,j*cellSize+3,(i+1)*cellSize-3,(j+1)*cellSize-3);
-			var right = board.getCell(i+1,j);
-			if(right&&right.id === cell.id)renderRect((i+1)*cellSize-3,j*cellSize+3,(i+1)*cellSize+3,(j+1)*cellSize-3);
-			var down = board.getCell(i,j+1);
-			if(down&&down.id === cell.id)renderRect(i*cellSize+3,(j+1)*cellSize-3,(i+1)*cellSize-3,(j+1)*cellSize+3);
-		}
-	}
-
-	// render floating
-	floatX += (goalFloatX-floatX)*0.2;
-	floatY += (goalFloatY-floatY)*0.2;
-
+	// render board and floating layer
+	renderGrid(board);
+	floatX += (goalFloatX-floatX)*0.3;
+	floatY += (goalFloatY-floatY)*0.3;
 	if(dragging){
 		gfx.save();
 		gfx.translate(-floatX,-floatY);
-		for(var i=0;i<floating.size;++i)
-		for(var j=0;j<floating.size;++j){
-			var cell = floating[i][j];
-			if(cell){
-				hsv((cell.order*goldenAngle)%1,1,0.7);
-				renderRect(i*cellSize+1,j*cellSize+1,(i+1)*cellSize-1,(j+1)*cellSize-1);
-				var right = floating.getCell(i+1,j);
-				if(right&&right.id === cell.id)renderRect((i+1)*cellSize-1,j*cellSize+1,(i+1)*cellSize+1,(j+1)*cellSize-1);
-				var down = floating.getCell(i,j+1);
-				if(down&&down.id === cell.id)renderRect(i*cellSize+1,(j+1)*cellSize-1,(i+1)*cellSize-1,(j+1)*cellSize+1);
-			}
-		}
-
-		for(var i=0;i<floating.size;++i)
-		for(var j=0;j<floating.size;++j){
-			var cell = floating[i][j];
-			if(cell){
-				hsv((cell.order*goldenAngle)%1,1,1);
-				renderRect(i*cellSize+3,j*cellSize+3,(i+1)*cellSize-3,(j+1)*cellSize-3);
-				var right = floating.getCell(i+1,j);
-				if(right&&right.id === cell.id)renderRect((i+1)*cellSize-3,j*cellSize+3,(i+1)*cellSize+3,(j+1)*cellSize-3);
-				var down = floating.getCell(i,j+1);
-				if(down&&down.id === cell.id)renderRect(i*cellSize+3,(j+1)*cellSize-3,(i+1)*cellSize-3,(j+1)*cellSize+3);
-			}
-		}
+		renderGrid(floating);
 		gfx.restore();
 	}
 
@@ -321,7 +329,6 @@ function newGame(){
 	score = 0;
 	dragging = false;
 	for(var i=0;i<4;++i)placeNewPoly();
-//	detectSquares(); // should only combine when 4 1x1's make a 2x2...
 //	for(var i=0;i<16;++i){
 //		var id = newId();
 //		for(var j=0;j<=i;++j)
@@ -343,10 +350,10 @@ function movePiece(from,to,id,offsetX,offsetY){
 }
 
 function calcMouseGridVars(){
-	downGX  = Math.floor(mouseDX/cellSize);
-	downGY  = Math.floor(mouseDY/cellSize);
-	mouseGX = Math.floor(mouse.x/cellSize);
-	mouseGY = Math.floor(mouse.y/cellSize);
+	downGX  = Math.floor(mouseDX/cs);
+	downGY  = Math.floor(mouseDY/cs);
+	mouseGX = Math.floor(mouse.x/cs);
+	mouseGY = Math.floor(mouse.y/cs);
 }
 
 function getMousePos(evt){
@@ -357,7 +364,7 @@ function getMousePos(evt){
 canvas.addEventListener("mousedown",function(e){
 	mouse = getMousePos(e);
 	if(dragging)return; // if ive somehow glitched into this state,keep holding whats being held
-	var c = board.getCell(mouse.x/cellSize,mouse.y/cellSize);
+	var c = board.getCell(mouse.x/cs,mouse.y/cs);
 	if(!c)return;
 
 	// move selected piece onto floating layer,remove from board
@@ -370,16 +377,16 @@ canvas.addEventListener("mousedown",function(e){
 	mouseDX = mouse.x;
 	mouseDY = mouse.y;
 	calcMouseGridVars();
-	floatX = goalFloatX = (downGX-mouseGX)*cellSize;
-	floatY = goalFloatY = (downGY-mouseGY)*cellSize;
+	floatX = goalFloatX = (downGX-mouseGX)*cs;
+	floatY = goalFloatY = (downGY-mouseGY)*cs;
 });
 
 canvas.addEventListener("mousemove",function(e){
 	mouse = getMousePos(e);
 	if(!dragging)return;
 	calcMouseGridVars();
-	goalFloatX = (downGX-mouseGX)*cellSize;
-	goalFloatY = (downGY-mouseGY)*cellSize;
+	goalFloatX = (downGX-mouseGX)*cs;
+	goalFloatY = (downGY-mouseGY)*cs;
 });
 
 canvas.addEventListener("mouseup",function(e){
@@ -387,15 +394,13 @@ canvas.addEventListener("mouseup",function(e){
 	if(!dragging)return;
 	dragging = false;
 
-	// TODO: these seem off...
-	// TODO: theyre not. however,your snapping relative to cursor,NOT the piece
 	calcMouseGridVars();
 	var offsetX = downGX-mouseGX;
 	var offsetY = downGY-mouseGY;
 
 	// check if floating is dropped on original position
 	if(downGX == mouseGX && downGY == mouseGY){
-		movePiece(floating,board,floating.getCell(mouseDX/cellSize,mouseDY/cellSize).id,0,0);
+		movePiece(floating,board,floating.getCell(mouseDX/cs,mouseDY/cs).id,0,0);
 		return;
 	}
 
@@ -404,17 +409,27 @@ canvas.addEventListener("mouseup",function(e){
 	for(var j=0;j<board.size;++j)
 	if(board.getCell(i,j))
 	if(floating.getCell(i+offsetX,j+offsetY)){
-		movePiece(floating,board,floating.getCell(mouseDX/cellSize,mouseDY/cellSize).id,0,0);
+		movePiece(floating,board,floating.getCell(mouseDX/cs,mouseDY/cs).id,0,0);
 		return;
 	}
 
-	// TODO: make sure pieces in floating aren't out of bounds in board
+	// make sure pieces in floating aren't out of bounds in board
+	for(var i=0;i<floating.size;++i)
+	for(var j=0;j<floating.size;++j)
+	if(floating.getCell(i,j)){
+		var x = i-offsetX;
+		var y = j-offsetY;
+		print(x+" "+y);
+		if(x<0||y<0||x>=floating.size||y>=floating.size){
+			movePiece(floating,board,floating.getCell(mouseDX/cs,mouseDY/cs).id,0,0);
+			return;
+		}
+	}
 
-	// successful move,place new poly and detect squares
+	// successful move, place new poly and detect squares
 	// (in this order so no new polys aren't near any detected-formed polys and new polys that happen to form squares get detected)
-	movePiece(floating,board,floating.getCell(mouseDX/cellSize,mouseDY/cellSize).id,offsetX,offsetY);
+	movePiece(floating,board,floating.getCell(mouseDX/cs,mouseDY/cs).id,offsetX,offsetY);
 	placeNewPoly();
-	detectSquares();
 });
 
 canvas.onselectstart = function(){return false;};

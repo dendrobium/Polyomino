@@ -19,7 +19,6 @@ var gfx = canvas.getContext("2d");
 var ww = canvas.width;
 var wh = canvas.height;
 var tick,elapsed;
-var print = console.log; // DELETE
 function rfloat(x){return Math.random()*x;}
 function rInt(x){return Math.floor(Math.random()*x);}
 
@@ -265,7 +264,6 @@ function squareToPoly(x,y,order){
 
 //==  MAIN LOOP  =============================================================//
 
-// TODO: fix border aliasing
 function renderGrid(g){
 	for(var i=0;i<g.size;++i)
 	for(var j=0;j<g.size;++j){
@@ -274,9 +272,9 @@ function renderGrid(g){
 			hsv((c.order*goldenAngle)%1,1,0.7);
 			renderRect(i*cs+1,j*cs+1,(i+1)*cs-1,(j+1)*cs-1);
 			var right = g.getCell(i+1,j);
-			if(right&&right.id === c.id)renderRect((i+1)*cs-1,j*cs+1,(i+1)*cs+1,(j+1)*cs-1);
+			if(right&&right.id === c.id)renderRect((i+1)*cs-2,j*cs+1,(i+1)*cs+2,(j+1)*cs-1);
 			var down = g.getCell(i,j+1);
-			if(down&&down.id === c.id)renderRect(i*cs+1,(j+1)*cs-1,(i+1)*cs-1,(j+1)*cs+1);
+			if(down&&down.id === c.id)renderRect(i*cs+1,(j+1)*cs-2,(i+1)*cs-1,(j+1)*cs+2);
 		}
 	}
 
@@ -287,9 +285,9 @@ function renderGrid(g){
 			hsv((c.order*goldenAngle)%1,1,1);
 			renderRect(i*cs+3,j*cs+3,(i+1)*cs-3,(j+1)*cs-3);
 			var right = g.getCell(i+1,j);
-			if(right&&right.id === c.id)renderRect((i+1)*cs-3,j*cs+3,(i+1)*cs+3,(j+1)*cs-3);
+			if(right&&right.id === c.id)renderRect((i+1)*cs-4,j*cs+3,(i+1)*cs+4,(j+1)*cs-3);
 			var down = g.getCell(i,j+1);
-			if(down&&down.id === c.id)renderRect(i*cs+3,(j+1)*cs-3,(i+1)*cs-3,(j+1)*cs+3);
+			if(down&&down.id === c.id)renderRect(i*cs+3,(j+1)*cs-4,(i+1)*cs-3,(j+1)*cs+4);
 		}
 	}
 }
@@ -329,11 +327,6 @@ function newGame(){
 	score = 0;
 	dragging = false;
 	for(var i=0;i<4;++i)placeNewPoly();
-//	for(var i=0;i<16;++i){
-//		var id = newId();
-//		for(var j=0;j<=i;++j)
-//			board[i][j] = new cell(id,i+1);
-//	}
 }
 
 //==  CONTROLS HANDLING  =====================================================//

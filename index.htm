@@ -9,9 +9,6 @@
                  / ___/ /_/ / /__\  / /_/ / /|_/ // //    / /_/ /
                 /_/   \____/____//_/\____/_/  /_/___/_/|_/\____/ 
 
-// TODO: optimize everything, pretty much all verification algos are extremely inefficient
-// TODO: GET RID OF THE UNNECESSARY RECURSION XXX XXX XXX XXX XXX XXX XXX XXX
-
 \*+==========================================================================+*/
 
 var canvas = document.getElementById("canvas");
@@ -63,6 +60,13 @@ var grid = function(size){
 		for(var j=0;j<size;++j)grid[i][j] = null;
 	}
 
+	grid.setCell = function(x,y,c){
+		x = Math.floor(x);
+		y = Math.floor(y);
+		if(x<0||y<0||x>=grid.size||y>=grid.size)return;
+		grid[x][y] = c;
+	}
+
 	grid.getCell = function(x,y){
 		x = Math.floor(x);
 		y = Math.floor(y);
@@ -80,7 +84,6 @@ var cell = function(id,order){
 
 //==  GAME VARIABLES  ========================================================//
 
-var polyColor = ["#f00","#0f0","#00f","#0ff","#f0f","#0ff","#fff"];
 var goldenAngle = 0.381966;
 var board,blockId,floating,score;
 var mouse,dragging,mouseDX,mouseDY,downGX,downGY,mouseGX,mouseGY;
@@ -92,50 +95,16 @@ function newId(){return ++blockId;}
 //==  VERIFICATION FUNCTIONS  ================================================//
 
 function recalculateIds(){
-	// detect sliced polys, reassign new ids
 	var visited = new grid(board.size);
 	for(var i=0;i<board.size;++i)
 	for(var j=0;j<board.size;++j){
-		var c = board[i][j];
-		if(c){
-			var recurse = function(x,y){
-				if(x<0||y<0||x>=visited.size||y>=visited.size)return;
-				if(!board[x][y])return;
-				if(board[i][j].id !== board[x][y].id)return;
-				if(visited[x][y])return;
-				visited[x][y] = true;
-				recurse(x,y-1);
-				recurse(x,y+1);
-				recurse(x-1,y);
-				recurse(x+1,y);
-			};
-
-			recurse(i,j);
-			var id = newId();
-			for(var x=0;x<board.size;++x)
-			for(var y=0;y<board.size;++y){
-				var chk = board[x][y];
-				if(chk&&chk.id === c.id&&!visited[x][y])
-					chk.id = id;
-			}
-		}
-	}
-}
-
-function recalculateOrder(){
-	for(var i=0;i<board.size;++i)
-	for(var j=0;j<board.size;++j)
-	if(board[i][j]){
-		// determine real order of cell
-		var count = 0;
-		var visited = new grid(board.size,board.size);
+		var c = board.getCell(i,j);
+		if(!c)continue;
 		var recurse = function(x,y){
-			if(x<0||y<0||x>=visited.size||y>=visited.size)return;
-			if(!board[x][y])return;
-			if(board[i][j].id !== board[x][y].id)return;
-			if(visited[x][y])return;
-			visited[x][y] = true;
-			++count;
+			var e = board.getCell(x,y);
+			if(!e || c.id !== e.id)return;
+			if(visited.getCell(x,y))return;
+			visited.setCell(x,y,true);
 			recurse(x,y-1);
 			recurse(x,y+1);
 			recurse(x-1,y);
@@ -143,25 +112,43 @@ function recalculateOrder(){
 		};
 
 		recurse(i,j);
+		var id = newId();
+		for(var x=0;x<board.size;++x)
+		for(var y=0;y<board.size;++y){
+			var chk = board.getCell(x,y);
+			if(chk&&chk.id === c.id&&!visited.getCell(x,y))
+				chk.id = id;
+		}
+	}
+}
+
+function recalculateOrder(){
+	for(var i=0;i<board.size;++i)
+	for(var j=0;j<board.size;++j){
+		var c = board.getCell(i,j);
+		if(!c)continue;
+
+		// determine real order of cell
+		var visited,count = 0;
+		var recurse = function(x,y,f){
+			var e = board.getCell(x,y);
+			if(!e || c.id !== e.id)return;
+			if(visited.getCell(x,y))return;
+			visited.setCell(x,y,true);
+			f(e);
+			recurse(x,y-1,f);
+			recurse(x,y+1,f);
+			recurse(x-1,y,f);
+			recurse(x+1,y,f);
+		};
+
+		visited = new grid(board.size,board.size);
+		recurse(i,j,function(c){++count;});
 
 		// if counted order doesnt match assigned order,reassign
-		if(count != board[i][j].order){
-			var visited = new grid(board.size,board.size);
-			var recurse = function(x,y){
-				if(x<0||y<0||x>=visited.size||y>=visited.size)return;
-				if(!board[x][y])return;
-				if(board[i][j].id !== board[x][y].id)return;
-				if(visited[x][y])return;
-				visited[x][y] = true;
-				board[x][y].order = count;
-				recurse(x,y-1);
-				recurse(x,y+1);
-				recurse(x-1,y);
-				recurse(x+1,y);
-			};
-
-			recurse(i,j);
-		}
+		if(count === c.order)continue;
+		visited = new grid(board.size,board.size);
+		recurse(i,j,function(c){c.order = count;});
 	}
 }
 
@@ -169,8 +156,8 @@ function detectSquares(){
 	var squareCount = 0;
 	for(var x=0;x<board.size;++x)
 	outer:for(var y=0;y<board.size;++y)
-	if(board[x][y]){
-		var n = board[x][y].order;
+	if(board.getCell(x,y)){
+		var n = board.getCell(x,y).order;
 		if(x+n>=board.size||y+n>=board.size)continue outer;
 		for(var i=x;i<x+n+1;++i)
 		for(var j=y;j<y+n+1;++j){
@@ -183,7 +170,7 @@ function detectSquares(){
 
 	// placing these here rather than right after squareToPoly allows for comboing
 	recalculateIds();
-//	recalculateOrder();
+	recalculateOrder();
 	if(squareCount>0)detectSquares();
 }
 
@@ -198,12 +185,12 @@ function placeNewPoly(){
 	}
 
 	var id = newId();
-	board[x][y] = new cell(id,1);
+	board.setCell(x,y,new cell(id,1));
 	switch(rInt(4)){
-		case 0:if(board.getCell(x,y-1) === null){board[x][y-1] = new cell(id,2);board.getCell(x,y).order = 2;}break;
-		case 1:if(board.getCell(x,y+1) === null){board[x][y+1] = new cell(id,2);board.getCell(x,y).order = 2;}break;
-		case 2:if(board.getCell(x-1,y) === null){board[x-1][y] = new cell(id,2);board.getCell(x,y).order = 2;}break;
-		case 3:if(board.getCell(x+1,y) === null){board[x+1][y] = new cell(id,2);board.getCell(x,y).order = 2;}break;
+		case 0:if(board.getCell(x,y-1) === null){board.setCell(x,y-1,new cell(id,2));board.getCell(x,y).order = 2;}break;
+		case 1:if(board.getCell(x,y+1) === null){board.setCell(x,y+1,new cell(id,2));board.getCell(x,y).order = 2;}break;
+		case 2:if(board.getCell(x-1,y) === null){board.setCell(x-1,y,new cell(id,2));board.getCell(x,y).order = 2;}break;
+		case 3:if(board.getCell(x+1,y) === null){board.setCell(x+1,y,new cell(id,2));board.getCell(x,y).order = 2;}break;
 	}
 
 	detectSquares();
@@ -216,33 +203,33 @@ function squareToPoly(x,y,order){
 		// clear everything in bounding box
 		for(var i=x;i<x+order;++i)
 		for(var j=y;j<y+order;++j)
-			board[i][j] = null;
+			board.setCell(i,j,null);
 
 		// generate random polyomino
 		var id = newId();
 		var i=x+rInt(order);
 		var j=y+rInt(order);
-		board[i][j] = new cell(id,order);
-		filled[i-x][j-y] = true;
+		board.setCell(i,j,new cell(id,order));
+		filled.setCell(i-x,j-y,true);
 		for(var count=1;count<order;++count)while(true){
 			i=x+rInt(order);
 			j=y+rInt(order);
-			if(board[i][j])continue;
+			if(board.getCell(i,j))continue;
 			var u = filled.getCell(i-x  ,j-y-1);
 			var d = filled.getCell(i-x  ,j-y+1);
 			var l = filled.getCell(i-x-1,j-y  );
 			var r = filled.getCell(i-x+1,j-y  );
 			if(!(u||d||l||r))continue;
-			board[i][j] = new cell(id,order);
-			filled[i-x][j-y] = true;
+			board.setCell(i,j,new cell(id,order));
+			filled.setCell(i-x,j-y,true);
 			break;
 		}
 
 		// assure poly has no holes
 		var recurse = function(x,y){
-			if(x<0||y<0||x>=filled.size||y>=filled.size)return;
-			if(filled[x][y])return;
-			filled[x][y] = true;
+			var c = filled.getCell(x,y);
+			if(c||c===undefined)return;
+			filled.setCell(x,y,true);
 			recurse(x,y-1);
 			recurse(x,y+1);
 			recurse(x-1,y);
@@ -252,12 +239,12 @@ function squareToPoly(x,y,order){
 		while(true){
 			i=rInt(order);
 			j=rInt(order);
-			if(!filled[i][j])break;
+			if(!filled.getCell(i,j))break;
 		}recurse(i,j);
 
 		for(var i=0;i<order;++i)
 		for(var j=0;j<order;++j)
-			if(!filled[i][j])continue outer;
+			if(!filled.getCell(i,j))continue outer;
 		break;
 	}
 }
@@ -267,7 +254,7 @@ function squareToPoly(x,y,order){
 function renderGrid(g){
 	for(var i=0;i<g.size;++i)
 	for(var j=0;j<g.size;++j){
-		var c = g[i][j];
+		var c = g.getCell(i,j);
 		if(c){
 			hsv((c.order*goldenAngle)%1,1,0.7);
 			renderRect(i*cs+1,j*cs+1,(i+1)*cs-1,(j+1)*cs-1);
@@ -280,7 +267,7 @@ function renderGrid(g){
 
 	for(var i=0;i<g.size;++i)
 	for(var j=0;j<g.size;++j){
-		var c = g[i][j];
+		var c = g.getCell(i,j);
 		if(c){
 			hsv((c.order*goldenAngle)%1,1,1);
 			renderRect(i*cs+3,j*cs+3,(i+1)*cs-3,(j+1)*cs-3);
@@ -337,8 +324,8 @@ function movePiece(from,to,id,offsetX,offsetY){
 		var c = from.getCell(i+offsetX,j+offsetY);
 		if(!c)continue;
 		if(c.id !== id)continue;
-		to[i][j] = c;
-		from[i+offsetX][j+offsetY] = null;
+		to.setCell(i,j,c);
+		from.setCell(i+offsetX,j+offsetY,null);
 	}
 }
 
@@ -356,7 +343,7 @@ function getMousePos(evt){
 
 canvas.addEventListener("mousedown",function(e){
 	mouse = getMousePos(e);
-	if(dragging)return; // if ive somehow glitched into this state,keep holding whats being held
+	if(dragging)return;
 	var c = board.getCell(mouse.x/cs,mouse.y/cs);
 	if(!c)return;
 
@@ -412,7 +399,6 @@ canvas.addEventListener("mouseup",function(e){
 	if(floating.getCell(i,j)){
 		var x = i-offsetX;
 		var y = j-offsetY;
-		print(x+" "+y);
 		if(x<0||y<0||x>=floating.size||y>=floating.size){
 			movePiece(floating,board,floating.getCell(mouseDX/cs,mouseDY/cs).id,0,0);
 			return;

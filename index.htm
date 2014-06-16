@@ -1,5 +1,5 @@
 <!DOCTYPE html><html><head><title>Polyomino</title><meta charset="UTF-8">
-<body bgcolor="000000"><canvas id="canvas" width="512" height="512"></canvas>
+<body bgcolor="000000"><canvas id="canvas" width="520" height="520"></canvas>
 <div style="font:48px arial;letter-spacing:-3px;font-weight:800;color:white;">Polyomino</div>
 <script type="text/javascript">
 
@@ -8,8 +8,6 @@
                   / _ \/ __ \/ /\ \/ / __ \/  |/  /  _/ |/ / __ \
                  / ___/ /_/ / /__\  / /_/ / /|_/ // //    / /_/ /
                 /_/   \____/____//_/\____/_/  /_/___/_/|_/\____/ 
-
-// TODO: chaining bonus
 
 \*+==========================================================================+*/
 
@@ -20,11 +18,6 @@ var wh = canvas.height;
 var tick,elapsed;
 function rfloat(x){return Math.random()*x;}
 function rInt(x){return Math.floor(Math.random()*x);}
-
-var UP    = 0;
-var DOWN  = 1;
-var LEFT  = 2;
-var RIGHT = 3;
 
 //==  MISC RENDERING  ========================================================//
 
@@ -98,8 +91,12 @@ var animCell = function(begin,end,direction,inOut){
 
 //==  GAME VARIABLES  ========================================================//
 
+var UP    = 0;
+var DOWN  = 1;
+var LEFT  = 2;
+var RIGHT = 3;
+
 var goldenAngle = 0.381966;
-var colorAngle = 0.28571429;
 var board,floating,active,anim;
 var blockId,score;
 var mouse,dragging,snapping,mouseDX,mouseDY,downGX,downGY,mouseGX,mouseGY;
@@ -159,27 +156,53 @@ function recalculateOrder(){
 }
 
 function detectSquares(){
-	/*
 	var squareCount = 0;
-	for(var x=0;x<board.size;++x)
-	outer:for(var y=0;y<board.size;++y)
-	if(board.getCell(x,y)){
-		var minOrder = board.getCell(x,y).order;
-		var maxOrder = minOrder;
-	}
-	*/
 
-	var squareCount = 0;
+	// initialize squares grid
+	var squares = new grid(board.size);
+	for(var i=0;i<squares.size;++i)for(var j=0;j<squares.size;++j)
+		squares.setCell(i,j,0);
+
+	// scan 1, detect any squares on the board
 	for(var x=0;x<board.size;++x)
-	outer:for(var y=0;y<board.size;++y)
-	if(board.getCell(x,y)){
-		var n = board.getCell(x,y).order;
-		if(x+n>=board.size||y+n>=board.size)continue outer;
-		for(var i=x;i<x+n+1;++i)for(var j=y;j<y+n+1;++j){
-			var c = board.getCell(i,j);
-			if(!c)continue outer;
-			if(c.order !== n)continue outer;
-		}squareToPoly(x,y,n+1);
+	outer:for(var y=0;y<board.size;++y){
+		var c = board.getCell(x,y);
+		if(c){
+			// determine largest possible square order
+			var minOrder = c.order+1;
+			var maxOrder = minOrder;
+			for(;Math.min(x+maxOrder,y+maxOrder)<=board.size;++maxOrder)
+				if(board.getCell(x,y).order !== c.order)break;
+
+			// for each possible order (smallest to largest)
+			inner:for(var order=minOrder;order!=maxOrder;++order){
+				// scan for square
+				for(var i=x;i<x+order;++i)for(var j=y;j<y+order;++j){
+					var e = board.getCell(i,j);
+					if(!e)continue inner;
+					if(e.order !== c.order)continue inner;
+				}
+
+				console.log(order);
+
+				// if square exists, write to squares grid
+				for(var i=x;i<x+order;++i)for(var j=y;j<y+order;++j)
+					if(squares.getCell(i,j)<order)squares.setCell(i,j,order);
+			}
+		}
+	}
+
+
+	// scan 2, detect largest squares on squares grid
+	for(var x=0;x<squares.size;++x)
+	outer:for(var y=0;y<squares.size;++y){
+		var c = squares.getCell(x,y);
+		if(c<=0)continue;
+		for(var i=x;i<x+c;++i)for(var j=y;j<y+c;++j)
+			if(squares.getCell(i,j) != c)continue outer;
+		for(var i=x;i<x+c;++i)for(var j=y;j<y+c;++j)
+			squares.setCell(i,j,0);
+		squareToPoly(x,y,c);
 		++squareCount;
 	}
 
@@ -191,6 +214,7 @@ function detectSquares(){
 
 //==  GENERATION FUNCTIONS  ==================================================//
 
+// TODO: detect endgame
 function placeNewPoly(){
 	var x,y;
 	while(true){
@@ -271,12 +295,12 @@ function squareToPoly(x,y,order){
 //==  MAIN LOOP  =============================================================//
 
 function renderGrid(g){
-	var hue = function(order){return (order*colorAngle)%1;}
+	var hue = function(order){return (order*goldenAngle)%1;}
 
 	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
 		var c = g.getCell(i,j);
 		if(c){
-			hsv(hue(c.order),1,0.7);
+			hsv(hue(c.order),1,0.6);
 			renderRect(i*cs+1,j*cs+1,(i+1)*cs-1,(j+1)*cs-1);
 			var right = g.getCell(i+1,j);
 			if(right&&right.id === c.id)renderRect((i+1)*cs-2,j*cs+1,(i+1)*cs+2,(j+1)*cs-1);
@@ -304,6 +328,8 @@ function render(){
 	tick = currentTick;
 	var currentlyAnimating = false;
 	gfx.clearRect(0,0,ww,wh);
+	gfx.save();
+	gfx.translate(4,4);
 
 	// render grid lines
 	rgb(0.2,0.2,0.2);
@@ -313,10 +339,9 @@ function render(){
 	}
 
 	// render grid cells
-	var sm = 2;
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
 		rgb(0.02,0.02,0.02);
-		renderRect(i*cs+sm,j*cs+sm,(i+1)*cs-sm,(j+1)*cs-sm);
+		renderRect(i*cs+2,j*cs+2,(i+1)*cs-2,(j+1)*cs-2);
 	}
 
 	// render board and floating layer
@@ -331,6 +356,7 @@ function render(){
 		renderGrid(floating);
 		gfx.restore();
 
+		// break animation if snapping is complete
 		if(snapping &&
 		   Math.abs(floatX-goalFloatX)<0.5 &&
 		   Math.abs(floatY-goalFloatY)<0.5){
@@ -342,6 +368,7 @@ function render(){
 		}
 	}
 
+	gfx.restore();
 	if(currentlyAnimating)requestAnimationFrame(render);
 }
 
@@ -354,8 +381,13 @@ function newGame(){
 	score = 0;
 	dragging = false;
 	snapping = false;
+
+//	for(var i=1;i<=7;++i){
+//		var id = newId();
+//		for(var j=1;j<=i;++j)board[i][j] = new polyCell(id,i);
+//	}
+
 	for(var i=0;i<4;++i)placeNewPoly();
-//	for(var i=1;i<=7;++i)board[i][1] = new polyCell(newId(),i);
 }
 
 //==  CONTROLS HANDLING  =====================================================//

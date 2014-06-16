@@ -9,6 +9,8 @@
                  / ___/ /_/ / /__\  / /_/ / /|_/ // //    / /_/ /
                 /_/   \____/____//_/\____/_/  /_/___/_/|_/\____/ 
 
+// TODO: chaining bonus
+
 \*+==========================================================================+*/
 
 var canvas = document.getElementById("canvas");
@@ -19,9 +21,14 @@ var tick,elapsed;
 function rfloat(x){return Math.random()*x;}
 function rInt(x){return Math.floor(Math.random()*x);}
 
+var UP    = 0;
+var DOWN  = 1;
+var LEFT  = 2;
+var RIGHT = 3;
+
 //==  MISC RENDERING  ========================================================//
 
-function setFillColor(r,g,b){gfx.fillStyle="rgb("+Math.floor(255*r)+","+Math.floor(255*g)+","+Math.floor(255*b)+")";}
+function rgb(r,g,b){gfx.fillStyle="rgb("+Math.floor(255*r)+","+Math.floor(255*g)+","+Math.floor(255*b)+")";}
 
 function hsv(h,s,v){
 	var r,g,b,i,f,p,q,t;
@@ -77,20 +84,33 @@ var grid = function(size){
 	return grid;
 }
 
-var cell = function(id,order){
+var polyCell = function(id,order){
 	this.id = id;
 	this.order = order;
+}
+
+var animCell = function(begin,end,direction,inOut){
+	this.begin = begin;
+	this.end = end;
+	this.direction = direction;
+	this.inOut = inOut;
 }
 
 //==  GAME VARIABLES  ========================================================//
 
 var goldenAngle = 0.381966;
-var board,blockId,floating,score;
-var mouse,dragging,mouseDX,mouseDY,downGX,downGY,mouseGX,mouseGY;
+var colorAngle = 0.28571429;
+var board,floating,active,anim;
+var blockId,score;
+var mouse,dragging,snapping,mouseDX,mouseDY,downGX,downGY,mouseGX,mouseGY;
 var goalFloatX,goalFloatY,floatX,floatY;
 var cs = 32;
 
 function newId(){return ++blockId;}
+function getInactiveCell(x,y){
+	if(active.getCell(x,y))return undefined;
+	return board.getCell(x,y);
+}
 
 //==  VERIFICATION FUNCTIONS  ================================================//
 
@@ -108,14 +128,12 @@ function recurse(visited,x,y,c,f){
 
 function recalculateIds(){
 	var visited = new grid(board.size);
-	for(var i=0;i<board.size;++i)
-	for(var j=0;j<board.size;++j){
+	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
 		var c = board.getCell(i,j);
 		if(!c)continue;
 		recurse(visited,i,j,c);
 		var id = newId();
-		for(var x=0;x<board.size;++x)
-		for(var y=0;y<board.size;++y){
+		for(var x=0;x<board.size;++x)for(var y=0;y<board.size;++y){
 			var chk = board.getCell(x,y);
 			if(chk&&chk.id === c.id&&!visited.getCell(x,y))
 				chk.id = id;
@@ -124,8 +142,7 @@ function recalculateIds(){
 }
 
 function recalculateOrder(){
-	for(var i=0;i<board.size;++i)
-	for(var j=0;j<board.size;++j){
+	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
 		var c = board.getCell(i,j);
 		if(!c)continue;
 
@@ -142,14 +159,23 @@ function recalculateOrder(){
 }
 
 function detectSquares(){
+	/*
+	var squareCount = 0;
+	for(var x=0;x<board.size;++x)
+	outer:for(var y=0;y<board.size;++y)
+	if(board.getCell(x,y)){
+		var minOrder = board.getCell(x,y).order;
+		var maxOrder = minOrder;
+	}
+	*/
+
 	var squareCount = 0;
 	for(var x=0;x<board.size;++x)
 	outer:for(var y=0;y<board.size;++y)
 	if(board.getCell(x,y)){
 		var n = board.getCell(x,y).order;
 		if(x+n>=board.size||y+n>=board.size)continue outer;
-		for(var i=x;i<x+n+1;++i)
-		for(var j=y;j<y+n+1;++j){
+		for(var i=x;i<x+n+1;++i)for(var j=y;j<y+n+1;++j){
 			var c = board.getCell(i,j);
 			if(!c)continue outer;
 			if(c.order !== n)continue outer;
@@ -174,10 +200,10 @@ function placeNewPoly(){
 	}
 
 	var id = newId();
-	board.setCell(x,y,new cell(id,1));
+	board.setCell(x,y,new polyCell(id,1));
 	var formDomino = function(i,j){
 		if(board.getCell(i,j) !== null)return;
-		board.setCell(i,j,new cell(id,2));
+		board.setCell(i,j,new polyCell(id,2));
 		board.getCell(x,y).order = 2;
 	}
 
@@ -196,15 +222,14 @@ function squareToPoly(x,y,order){
 		var filled = new grid(order,order);
 
 		// clear everything in bounding box
-		for(var i=x;i<x+order;++i)
-		for(var j=y;j<y+order;++j)
+		for(var i=x;i<x+order;++i)for(var j=y;j<y+order;++j)
 			board.setCell(i,j,null);
 
 		// generate random polyomino
 		var id = newId();
 		var i=x+rInt(order);
 		var j=y+rInt(order);
-		board.setCell(i,j,new cell(id,order));
+		board.setCell(i,j,new polyCell(id,order));
 		filled.setCell(i-x,j-y,true);
 		for(var count=1;count<order;++count)while(true){
 			i=x+rInt(order);
@@ -215,7 +240,7 @@ function squareToPoly(x,y,order){
 			var l = filled.getCell(i-x-1,j-y  );
 			var r = filled.getCell(i-x+1,j-y  );
 			if(!(u||d||l||r))continue;
-			board.setCell(i,j,new cell(id,order));
+			board.setCell(i,j,new polyCell(id,order));
 			filled.setCell(i-x,j-y,true);
 			break;
 		}
@@ -237,8 +262,7 @@ function squareToPoly(x,y,order){
 			if(!filled.getCell(i,j))break;
 		}recurse(i,j);
 
-		for(var i=0;i<order;++i)
-		for(var j=0;j<order;++j)
+		for(var i=0;i<order;++i)for(var j=0;j<order;++j)
 			if(!filled.getCell(i,j))continue outer;
 		break;
 	}
@@ -247,11 +271,12 @@ function squareToPoly(x,y,order){
 //==  MAIN LOOP  =============================================================//
 
 function renderGrid(g){
-	for(var i=0;i<g.size;++i)
-	for(var j=0;j<g.size;++j){
+	var hue = function(order){return (order*colorAngle)%1;}
+
+	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
 		var c = g.getCell(i,j);
 		if(c){
-			hsv((c.order*goldenAngle)%1,1,0.7);
+			hsv(hue(c.order),1,0.7);
 			renderRect(i*cs+1,j*cs+1,(i+1)*cs-1,(j+1)*cs-1);
 			var right = g.getCell(i+1,j);
 			if(right&&right.id === c.id)renderRect((i+1)*cs-2,j*cs+1,(i+1)*cs+2,(j+1)*cs-1);
@@ -260,11 +285,10 @@ function renderGrid(g){
 		}
 	}
 
-	for(var i=0;i<g.size;++i)
-	for(var j=0;j<g.size;++j){
+	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
 		var c = g.getCell(i,j);
 		if(c){
-			hsv((c.order*goldenAngle)%1,1,1);
+			hsv(hue(c.order),1,1);
 			renderRect(i*cs+3,j*cs+3,(i+1)*cs-3,(j+1)*cs-3);
 			var right = g.getCell(i+1,j);
 			if(right&&right.id === c.id)renderRect((i+1)*cs-4,j*cs+3,(i+1)*cs+4,(j+1)*cs-3);
@@ -275,47 +299,67 @@ function renderGrid(g){
 }
 
 function update(){
-	requestAnimationFrame(update); // TODO: DONT RENDER IF NOTHINGS MOVING
+	requestAnimationFrame(update);
 	var currentTick = new Date().getTime();
 	elapsed = currentTick-tick;
 	tick = currentTick;
 	gfx.clearRect(0,0,ww,wh);
 
-	// render dot grid
-	for(var i=0;i<board.size;++i)
-	for(var j=0;j<board.size;++j){
-		setFillColor(0.2,0.2,0.2);
-		renderRect(i*cs+13,j*cs+13,(i+1)*cs-13,(j+1)*cs-13);
-		setFillColor(0.4,0.4,0.4);
-		renderRect(i*cs+15,j*cs+15,(i+1)*cs-15,(j+1)*cs-15);
+	// render grid lines
+	rgb(0.2,0.2,0.2);
+	for(var i=1;i<board.size;++i)for(var j=1;j<board.size;++j){
+		renderRect(i*cs-4,j*cs-1,i*cs+4,j*cs+1);
+		renderRect(i*cs-1,j*cs-4,i*cs+1,j*cs+4);
+	}
+
+	// render grid cells
+	var sm = 2;
+	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
+		rgb(0.02,0.02,0.02);
+		renderRect(i*cs+sm,j*cs+sm,(i+1)*cs-sm,(j+1)*cs-sm);
 	}
 
 	// render board and floating layer
 	renderGrid(board);
-	floatX += (goalFloatX-floatX)*0.3;
-	floatY += (goalFloatY-floatY)*0.3;
 	if(dragging){
+		floatX += (goalFloatX-floatX)*0.3;
+		floatY += (goalFloatY-floatY)*0.3;
+
 		gfx.save();
 		gfx.translate(-floatX,-floatY);
 		renderGrid(floating);
 		gfx.restore();
+
+		if(snapping &&
+		   Math.abs(floatX-goalFloatX)<0.5 &&
+		   Math.abs(floatY-goalFloatY)<0.5){
+			for(var i=0;i<floating.size;++i)for(var j=0;j<floating.size;++j)
+			if(floating.getCell(i,j))
+				active.setCell(i,j,null);
+			movePiece(floating,board,floating.getCell(mouseDX/cs,mouseDY/cs).id,0,0);
+			dragging = snapping = false;
+		}
 	}
 
 }
 
 function newGame(){
-	board = new grid(16);
+	var size = 16;
+	board = new grid(size);
+	active = new grid(size);
+	anim = new grid(size);
 	blockId = 0;
 	score = 0;
 	dragging = false;
+	snapping = false;
 	for(var i=0;i<4;++i)placeNewPoly();
+//	for(var i=1;i<=7;++i)board[i][1] = new polyCell(newId(),i);
 }
 
 //==  CONTROLS HANDLING  =====================================================//
 
 function movePiece(from,to,id,offsetX,offsetY){
-	for(var i=0;i<from.size;++i)
-	for(var j=0;j<from.size;++j){
+	for(var i=0;i<from.size;++i)for(var j=0;j<from.size;++j){
 		var c = from.getCell(i+offsetX,j+offsetY);
 		if(!c)continue;
 		if(c.id !== id)continue;
@@ -358,7 +402,7 @@ canvas.addEventListener("mousedown",function(e){
 
 canvas.addEventListener("mousemove",function(e){
 	mouse = getMousePos(e);
-	if(!dragging)return;
+	if(!dragging||snapping)return;
 	calcMouseGridVars();
 	goalFloatX = (downGX-mouseGX)*cs;
 	goalFloatY = (downGY-mouseGY)*cs;
@@ -366,44 +410,40 @@ canvas.addEventListener("mousemove",function(e){
 
 canvas.addEventListener("mouseup",function(e){
 	mouse = getMousePos(e);
-	if(!dragging)return;
-	dragging = false;
+	if(!dragging||snapping)return;
 
 	calcMouseGridVars();
 	var offsetX = downGX-mouseGX;
 	var offsetY = downGY-mouseGY;
 
+	var revert = function(){
+		for(var i=0;i<floating.size;++i)for(var j=0;j<floating.size;++j)
+		if(floating.getCell(i,j))
+			active.setCell(i,j,true);
+		goalFloatX = goalFloatY = 0;
+		snapping = true;
+	};
+
 	// check if floating is dropped on original position
-	if(downGX == mouseGX && downGY == mouseGY){
-		movePiece(floating,board,floating.getCell(mouseDX/cs,mouseDY/cs).id,0,0);
-		return;
-	}
+	if(downGX == mouseGX && downGY == mouseGY){revert();return;}
 
 	// make sure pieces in floating and board aren't overlapping
-	for(var i=0;i<board.size;++i)
-	for(var j=0;j<board.size;++j)
+	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
 	if(board.getCell(i,j))
-	if(floating.getCell(i+offsetX,j+offsetY)){
-		movePiece(floating,board,floating.getCell(mouseDX/cs,mouseDY/cs).id,0,0);
-		return;
-	}
+	if(floating.getCell(i+offsetX,j+offsetY)){revert();return;}
 
 	// make sure pieces in floating aren't out of bounds in board
-	for(var i=0;i<floating.size;++i)
-	for(var j=0;j<floating.size;++j)
+	for(var i=0;i<floating.size;++i)for(var j=0;j<floating.size;++j)
 	if(floating.getCell(i,j)){
 		var x = i-offsetX;
 		var y = j-offsetY;
-		if(x<0||y<0||x>=floating.size||y>=floating.size){
-			movePiece(floating,board,floating.getCell(mouseDX/cs,mouseDY/cs).id,0,0);
-			return;
-		}
+		if(x<0||y<0||x>=floating.size||y>=floating.size){revert();return;}
 	}
 
-	// successful move, place new poly and detect squares
-	// (in this order so no new polys aren't near any detected-formed polys and new polys that happen to form squares get detected)
+	// successful move, place new poly
 	movePiece(floating,board,floating.getCell(mouseDX/cs,mouseDY/cs).id,offsetX,offsetY);
 	placeNewPoly();
+	dragging = false;
 });
 
 canvas.onselectstart = function(){return false;};

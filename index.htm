@@ -298,11 +298,11 @@ function renderGrid(g){
 	}
 }
 
-function update(){
-	requestAnimationFrame(update);
+function render(){
 	var currentTick = new Date().getTime();
 	elapsed = currentTick-tick;
 	tick = currentTick;
+	var currentlyAnimating = false;
 	gfx.clearRect(0,0,ww,wh);
 
 	// render grid lines
@@ -322,6 +322,7 @@ function update(){
 	// render board and floating layer
 	renderGrid(board);
 	if(dragging){
+		currentlyAnimating = true;
 		floatX += (goalFloatX-floatX)*0.3;
 		floatY += (goalFloatY-floatY)*0.3;
 
@@ -341,6 +342,7 @@ function update(){
 		}
 	}
 
+	if(currentlyAnimating)requestAnimationFrame(render);
 }
 
 function newGame(){
@@ -398,6 +400,8 @@ canvas.addEventListener("mousedown",function(e){
 	calcMouseGridVars();
 	floatX = goalFloatX = (downGX-mouseGX)*cs;
 	floatY = goalFloatY = (downGY-mouseGY)*cs;
+
+	render();
 });
 
 canvas.addEventListener("mousemove",function(e){
@@ -450,6 +454,6 @@ canvas.onselectstart = function(){return false;};
 
 //==  PROGRAM ENTRY  =========================================================//
 
-(function main(){newGame();tick=new Date().getTime();update();})();
+(function main(){newGame();tick=new Date().getTime();render();})();
 
 </script></body></html>

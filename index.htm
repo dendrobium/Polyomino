@@ -50,6 +50,11 @@ function renderRect(x0,y0,x1,y1){
 	gfx.fill();
 }
 
+function keyframe(n){
+	var scale = 150;
+	return tick+n*scale;
+}
+
 //==  GRID RELATED  ==========================================================//
 
 var grid = function(size){
@@ -82,11 +87,11 @@ var polyCell = function(id,order){
 	this.order = order;
 }
 
-var animCell = function(begin,end,direction,inOut){
+var animCell = function(begin,end,inOutOUTFADE,direction){
 	this.begin = begin;
 	this.end = end;
+	this.inOutOUTFADE = inOutOUTFADE;
 	this.direction = direction;
-	this.inOut = inOut;
 }
 
 //==  GAME VARIABLES  ========================================================//
@@ -96,6 +101,10 @@ var DOWN  = 1;
 var LEFT  = 2;
 var RIGHT = 3;
 
+var IN      = 0;
+var OUT     = 1;
+var OUTFADE = 2;
+
 var goldenAngle = 0.381966;
 var board,floating,active,anim;
 var blockId,score;
@@ -104,15 +113,21 @@ var goalFloatX,goalFloatY,floatX,floatY;
 var cs = 32;
 
 function newId(){return ++blockId;}
+
 function getInactiveCell(x,y){
 	if(active.getCell(x,y))return undefined;
 	return board.getCell(x,y);
 }
 
+function setAnim(x,y,begin,end,IOF,direction){
+	active.setCell(x,y,true);
+	anim.getCell(x,y).push(new animCell(begin,end,IOF,direction));
+}
+
 //==  VERIFICATION FUNCTIONS  ================================================//
 
 function recurse(visited,x,y,c,f){
-	var e = board.getCell(x,y);
+	var e = getInactiveCell(x,y);
 	if(!e || c.id !== e.id)return;
 	if(visited.getCell(x,y))return;
 	visited.setCell(x,y,true);
@@ -126,12 +141,12 @@ function recurse(visited,x,y,c,f){
 function recalculateIds(){
 	var visited = new grid(board.size);
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
-		var c = board.getCell(i,j);
+		var c = getInactiveCell(i,j);
 		if(!c)continue;
 		recurse(visited,i,j,c);
 		var id = newId();
 		for(var x=0;x<board.size;++x)for(var y=0;y<board.size;++y){
-			var chk = board.getCell(x,y);
+			var chk = getInactiveCell(x,y);
 			if(chk&&chk.id === c.id&&!visited.getCell(x,y))
 				chk.id = id;
 		}
@@ -140,7 +155,7 @@ function recalculateIds(){
 
 function recalculateOrder(){
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
-		var c = board.getCell(i,j);
+		var c = getInactiveCell(i,j);
 		if(!c)continue;
 
 		// determine real order of cell
@@ -166,19 +181,19 @@ function detectSquares(){
 	// scan 1, detect any squares on the board
 	for(var x=0;x<board.size;++x)
 	outer:for(var y=0;y<board.size;++y){
-		var c = board.getCell(x,y);
+		var c = getInactiveCell(x,y);
 		if(c){
 			// determine largest possible square order
 			var minOrder = c.order+1;
 			var maxOrder = minOrder;
 			for(;Math.min(x+maxOrder,y+maxOrder)<=board.size;++maxOrder)
-				if(board.getCell(x,y).order !== c.order)break;
+				if(getInactiveCell(x,y).order !== c.order)break;
 
 			// for each possible order (smallest to largest)
 			inner:for(var order=minOrder;order!=maxOrder;++order){
 				// scan for square
 				for(var i=x;i<x+order;++i)for(var j=y;j<y+order;++j){
-					var e = board.getCell(i,j);
+					var e = getInactiveCell(i,j);
 					if(!e)continue inner;
 					if(e.order !== c.order)continue inner;
 				}
@@ -220,22 +235,30 @@ function placeNewPoly(){
 	while(true){
 		x = rInt(board.size);
 		y = rInt(board.size);
-		if(!board.getCell(x,y))break;
+		if(!getInactiveCell(x,y))break;
 	}
 
 	var id = newId();
 	board.setCell(x,y,new polyCell(id,1));
-	var formDomino = function(i,j){
-		if(board.getCell(i,j) !== null)return;
-		board.setCell(i,j,new polyCell(id,2));
-		board.getCell(x,y).order = 2;
+	var formDomino = function(i,j,dir){
+		if(getInactiveCell(i,j) !== null){
+			setAnim(x,y,keyframe(1),keyframe(2),OUTFADE);
+			setAnim(x,y,keyframe(0),keyframe(1),IN,dir);
+		}else{
+			setAnim(x,y,keyframe(2),keyframe(3),OUTFADE);
+			setAnim(i,j,keyframe(2),keyframe(3),OUTFADE);
+			setAnim(x,y,keyframe(0),keyframe(1),IN,dir);
+			setAnim(i,j,keyframe(1),keyframe(2),IN,dir);
+			board.setCell(i,j,new polyCell(id,2));
+			board.getCell(x,y).order = 2;
+		}
 	}
 
 	switch(rInt(4)){
-		case 0:formDomino(x,y-1);break;
-		case 1:formDomino(x,y+1);break;
-		case 2:formDomino(x-1,y);break;
-		case 3:formDomino(x+1,y);break;
+		case 0:formDomino(x,y-1,UP);break;
+		case 1:formDomino(x,y+1,DOWN);break;
+		case 2:formDomino(x-1,y,LEFT);break;
+		case 3:formDomino(x+1,y,RIGHT);break;
 	}
 
 	detectSquares();
@@ -294,12 +317,20 @@ function squareToPoly(x,y,order){
 
 //==  MAIN LOOP  =============================================================//
 
+function notAnimating(x,y){
+	var c = anim.getCell(x,y);
+	c = c[c.length-1];
+	if(!c)return true;
+	if(c.inOutOUTFADE === IN || c.inOutOUTFADE === OUT)return false;
+	return true;
+}
+
 function renderGrid(g){
 	var hue = function(order){return (order*goldenAngle)%1;}
 
 	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
 		var c = g.getCell(i,j);
-		if(c){
+		if(c && notAnimating(i,j)){
 			hsv(hue(c.order),1,0.6);
 			renderRect(i*cs+1,j*cs+1,(i+1)*cs-1,(j+1)*cs-1);
 			var right = g.getCell(i+1,j);
@@ -311,7 +342,7 @@ function renderGrid(g){
 
 	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
 		var c = g.getCell(i,j);
-		if(c){
+		if(c && notAnimating(i,j)){
 			hsv(hue(c.order),1,1);
 			renderRect(i*cs+3,j*cs+3,(i+1)*cs-3,(j+1)*cs-3);
 			var right = g.getCell(i+1,j);
@@ -327,6 +358,7 @@ function render(){
 	elapsed = currentTick-tick;
 	tick = currentTick;
 	var currentlyAnimating = false;
+	var triggerDetectSquares = false;
 	gfx.clearRect(0,0,ww,wh);
 	gfx.save();
 	gfx.translate(4,4);
@@ -344,8 +376,51 @@ function render(){
 		renderRect(i*cs+2,j*cs+2,(i+1)*cs-2,(j+1)*cs-2);
 	}
 
-	// render board and floating layer
+	// render board and animations
 	renderGrid(board);
+	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
+		var cLs = anim.getCell(i,j);
+		var c = cLs[cLs.length-1];
+		if(!c)continue;
+		currentlyAnimating = true;
+		if(tick>c.end){
+			cLs.pop();
+			c = cLs[cLs.length-1];
+			if(!c){
+				active.setCell(i,j,null);
+				triggerDetectSquares = true;
+				continue;
+			}
+		}
+
+		switch(c.inOutOUTFADE){
+			case IN:
+				if(tick>c.begin){
+					rgb(1,1,1);
+					var interp = (tick-c.begin)/(c.end-c.begin);
+					switch(c.direction){
+						case UP:   renderRect(i*cs,(j+1)*cs-interp*cs,(i+1)*cs,(j+1)*cs);break;
+						case DOWN: renderRect(i*cs,j*cs,(i+1)*cs,j*cs+interp*cs);break;
+						case LEFT: renderRect((i+1)*cs-interp*cs,j*cs,(i+1)*cs,(j+1)*cs);break;
+						case RIGHT:renderRect(i*cs,j*cs,i*cs+interp*cs,(j+1)*cs);break;
+					}
+				}break;
+			case OUT:
+				if(tick<c.begin){
+					rgb(1,1,1);
+				}else{
+				}break;
+			case OUTFADE:
+				if(tick<c.begin)rgb(1,1,1);
+				else{
+					var interp = 1-(tick-c.begin)/(c.end-c.begin);
+					gfx.fillStyle = "rgba(255,255,255,"+interp+")";
+				}renderRect(i*cs,j*cs,(i+1)*cs,(j+1)*cs);
+				break;
+		}
+	}
+
+	// render floating layer
 	if(dragging){
 		currentlyAnimating = true;
 		floatX += (goalFloatX-floatX)*0.3;
@@ -369,6 +444,7 @@ function render(){
 	}
 
 	gfx.restore();
+	if(triggerDetectSquares)detectSquares();
 	if(currentlyAnimating)requestAnimationFrame(render);
 }
 
@@ -377,16 +453,12 @@ function newGame(){
 	board = new grid(size);
 	active = new grid(size);
 	anim = new grid(size);
+	for(var i=0;i<anim.size;++i)for(var j=0;j<anim.size;++j)
+		anim.setCell(i,j,[]);
 	blockId = 0;
 	score = 0;
 	dragging = false;
 	snapping = false;
-
-//	for(var i=1;i<=7;++i){
-//		var id = newId();
-//		for(var j=1;j<=i;++j)board[i][j] = new polyCell(id,i);
-//	}
-
 	for(var i=0;i<4;++i)placeNewPoly();
 }
 
@@ -417,7 +489,7 @@ function getMousePos(evt){
 canvas.addEventListener("mousedown",function(e){
 	mouse = getMousePos(e);
 	if(dragging)return;
-	var c = board.getCell(mouse.x/cs,mouse.y/cs);
+	var c = getInactiveCell(mouse.x/cs,mouse.y/cs);
 	if(!c)return;
 
 	// move selected piece onto floating layer,remove from board
@@ -486,6 +558,6 @@ canvas.onselectstart = function(){return false;};
 
 //==  PROGRAM ENTRY  =========================================================//
 
-(function main(){newGame();tick=new Date().getTime();render();})();
+(function main(){tick=new Date().getTime();newGame();render();})();
 
 </script></body></html>

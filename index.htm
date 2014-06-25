@@ -87,10 +87,10 @@ var polyCell = function(id,order){
 	this.order = order;
 }
 
-var animCell = function(begin,end,inOutOUTFADE,direction){
+var animCell = function(begin,end,inOutFade,direction){
 	this.begin = begin;
 	this.end = end;
-	this.inOutOUTFADE = inOutOUTFADE;
+	this.inOutFade = inOutFade;
 	this.direction = direction;
 }
 
@@ -132,12 +132,13 @@ function recurse(visited,x,y,c,f){
 	if(visited.getCell(x,y))return;
 	visited.setCell(x,y,true);
 	if(f)f(e);
-	recurse(visited,x,y-1,c,f);
-	recurse(visited,x,y+1,c,f);
-	recurse(visited,x-1,y,c,f);
-	recurse(visited,x+1,y,c,f);
+	recurse(visited,x  ,y-1,c,f);
+	recurse(visited,x  ,y+1,c,f);
+	recurse(visited,x-1,y  ,c,f);
+	recurse(visited,x+1,y  ,c,f);
 };
 
+// TODO: consider animations
 function recalculateIds(){
 	var visited = new grid(board.size);
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
@@ -153,6 +154,7 @@ function recalculateIds(){
 	}
 }
 
+// TODO: consider animations
 function recalculateOrder(){
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
 		var c = getInactiveCell(i,j);
@@ -222,9 +224,9 @@ function detectSquares(){
 	}
 
 	// placing these here rather than right after squareToPoly allows for comboing
-	recalculateIds();
-	recalculateOrder();
-	if(squareCount>0)detectSquares();
+	recalculateIds();                 // TODO: consider animations
+	recalculateOrder();               // TODO: consider animations
+	if(squareCount>0)detectSquares(); // TODO: consider animations
 }
 
 //==  GENERATION FUNCTIONS  ==================================================//
@@ -261,9 +263,10 @@ function placeNewPoly(){
 		case 3:formDomino(x+1,y,RIGHT);break;
 	}
 
-	detectSquares();
+	detectSquares(); // TODO: consider animations
 }
 
+ // TODO: consider animations
 function squareToPoly(x,y,order){
 	outer:while(true){
 		var filled = new grid(order,order);
@@ -297,10 +300,10 @@ function squareToPoly(x,y,order){
 			var c = filled.getCell(x,y);
 			if(c||c===undefined)return;
 			filled.setCell(x,y,true);
-			recurse(x,y-1);
-			recurse(x,y+1);
-			recurse(x-1,y);
-			recurse(x+1,y);
+			recurse(x  ,y-1);
+			recurse(x  ,y+1);
+			recurse(x-1,y  );
+			recurse(x+1,y  );
 		};
 
 		while(true){
@@ -321,7 +324,7 @@ function notAnimating(x,y){
 	var c = anim.getCell(x,y);
 	c = c[c.length-1];
 	if(!c)return true;
-	if(c.inOutOUTFADE === IN || c.inOutOUTFADE === OUT)return false;
+	if(c.inOutFade === IN || c.inOutFade === OUT)return false;
 	return true;
 }
 
@@ -393,7 +396,7 @@ function render(){
 			}
 		}
 
-		switch(c.inOutOUTFADE){
+		switch(c.inOutFade){
 			case IN:
 				if(tick>c.begin){
 					rgb(1,1,1);

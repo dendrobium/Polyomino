@@ -62,6 +62,7 @@ function detectSquares(){
 			var maxOrder = minOrder;
 			for(;Math.min(x+maxOrder,y+maxOrder)<=board.size;++maxOrder)
 				if(getInactiveCell(x,y).order !== c.order)break;
+			if(!upgradeHighestOrder)maxOrder = minOrder+1;
 
 			// for each possible order (smallest to largest)
 			inner:for(var order=minOrder;order!=maxOrder;++order){
@@ -97,6 +98,7 @@ function detectSquares(){
 
 	// placing these here rather than right after squareToPoly allows for comboing
 	recalculateIds();                 // TODO: consider animations
-	recalculateOrder();               // TODO: consider animations
+	if(doRecalculateOrder) //fromg gamerules.js
+		recalculateOrder();               // TODO: consider animations
 	if(squareCount>0)detectSquares(); // TODO: consider animations
 }

@@ -66,7 +66,7 @@ function setAnim(x,y,begin,end,IOF,direction){
 //==  MAIN LOOP  =============================================================//
 
 function newGame(){
-	var size = 16;
+	var size = gridSize; //from gamerules.js
 	board = new grid(size);
 	active = new grid(size);
 	anim = new grid(size);

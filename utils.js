@@ -29,8 +29,3 @@ function renderRect(x0,y0,x1,y1){
 	gfx.lineTo(x1,y0);
 	gfx.fill();
 }
-
-function keyframe(n){
-	var scale = 1000;
-	return tick+n*scale;
-}

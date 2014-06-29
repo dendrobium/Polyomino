@@ -60,9 +60,10 @@ function detectSquares(){
 			// determine largest possible square order
 			var minOrder = c.order+1;
 			var maxOrder = minOrder;
-			for(;Math.min(x+maxOrder,y+maxOrder)<=board.size;++maxOrder)
-				if(getInactiveCell(x,y).order !== c.order)break;
-			if(!upgradeHighestOrder)maxOrder = minOrder+1;
+			for(;Math.min(x+maxOrder,y+maxOrder)<=board.size;++maxOrder){
+				var testC = getInactiveCell(x,y);
+				if(!testC || testC.order !== c.order)break;
+			}if(!upgradeHighestOrder)maxOrder = minOrder+1;
 
 			// for each possible order (smallest to largest)
 			inner:for(var order=minOrder;order!=maxOrder;++order){

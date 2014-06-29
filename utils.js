@@ -31,6 +31,6 @@ function renderRect(x0,y0,x1,y1){
 }
 
 function keyframe(n){
-	var scale = 150;
+	var scale = 1000;
 	return tick+n*scale;
 }

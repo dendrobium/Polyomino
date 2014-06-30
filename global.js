@@ -3,14 +3,15 @@
 doRecalculateOrder    = true;
 upgradeHighestOrder   = true;
 gridSize              = 8;
-cs                    = 32; // cell size
+cs                    = 32;  // cell size
+animSpeed             = 150; // milliseconds
 
 //==  CONSTANTS  =============================================================//
 
-var UP    = 0;
-var DOWN  = 1;
-var LEFT  = 2;
-var RIGHT = 3;
+var UP      = 0;
+var DOWN    = 1;
+var LEFT    = 2;
+var RIGHT   = 3;
 
 var IN      = 0;
 var OUT     = 1;

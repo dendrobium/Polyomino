@@ -35,21 +35,6 @@ var animCell = function(begin,end,inOutFade,direction){
 	this.direction = direction;
 }
 
-var UP    = 0;
-var DOWN  = 1;
-var LEFT  = 2;
-var RIGHT = 3;
-
-var IN      = 0;
-var OUT     = 1;
-var OUTFADE = 2;
-
-var goldenAngle = 0.381966;
-var board,floating,active,anim;
-var blockId,score;
-var mouse,dragging,snapping,mouseDX,mouseDY,downGX,downGY,mouseGX,mouseGY;
-var goalFloatX,goalFloatY,floatX,floatY;
-
 function newId(){return ++blockId;}
 
 function getInactiveCell(x,y){
@@ -60,22 +45,4 @@ function getInactiveCell(x,y){
 function setAnim(x,y,begin,end,IOF,direction){
 	active.setCell(x,y,true);
 	anim.getCell(x,y).push(new animCell(begin,end,IOF,direction));
-}
-
-//==  MAIN LOOP  =============================================================//
-
-function newGame(){
-	board = new grid(gridSize);
-	active = new grid(gridSize);
-	anim = new grid(gridSize);
-	for(var i=0;i<anim.size;++i)for(var j=0;j<anim.size;++j)
-		anim.setCell(i,j,[]);
-	blockId = 0;
-	score = 0;
-	dragging = false;
-	snapping = false;
-	for(var i=0;i<4;++i)placeNewPoly();
-
-	canvas.width  = ww = gridSize*cs+8;
-	canvas.height = wh = gridSize*cs+8;
 }

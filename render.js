@@ -1,7 +1,4 @@
-function keyframe(n){
-	var scale = 150;
-	return tick+n*scale;
-}
+function keyframe(n){return tick+n*animSpeed;}
 
 function notAnimating(x,y){
 	var c = anim.getCell(x,y);

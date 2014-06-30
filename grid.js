@@ -23,10 +23,6 @@ var grid = function(size){
 	return grid;
 }
 
-function getInactiveCell(x,y){
-	return board.getCell(x,y);
-}
-
 function movePiece(from,to,id,offsetX,offsetY){
 	for(var i=0;i<from.size;++i)for(var j=0;j<from.size;++j){
 		var c = from.getCell(i+offsetX,j+offsetY);

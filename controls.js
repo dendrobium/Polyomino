@@ -20,7 +20,7 @@ function getMousePos(evt){
 canvas.addEventListener("mousedown",function(e){
 	mouse = getMousePos(e);
 	if(dragging)return;
-	var c = getInactiveCell(mouse.x/cellSize,mouse.y/cellSize);
+	var c = board.getCell(mouse.x/cellSize,mouse.y/cellSize);
 	if(!c)return;
 
 	// move selected piece onto floating layer,remove from board

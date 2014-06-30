@@ -1,5 +1,5 @@
 function recurse(visited,x,y,c,f){
-	var e = getInactiveCell(x,y);
+	var e = board.getCell(x,y);
 	if(!e || c.id !== e.id)return;
 	if(visited.getCell(x,y))return;
 	visited.setCell(x,y,true);
@@ -14,12 +14,12 @@ function recurse(visited,x,y,c,f){
 function recalculateIds(){
 	var visited = new grid(board.size);
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
-		var c = getInactiveCell(i,j);
+		var c = board.getCell(i,j);
 		if(!c)continue;
 		recurse(visited,i,j,c);
 		var id = newId();
 		for(var x=0;x<board.size;++x)for(var y=0;y<board.size;++y){
-			var chk = getInactiveCell(x,y);
+			var chk = board.getCell(x,y);
 			if(chk&&chk.id === c.id&&!visited.getCell(x,y))
 				chk.id = id;
 		}
@@ -30,7 +30,7 @@ function recalculateIds(){
 function recalculateOrder(){
 	if(!orderDecay)return;
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
-		var c = getInactiveCell(i,j);
+		var c = board.getCell(i,j);
 		if(!c)continue;
 
 		// determine real order of cell
@@ -45,6 +45,7 @@ function recalculateOrder(){
 	}
 }
 
+// TODO: detect endgame
 // TODO: consider animations
 function detectSquares(){
 	var squareCount = 0;
@@ -57,13 +58,13 @@ function detectSquares(){
 	// scan 1, detect any squares on the board
 	for(var x=0;x<board.size;++x)
 	outer:for(var y=0;y<board.size;++y){
-		var c = getInactiveCell(x,y);
+		var c = board.getCell(x,y);
 		if(c){
 			// determine largest possible square order
 			var minOrder = c.order+1;
 			var maxOrder = minOrder;
 			for(;Math.min(x+maxOrder,y+maxOrder)<=board.size;++maxOrder){
-				var testC = getInactiveCell(x,y);
+				var testC = board.getCell(x,y);
 				if(!testC || testC.order !== c.order)break;
 			}if(!detectHighestOrder)maxOrder = Math.min(maxOrder,minOrder+1);
 
@@ -71,7 +72,7 @@ function detectSquares(){
 			inner:for(var order=minOrder;order!=maxOrder;++order){
 				// scan for square
 				for(var i=x;i<x+order;++i)for(var j=y;j<y+order;++j){
-					var e = getInactiveCell(i,j);
+					var e = board.getCell(i,j);
 					if(!e)continue inner;
 					if(e.order !== c.order)continue inner;
 				}
@@ -100,5 +101,5 @@ function detectSquares(){
 	// placing these here rather than right after squareToPoly allows for comboing
 	recalculateIds();
 	recalculateOrder();
-	if(squareCount>0)detectSquares(); // XXX: this wont be recursive anymore because of animation
+	if(squareCount>0)detectSquares(); // DELETE: this wont be recursive anymore because of animation
 }

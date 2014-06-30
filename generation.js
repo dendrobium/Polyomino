@@ -1,17 +1,21 @@
-// TODO: detect endgame
+// TODO: verify something can even be placed (low grid size, high init piece count size)
 function placeNewPoly(){
+	// TODO: generate list of empty cells
+	// TODO: if emptyCells length === 0, return | XXX: endgame considerations? (thats currently in detectSquares)
+	// TODO: x,y = random cell in list
+
 	var x,y;
 	while(true){
 		x = rInt(board.size);
 		y = rInt(board.size);
-		if(!getInactiveCell(x,y))break;
+		if(!board.getCell(x,y))break;
 	}
 
 	var id = newId();
-	board.setCell(x,y,new polyCell(id,1));
+	board.setCell(x,y,new cell(id,1));
 	var formDomino = function(i,j,dir){
-		if(getInactiveCell(i,j) === null){
-			board.setCell(i,j,new polyCell(id,2));
+		if(board.getCell(i,j) === null){
+			board.setCell(i,j,new cell(id,2));
 			board.getCell(x,y).order = 2;
 		}
 	}
@@ -23,10 +27,10 @@ function placeNewPoly(){
 		case 3:formDomino(x+1,y,RIGHT);break;
 	}
 
-	detectSquares(); // TODO: consider animations
+	detectSquares();
 }
 
- // TODO: consider animations
+// TODO: consider animations
 function squareToPoly(x,y,order){
 	outer:while(true){
 		var filled = new grid(order,order);
@@ -39,7 +43,7 @@ function squareToPoly(x,y,order){
 		var id = newId();
 		var i=x+rInt(order);
 		var j=y+rInt(order);
-		board.setCell(i,j,new polyCell(id,order));
+		board.setCell(i,j,new cell(id,order));
 		filled.setCell(i-x,j-y,true);
 		for(var count=1;count<order;++count)while(true){
 			i=x+rInt(order);
@@ -50,7 +54,7 @@ function squareToPoly(x,y,order){
 			var l = filled.getCell(i-x-1,j-y  );
 			var r = filled.getCell(i-x+1,j-y  );
 			if(!(u||d||l||r))continue;
-			board.setCell(i,j,new polyCell(id,order));
+			board.setCell(i,j,new cell(id,order));
 			filled.setCell(i-x,j-y,true);
 			break;
 		}

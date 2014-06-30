@@ -74,8 +74,6 @@ function detectSquares(){
 					if(e.order !== c.order)continue inner;
 				}
 
-				console.log(order);
-
 				// if square exists, write to squares grid
 				for(var i=x;i<x+order;++i)for(var j=y;j<y+order;++j)
 					if(squares.getCell(i,j)<order)squares.setCell(i,j,order);

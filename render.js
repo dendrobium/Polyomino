@@ -1,5 +1,5 @@
 function keyframe(n){
-	var scale = 1000;
+	var scale = 150;
 	return tick+n*scale;
 }
 

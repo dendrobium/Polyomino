@@ -49,7 +49,6 @@ var board,floating,active,anim;
 var blockId,score;
 var mouse,dragging,snapping,mouseDX,mouseDY,downGX,downGY,mouseGX,mouseGY;
 var goalFloatX,goalFloatY,floatX,floatY;
-var cs = 32;
 
 function newId(){return ++blockId;}
 
@@ -66,10 +65,9 @@ function setAnim(x,y,begin,end,IOF,direction){
 //==  MAIN LOOP  =============================================================//
 
 function newGame(){
-	var size = gridSize; //from gamerules.js
-	board = new grid(size);
-	active = new grid(size);
-	anim = new grid(size);
+	board = new grid(gridSize);
+	active = new grid(gridSize);
+	anim = new grid(gridSize);
 	for(var i=0;i<anim.size;++i)for(var j=0;j<anim.size;++j)
 		anim.setCell(i,j,[]);
 	blockId = 0;
@@ -77,4 +75,7 @@ function newGame(){
 	dragging = false;
 	snapping = false;
 	for(var i=0;i<4;++i)placeNewPoly();
+
+	canvas.width  = ww = gridSize*cs+8;
+	canvas.height = wh = gridSize*cs+8;
 }

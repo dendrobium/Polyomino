@@ -8,6 +8,14 @@ function movePiece(from,to,id,offsetX,offsetY){
 	}
 }
 
+var cancelMove = function(){
+	for(var i=0;i<floating.size;++i)for(var j=0;j<floating.size;++j)
+	if(floating.getCell(i,j))
+		active.setCell(i,j,true);
+	goalFloatX = goalFloatY = 0;
+	snapping = true;
+};
+
 function calcMouseGridVars(){
 	downGX  = Math.floor(mouseDX/cellSize);
 	downGY  = Math.floor(mouseDY/cellSize);
@@ -50,6 +58,8 @@ canvas.addEventListener("mousemove",function(e){
 	goalFloatY = (downGY-mouseGY)*cellSize;
 });
 
+canvas.addEventListener("mouseout",cancelMove(););
+
 canvas.addEventListener("mouseup",function(e){
 	mouse = getMousePos(e);
 	if(!dragging||snapping)return;
@@ -58,28 +68,20 @@ canvas.addEventListener("mouseup",function(e){
 	var offsetX = downGX-mouseGX;
 	var offsetY = downGY-mouseGY;
 
-	var revert = function(){
-		for(var i=0;i<floating.size;++i)for(var j=0;j<floating.size;++j)
-		if(floating.getCell(i,j))
-			active.setCell(i,j,true);
-		goalFloatX = goalFloatY = 0;
-		snapping = true;
-	};
-
 	// check if floating is dropped on original position
-	if(downGX == mouseGX && downGY == mouseGY){revert();return;}
+	if(downGX == mouseGX && downGY == mouseGY){cancelMove();return;}
 
 	// make sure pieces in floating and board aren't overlapping
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
 	if(board.getCell(i,j))
-	if(floating.getCell(i+offsetX,j+offsetY)){revert();return;}
+	if(floating.getCell(i+offsetX,j+offsetY)){cancelMove();return;}
 
 	// make sure pieces in floating aren't out of bounds in board
 	for(var i=0;i<floating.size;++i)for(var j=0;j<floating.size;++j)
 	if(floating.getCell(i,j)){
 		var x = i-offsetX;
 		var y = j-offsetY;
-		if(x<0||y<0||x>=floating.size||y>=floating.size){revert();return;}
+		if(x<0||y<0||x>=floating.size||y>=floating.size){cancelMove();return;}
 	}
 
 	// successful move, place new poly

@@ -10,8 +10,8 @@ function newGame(){
 	snapping = false;
 	for(var i=0;i<4;++i)placeNewPoly();
 
-	canvas.width  = ww = gridSize*cs+8;
-	canvas.height = wh = gridSize*cs+8;
+	canvas.width  = ww = gridSize*cellSize+8;
+	canvas.height = wh = gridSize*cellSize+8;
 }
 
 (function main(){

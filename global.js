@@ -1,10 +1,10 @@
 //==  RULES  =================================================================//
 
-doRecalculateOrder    = true;
-upgradeHighestOrder   = true;
-gridSize              = 8;
-cs                    = 32;  // cell size
-animSpeed             = 150; // milliseconds
+detectHighestOrder = true;
+orderDecay         = true;
+gridSize           = 8;
+cellSize           = 32;
+animSpeed          = 150;
 
 //==  CONSTANTS  =============================================================//
 

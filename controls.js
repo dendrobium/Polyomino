@@ -9,10 +9,10 @@ function movePiece(from,to,id,offsetX,offsetY){
 }
 
 function calcMouseGridVars(){
-	downGX  = Math.floor(mouseDX/cs);
-	downGY  = Math.floor(mouseDY/cs);
-	mouseGX = Math.floor(mouse.x/cs);
-	mouseGY = Math.floor(mouse.y/cs);
+	downGX  = Math.floor(mouseDX/cellSize);
+	downGY  = Math.floor(mouseDY/cellSize);
+	mouseGX = Math.floor(mouse.x/cellSize);
+	mouseGY = Math.floor(mouse.y/cellSize);
 }
 
 function getMousePos(evt){
@@ -23,7 +23,7 @@ function getMousePos(evt){
 canvas.addEventListener("mousedown",function(e){
 	mouse = getMousePos(e);
 	if(dragging)return;
-	var c = getInactiveCell(mouse.x/cs,mouse.y/cs);
+	var c = getInactiveCell(mouse.x/cellSize,mouse.y/cellSize);
 	if(!c)return;
 
 	// move selected piece onto floating layer,remove from board
@@ -36,8 +36,8 @@ canvas.addEventListener("mousedown",function(e){
 	mouseDX = mouse.x;
 	mouseDY = mouse.y;
 	calcMouseGridVars();
-	floatX = goalFloatX = (downGX-mouseGX)*cs;
-	floatY = goalFloatY = (downGY-mouseGY)*cs;
+	floatX = goalFloatX = (downGX-mouseGX)*cellSize;
+	floatY = goalFloatY = (downGY-mouseGY)*cellSize;
 
 	render();
 });
@@ -46,8 +46,8 @@ canvas.addEventListener("mousemove",function(e){
 	mouse = getMousePos(e);
 	if(!dragging||snapping)return;
 	calcMouseGridVars();
-	goalFloatX = (downGX-mouseGX)*cs;
-	goalFloatY = (downGY-mouseGY)*cs;
+	goalFloatX = (downGX-mouseGX)*cellSize;
+	goalFloatY = (downGY-mouseGY)*cellSize;
 });
 
 canvas.addEventListener("mouseup",function(e){
@@ -83,7 +83,7 @@ canvas.addEventListener("mouseup",function(e){
 	}
 
 	// successful move, place new poly
-	movePiece(floating,board,floating.getCell(mouseDX/cs,mouseDY/cs).id,offsetX,offsetY);
+	movePiece(floating,board,floating.getCell(mouseDX/cellSize,mouseDY/cellSize).id,offsetX,offsetY);
 	placeNewPoly();
 	dragging = false;
 });

@@ -15,11 +15,11 @@ function renderGrid(g){
 		var c = g.getCell(i,j);
 		if(c && notAnimating(i,j)){
 			hsv(hue(c.order),1,0.6);
-			renderRect(i*cs+1,j*cs+1,(i+1)*cs-1,(j+1)*cs-1);
+			renderRect(i*cellSize+1,j*cellSize+1,(i+1)*cellSize-1,(j+1)*cellSize-1);
 			var right = g.getCell(i+1,j);
-			if(right&&right.id === c.id)renderRect((i+1)*cs-2,j*cs+1,(i+1)*cs+2,(j+1)*cs-1);
+			if(right&&right.id === c.id)renderRect((i+1)*cellSize-2,j*cellSize+1,(i+1)*cellSize+2,(j+1)*cellSize-1);
 			var down = g.getCell(i,j+1);
-			if(down&&down.id === c.id)renderRect(i*cs+1,(j+1)*cs-2,(i+1)*cs-1,(j+1)*cs+2);
+			if(down&&down.id === c.id)renderRect(i*cellSize+1,(j+1)*cellSize-2,(i+1)*cellSize-1,(j+1)*cellSize+2);
 		}
 	}
 
@@ -27,11 +27,11 @@ function renderGrid(g){
 		var c = g.getCell(i,j);
 		if(c && notAnimating(i,j)){
 			hsv(hue(c.order),1,1);
-			renderRect(i*cs+3,j*cs+3,(i+1)*cs-3,(j+1)*cs-3);
+			renderRect(i*cellSize+3,j*cellSize+3,(i+1)*cellSize-3,(j+1)*cellSize-3);
 			var right = g.getCell(i+1,j);
-			if(right&&right.id === c.id)renderRect((i+1)*cs-4,j*cs+3,(i+1)*cs+4,(j+1)*cs-3);
+			if(right&&right.id === c.id)renderRect((i+1)*cellSize-4,j*cellSize+3,(i+1)*cellSize+4,(j+1)*cellSize-3);
 			var down = g.getCell(i,j+1);
-			if(down&&down.id === c.id)renderRect(i*cs+3,(j+1)*cs-4,(i+1)*cs-3,(j+1)*cs+4);
+			if(down&&down.id === c.id)renderRect(i*cellSize+3,(j+1)*cellSize-4,(i+1)*cellSize-3,(j+1)*cellSize+4);
 		}
 	}
 }
@@ -49,14 +49,14 @@ function render(){
 	// render grid lines
 	rgb(0.2,0.2,0.2);
 	for(var i=1;i<board.size;++i)for(var j=1;j<board.size;++j){
-		renderRect(i*cs-4,j*cs-1,i*cs+4,j*cs+1);
-		renderRect(i*cs-1,j*cs-4,i*cs+1,j*cs+4);
+		renderRect(i*cellSize-4,j*cellSize-1,i*cellSize+4,j*cellSize+1);
+		renderRect(i*cellSize-1,j*cellSize-4,i*cellSize+1,j*cellSize+4);
 	}
 
 	// render grid cells
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
 		rgb(0.02,0.02,0.02);
-		renderRect(i*cs+2,j*cs+2,(i+1)*cs-2,(j+1)*cs-2);
+		renderRect(i*cellSize+2,j*cellSize+2,(i+1)*cellSize-2,(j+1)*cellSize-2);
 	}
 
 	// render board and animations
@@ -82,10 +82,10 @@ function render(){
 					rgb(1,1,1);
 					var interp = (tick-c.begin)/(c.end-c.begin);
 					switch(c.direction){
-						case UP:   renderRect(i*cs,(j+1)*cs-interp*cs,(i+1)*cs,(j+1)*cs);break;
-						case DOWN: renderRect(i*cs,j*cs,(i+1)*cs,j*cs+interp*cs);break;
-						case LEFT: renderRect((i+1)*cs-interp*cs,j*cs,(i+1)*cs,(j+1)*cs);break;
-						case RIGHT:renderRect(i*cs,j*cs,i*cs+interp*cs,(j+1)*cs);break;
+						case UP:   renderRect(i*cellSize,(j+1)*cellSize-interp*cellSize,(i+1)*cellSize,(j+1)*cellSize);break;
+						case DOWN: renderRect(i*cellSize,j*cellSize,(i+1)*cellSize,j*cellSize+interp*cellSize);break;
+						case LEFT: renderRect((i+1)*cellSize-interp*cellSize,j*cellSize,(i+1)*cellSize,(j+1)*cellSize);break;
+						case RIGHT:renderRect(i*cellSize,j*cellSize,i*cellSize+interp*cellSize,(j+1)*cellSize);break;
 					}
 				}break;
 			case OUT:
@@ -98,7 +98,7 @@ function render(){
 				else{
 					var interp = 1-(tick-c.begin)/(c.end-c.begin);
 					gfx.fillStyle = "rgba(255,255,255,"+interp+")";
-				}renderRect(i*cs,j*cs,(i+1)*cs,(j+1)*cs);
+				}renderRect(i*cellSize,j*cellSize,(i+1)*cellSize,(j+1)*cellSize);
 				break;
 		}
 	}
@@ -121,7 +121,7 @@ function render(){
 			for(var i=0;i<floating.size;++i)for(var j=0;j<floating.size;++j)
 			if(floating.getCell(i,j))
 				active.setCell(i,j,null);
-			movePiece(floating,board,floating.getCell(mouseDX/cs,mouseDY/cs).id,0,0);
+			movePiece(floating,board,floating.getCell(mouseDX/cellSize,mouseDY/cellSize).id,0,0);
 			dragging = snapping = false;
 		}
 	}

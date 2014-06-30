@@ -58,7 +58,10 @@ canvas.addEventListener("mousemove",function(e){
 	goalFloatY = (downGY-mouseGY)*cellSize;
 });
 
-canvas.addEventListener("mouseout",cancelMove(););
+canvas.addEventListener("mouseout",function(e){
+	if(!dragging||snapping)return;
+	cancelMove();
+});
 
 canvas.addEventListener("mouseup",function(e){
 	mouse = getMousePos(e);

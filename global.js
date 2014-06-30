@@ -4,6 +4,7 @@ detectHighestOrder = true;
 orderDecay         = true;
 gridSize           = 8;
 cellSize           = 32;
+initPieceCount     = 10;
 animSpeed          = 150;
 
 //==  CONSTANTS  =============================================================//

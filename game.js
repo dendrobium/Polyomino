@@ -4,8 +4,8 @@ function newGame(){
 	score = 0;
 	dragging = false;
 	snapping = false;
-	for(var i=0;i<4;++i)placeNewPoly();
-
+	for(var i=0;i<initPieceCount;++i)placeNewPoly();
+	detectSquares();
 	canvas.width  = ww = gridSize*cellSize+8;
 	canvas.height = wh = gridSize*cellSize+8;
 }

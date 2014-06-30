@@ -23,13 +23,6 @@ var grid = function(size){
 	return grid;
 }
 
-var polyCell = function(id,order){
-	this.id = id;
-	this.order = order;
-}
-
-function newId(){return ++blockId;}
-
 function getInactiveCell(x,y){
 	return board.getCell(x,y);
 }

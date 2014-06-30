@@ -1,9 +1,5 @@
 function newGame(){
 	board = new grid(gridSize);
-	active = new grid(gridSize);
-	anim = new grid(gridSize);
-	for(var i=0;i<anim.size;++i)for(var j=0;j<anim.size;++j)
-		anim.setCell(i,j,[]);
 	blockId = 0;
 	score = 0;
 	dragging = false;

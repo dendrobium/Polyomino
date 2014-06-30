@@ -10,14 +10,7 @@ function placeNewPoly(){
 	var id = newId();
 	board.setCell(x,y,new polyCell(id,1));
 	var formDomino = function(i,j,dir){
-		if(getInactiveCell(i,j) !== null){
-			setAnim(x,y,keyframe(1),keyframe(2),OUTFADE);
-			setAnim(x,y,keyframe(0),keyframe(1),IN,dir);
-		}else{
-			setAnim(x,y,keyframe(2),keyframe(3),OUTFADE);
-			setAnim(i,j,keyframe(2),keyframe(3),OUTFADE);
-			setAnim(x,y,keyframe(0),keyframe(1),IN,dir);
-			setAnim(i,j,keyframe(1),keyframe(2),IN,dir);
+		if(getInactiveCell(i,j) === null){
 			board.setCell(i,j,new polyCell(id,2));
 			board.getCell(x,y).order = 2;
 		}

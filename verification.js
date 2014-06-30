@@ -28,6 +28,7 @@ function recalculateIds(){
 
 // TODO: consider animations
 function recalculateOrder(){
+	if(!orderDecay)return;
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
 		var c = getInactiveCell(i,j);
 		if(!c)continue;
@@ -44,6 +45,7 @@ function recalculateOrder(){
 	}
 }
 
+// TODO: consider animations
 function detectSquares(){
 	var squareCount = 0;
 
@@ -96,7 +98,7 @@ function detectSquares(){
 	}
 
 	// placing these here rather than right after squareToPoly allows for comboing
-	recalculateIds();                 // TODO: consider animations
-	if(orderDecay)recalculateOrder(); // TODO: consider animations
-	if(squareCount>0)detectSquares(); // TODO: consider animations
+	recalculateIds();
+	recalculateOrder();
+	if(squareCount>0)detectSquares(); // XXX: this wont be recursive anymore because of animation
 }

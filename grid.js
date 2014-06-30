@@ -28,21 +28,18 @@ var polyCell = function(id,order){
 	this.order = order;
 }
 
-var animCell = function(begin,end,inOutFade,direction){
-	this.begin = begin;
-	this.end = end;
-	this.inOutFade = inOutFade;
-	this.direction = direction;
-}
-
 function newId(){return ++blockId;}
 
 function getInactiveCell(x,y){
-	if(active.getCell(x,y))return undefined;
 	return board.getCell(x,y);
 }
 
-function setAnim(x,y,begin,end,IOF,direction){
-	active.setCell(x,y,true);
-	anim.getCell(x,y).push(new animCell(begin,end,IOF,direction));
+function movePiece(from,to,id,offsetX,offsetY){
+	for(var i=0;i<from.size;++i)for(var j=0;j<from.size;++j){
+		var c = from.getCell(i+offsetX,j+offsetY);
+		if(!c)continue;
+		if(c.id !== id)continue;
+		to.setCell(i,j,c);
+		from.setCell(i+offsetX,j+offsetY,null);
+	}
 }

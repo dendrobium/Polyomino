@@ -21,7 +21,7 @@ var goldenAngle = 0.381966;
 
 //==  GLOBAL VARS  ===========================================================//
 
-var board,floating,active,anim;
+var board,floating;
 var blockId,score;
 var mouse,dragging,snapping,mouseDX,mouseDY,downGX,downGY,mouseGX,mouseGY;
 var goalFloatX,goalFloatY,floatX,floatY;

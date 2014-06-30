@@ -1,17 +1,5 @@
-function movePiece(from,to,id,offsetX,offsetY){
-	for(var i=0;i<from.size;++i)for(var j=0;j<from.size;++j){
-		var c = from.getCell(i+offsetX,j+offsetY);
-		if(!c)continue;
-		if(c.id !== id)continue;
-		to.setCell(i,j,c);
-		from.setCell(i+offsetX,j+offsetY,null);
-	}
-}
-
 var cancelMove = function(){
 	for(var i=0;i<floating.size;++i)for(var j=0;j<floating.size;++j)
-	if(floating.getCell(i,j))
-		active.setCell(i,j,true);
 	goalFloatX = goalFloatY = 0;
 	snapping = true;
 };
@@ -28,6 +16,7 @@ function getMousePos(evt){
 	return{x:evt.clientX-rect.left,y:evt.clientY-rect.top};
 }
 
+// TODO: consider locked cells
 canvas.addEventListener("mousedown",function(e){
 	mouse = getMousePos(e);
 	if(dragging)return;
@@ -63,6 +52,7 @@ canvas.addEventListener("mouseout",function(e){
 	cancelMove();
 });
 
+// TODO: consider locked cells
 canvas.addEventListener("mouseup",function(e){
 	mouse = getMousePos(e);
 	if(!dragging||snapping)return;

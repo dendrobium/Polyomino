@@ -13,12 +13,13 @@ var cell = function(){
 	}
 }
 
-var event = function(cell,startTick,endTick,func,onEnd){
-	this.c = cell;
+var event = function(c,startTick,endTick,func,onEnd){
+	this.c = c;
 	this.startTick = startTick;
 	this.endTick = endTick;
 	this.func  = func;  // TODO: must accept cell, start, end
 	this.onEnd = onEnd; // TODO: must accept cell
+	eventLs.push(this);
 }
 
 var eventLs = [];
@@ -38,10 +39,17 @@ function processEvents(){
 	}
 }
 
+function unlockEvt(cell,unlockTick){
+}
+
 /*
 
 	setting animation vars
 	setting active id order vars
 	unlocking cell
+
+	set the following to true when appropriate:
+	currentlyAnimating
+	triggerDetectSquares
 
 */

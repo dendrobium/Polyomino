@@ -26,6 +26,7 @@ var board,floating;
 var blockId,score;
 var mouse,dragging,snapping,mouseDX,mouseDY,downGX,downGY,mouseGX,mouseGY;
 var goalFloatX,goalFloatY,floatX,floatY;
+var currentlyAnimating,triggerDetectSquares;
 
 //==  CANVAS VARS  ===========================================================//
 

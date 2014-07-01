@@ -34,8 +34,8 @@ function render(){
 	gfx.save();
 	gfx.translate(4,4);
 
-	var currentlyAnimating = false;
-	var triggerDetectSquares = false;
+	currentlyAnimating   = false;
+	triggerDetectSquares = false;
 
 	// render grid lines
 	rgb(0.2,0.2,0.2);
@@ -50,8 +50,9 @@ function render(){
 		renderRect(i*cellSize+2,j*cellSize+2,(i+1)*cellSize-2,(j+1)*cellSize-2);
 	}
 
-	// render board and animations
+	// render board and process events and animations
 	renderGrid(board);
+	processEvents();
 
 	// render floating layer
 	if(dragging){

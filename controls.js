@@ -21,7 +21,7 @@ canvas.addEventListener("mousedown",function(e){
 	mouse = getMousePos(e);
 	if(dragging)return;
 	var c = board.getCell(mouse.x/cellSize,mouse.y/cellSize);
-	if(!c.occupied || c.locked)return;
+	if(!c || !c.occupied || c.locked)return;
 
 	// move selected piece onto floating layer,remove from board
 	dragging = true;

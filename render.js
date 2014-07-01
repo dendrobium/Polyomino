@@ -8,9 +8,9 @@ function renderGrid(g){
 		hsv(hue(c.order),1,0.6);
 		renderRect(i*cellSize+1,j*cellSize+1,(i+1)*cellSize-1,(j+1)*cellSize-1);
 		var right = g.getCell(i+1,j);
-		if(right&&right.id === c.id)renderRect((i+1)*cellSize-2,j*cellSize+1,(i+1)*cellSize+2,(j+1)*cellSize-1);
+		if(right&&right.occupied&&right.id === c.id)renderRect((i+1)*cellSize-2,j*cellSize+1,(i+1)*cellSize+2,(j+1)*cellSize-1);
 		var down = g.getCell(i,j+1);
-		if(down&&down.id === c.id)renderRect(i*cellSize+1,(j+1)*cellSize-2,(i+1)*cellSize-1,(j+1)*cellSize+2);
+		if(down&&down.occupied&&down.id === c.id)renderRect(i*cellSize+1,(j+1)*cellSize-2,(i+1)*cellSize-1,(j+1)*cellSize+2);
 	}
 
 	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
@@ -19,9 +19,9 @@ function renderGrid(g){
 		hsv(hue(c.order),1,1);
 		renderRect(i*cellSize+3,j*cellSize+3,(i+1)*cellSize-3,(j+1)*cellSize-3);
 		var right = g.getCell(i+1,j);
-		if(right&&right.id === c.id)renderRect((i+1)*cellSize-4,j*cellSize+3,(i+1)*cellSize+4,(j+1)*cellSize-3);
+		if(right&&right.occupied&&right.id === c.id)renderRect((i+1)*cellSize-4,j*cellSize+3,(i+1)*cellSize+4,(j+1)*cellSize-3);
 		var down = g.getCell(i,j+1);
-		if(down&&down.id === c.id)renderRect(i*cellSize+3,(j+1)*cellSize-4,(i+1)*cellSize-3,(j+1)*cellSize+4);
+		if(down&&down.occupied&&down.id === c.id)renderRect(i*cellSize+3,(j+1)*cellSize-4,(i+1)*cellSize-3,(j+1)*cellSize+4);
 	}
 }
 

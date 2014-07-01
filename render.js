@@ -1,4 +1,3 @@
-// TODO: consider animation
 function renderGrid(g){
 	var hue = function(order){return(order*goldenAngle)%1;}
 
@@ -25,17 +24,26 @@ function renderGrid(g){
 	}
 }
 
-// TODO: consider animation and floating/snapping locks
 function render(){
+	requestAnimationFrame(render);
 	var currentTick = new Date().getTime();
 	elapsed = currentTick-tick;
 	tick = currentTick;
+
+	// preprocess event list
+	processInactiveEvents();
+
+	// detect squares if flagged
+	if(triggerDetectSquares)detectSquares();
+	triggerDetectSquares = false;
+
+	// render everything if flagged
+	if(!currentlyAnimating)return;
+	currentlyAnimating = false;
+
 	gfx.clearRect(0,0,ww,wh);
 	gfx.save();
 	gfx.translate(paneThickness,paneThickness);
-
-	currentlyAnimating   = false;
-	triggerDetectSquares = false;
 
 	// render grid lines
 	rgb(0.2,0.2,0.2);
@@ -52,7 +60,7 @@ function render(){
 
 	// render board and process events and animations
 	renderGrid(board);
-	processEvents();
+	processActiveEvents();
 
 	// render floating layer
 	if(dragging){
@@ -76,6 +84,4 @@ function render(){
 	}
 
 	gfx.restore();
-	if(triggerDetectSquares)detectSquares();
-	if(currentlyAnimating)requestAnimationFrame(render);
 }

@@ -41,9 +41,9 @@ var grid = function(size){
 function movePiece(from,to,id,offsetX,offsetY){
 	for(var i=0;i<from.size;++i)for(var j=0;j<from.size;++j){
 		var c = from.getCell(i+offsetX,j+offsetY);
-		if(!c)continue;
+		if(!c || !c.occupied)continue;
 		if(c.id !== id)continue;
-		to.setCell(i,j,c);
-		from.setCell(i+offsetX,j+offsetY,new cell());
+		to.getCell(i,j).quickSet(true,c.id,c.order);
+		from.getCell(i+offsetX,j+offsetY).occupied = false;
 	}
 }

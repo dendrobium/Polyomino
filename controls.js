@@ -15,6 +15,7 @@ var cancelMove = function(){
 	placeX = placeY = 0;
 	goalFloatX = goalFloatY = 0;
 	snapping = true;
+	placeAfterSnap = false;
 };
 
 // TODO: lock cells being picked up
@@ -39,7 +40,7 @@ canvas.addEventListener("mousedown",function(e){
 	goalFloatX = floatX+hoverOffset;
 	goalFloatY = floatY+hoverOffset;
 
-	render();
+	currentlyAnimating = true;
 });
 
 canvas.addEventListener("mousemove",function(e){
@@ -87,5 +88,5 @@ canvas.addEventListener("mouseup",function(e){
 	goalFloatX = (downGX-mouseGX)*cellSize;
 	goalFloatY = (downGY-mouseGY)*cellSize;
 	snapping = true;
-	placeNewPoly();
+	placeAfterSnap = true;
 });

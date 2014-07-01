@@ -5,8 +5,9 @@ orderDecay         = true;
 paneThickness      = 4;
 gridSize           = 8;
 cellSize           = 32;
-initPieceCount     = 1;
+initPieceCount     = 4;
 animSpeed          = 150;
+dragSpeed          = 0.3;
 hoverOffset        = 4;
 
 //==  CONSTANTS  =============================================================//

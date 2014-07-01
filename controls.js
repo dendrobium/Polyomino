@@ -10,7 +10,7 @@ function calcMouseGridVars(){
 	mouseGY = Math.floor(mouse.y/cellSize);
 }
 
-// TODO: add locks
+// TODO: unlock after snapping
 var cancelMove = function(){
 	placeX = placeY = 0;
 	goalFloatX = goalFloatY = 0;
@@ -85,8 +85,9 @@ canvas.addEventListener("mouseup",function(e){
 
 	// successful move, place new poly
 	// TODO: add locks
+	// TODO: unlock original locked cells
 	goalFloatX = (downGX-mouseGX)*cellSize;
 	goalFloatY = (downGY-mouseGY)*cellSize;
 	snapping = true;
-	placeAfterSnap = true;
+	placeAfterSnap = true; // TODO: replace with placeNewPoly() AFTER THE APPRORIATE LOCKS ARE IN PLACE
 });

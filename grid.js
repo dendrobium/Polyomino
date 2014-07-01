@@ -38,6 +38,7 @@ var grid = function(size){
 	return grid;
 }
 
+// assumes piece isnt locked
 function movePiece(from,to,id,offsetX,offsetY){
 	for(var i=0;i<from.size;++i)for(var j=0;j<from.size;++j){
 		var c = from.getCell(i+offsetX,j+offsetY);

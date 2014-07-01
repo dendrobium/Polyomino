@@ -11,7 +11,6 @@ function recurse(visited,x,y,c,f){
 	recurse(visited,x+1,y  ,c,f);
 };
 
-// TODO: consider animations
 function recalculateIds(){
 	var visited = new grid(board.size);
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
@@ -28,7 +27,6 @@ function recalculateIds(){
 	}
 }
 
-// TODO: consider animations (event that gradually changes cells order [hue], dispatch particles at split?)
 function recalculateOrder(){
 	if(!orderDecay)return;
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
@@ -41,7 +39,12 @@ function recalculateOrder(){
 
 		// if counted order doesnt match assigned order,reassign
 		if(count === c.order)continue;
-		recurse(new grid(board.size),i,j,c,function(e){e.order = count;});
+		recurse(new grid(board.size),i,j,c,function(e){
+			e.order = count; // DELETE
+			// TODO: lock cell(x,y)
+			// TODO: event x y oldOrder newOrder beginTick endTick
+			// TODO: event x y unlock tick
+		});
 	}
 }
 

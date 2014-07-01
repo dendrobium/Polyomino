@@ -1,27 +1,24 @@
-function renderGrid(g){
+function renderGridRaw(g,value,offset){
 	var hue = function(order){return(order*goldenAngle)%1;}
+	var cs = cellSize;
 
 	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
 		var c = g.getCell(i,j);
 		if(!c.occupied)continue;
-		hsv(hue(c.order),1,0.6);
-		renderRect(i*cellSize+1,j*cellSize+1,(i+1)*cellSize-1,(j+1)*cellSize-1);
+		hsv(hue(c.order),1,value);
+		renderRect(i*cs+offset,j*cs+offset,(i+1)*cs-offset,(j+1)*cs-offset);
 		var right = g.getCell(i+1,j);
-		if(right&&right.occupied&&right.id === c.id)renderRect((i+1)*cellSize-2,j*cellSize+1,(i+1)*cellSize+2,(j+1)*cellSize-1);
+		if(right && right.occupied && right.id === c.id)
+			renderRect((i+1)*cs-offset-1,j*cs+offset,(i+1)*cs+offset+1,(j+1)*cs-offset);
 		var down = g.getCell(i,j+1);
-		if(down&&down.occupied&&down.id === c.id)renderRect(i*cellSize+1,(j+1)*cellSize-2,(i+1)*cellSize-1,(j+1)*cellSize+2);
+		if(down && down.occupied && down.id === c.id)
+			renderRect(i*cs+offset,(j+1)*cs-offset-1,(i+1)*cs-offset,(j+1)*cs+offset+1);
 	}
+}
 
-	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
-		var c = g.getCell(i,j);
-		if(!c.occupied)continue;
-		hsv(hue(c.order),1,1);
-		renderRect(i*cellSize+3,j*cellSize+3,(i+1)*cellSize-3,(j+1)*cellSize-3);
-		var right = g.getCell(i+1,j);
-		if(right&&right.occupied&&right.id === c.id)renderRect((i+1)*cellSize-4,j*cellSize+3,(i+1)*cellSize+4,(j+1)*cellSize-3);
-		var down = g.getCell(i,j+1);
-		if(down&&down.occupied&&down.id === c.id)renderRect(i*cellSize+3,(j+1)*cellSize-4,(i+1)*cellSize-3,(j+1)*cellSize+4);
-	}
+function renderGrid(g){
+	renderGridRaw(g,0.6,1);
+	renderGridRaw(g,1,3);
 }
 
 function render(){
@@ -53,10 +50,9 @@ function render(){
 	}
 
 	// render grid cells
-	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
-		rgb(0.02,0.02,0.02);
+	rgb(0.02,0.02,0.02);
+	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
 		renderRect(i*cellSize+2,j*cellSize+2,(i+1)*cellSize-2,(j+1)*cellSize-2);
-	}
 
 	// render board and process events and animations
 	renderGrid(board);
@@ -70,6 +66,8 @@ function render(){
 
 		gfx.save();
 		gfx.translate(-floatX,-floatY);
+		// gfx.translate(Math.round(-floatX),Math.round(-floatY)); // no anti-alias version
+		//   if you want some sort of transparency going on in the floating layer, you need to use this or there will be artifacts
 		renderGrid(floating);
 		gfx.restore();
 

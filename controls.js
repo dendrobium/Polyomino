@@ -10,8 +10,9 @@ function calcMouseGridVars(){
 	mouseGY = Math.floor(mouse.y/cellSize);
 }
 
-// TODO: consider locked cells
+// TODO: add locks
 var cancelMove = function(){
+	placeX = placeY = 0;
 	goalFloatX = goalFloatY = 0;
 	snapping = true;
 };
@@ -33,8 +34,10 @@ canvas.addEventListener("mousedown",function(e){
 	mouseDX = mouse.x;
 	mouseDY = mouse.y;
 	calcMouseGridVars();
-	floatX = goalFloatX = (downGX-mouseGX)*cellSize;
-	floatY = goalFloatY = (downGY-mouseGY)*cellSize;
+	floatX = (downGX-mouseGX)*cellSize;
+	floatY = (downGY-mouseGY)*cellSize;
+	goalFloatX = floatX+hoverOffset;
+	goalFloatY = floatY+hoverOffset;
 
 	render();
 });
@@ -43,8 +46,8 @@ canvas.addEventListener("mousemove",function(e){
 	mouse = getMousePos(e);
 	if(!dragging||snapping)return;
 	calcMouseGridVars();
-	goalFloatX = (downGX-mouseGX)*cellSize;
-	goalFloatY = (downGY-mouseGY)*cellSize;
+	goalFloatX = (downGX-mouseGX)*cellSize+hoverOffset;
+	goalFloatY = (downGY-mouseGY)*cellSize+hoverOffset;
 });
 
 canvas.addEventListener("mouseout",function(e){
@@ -58,8 +61,8 @@ canvas.addEventListener("mouseup",function(e){
 	if(!dragging||snapping)return;
 
 	calcMouseGridVars();
-	var offsetX = downGX-mouseGX;
-	var offsetY = downGY-mouseGY;
+	placeX = downGX-mouseGX;
+	placeY = downGY-mouseGY;
 
 	// check if floating is dropped on original position
 	if(downGX == mouseGX && downGY == mouseGY){cancelMove();return;}
@@ -67,20 +70,22 @@ canvas.addEventListener("mouseup",function(e){
 	// make sure pieces in floating arent dropped on existing pieces or locked cells
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
 	if((board.getCell(i,j).occupied || board.getCell(i,j).locked) &&
-	   (floating.getCell(i+offsetX,j+offsetY) &&
-	    floating.getCell(i+offsetX,j+offsetY).occupied)
+	   (floating.getCell(i+placeX,j+placeY) &&
+	    floating.getCell(i+placeX,j+placeY).occupied)
 	  ){cancelMove();return;}
 
 	// make sure pieces in floating aren't out of bounds in board
 	for(var i=0;i<floating.size;++i)for(var j=0;j<floating.size;++j)
 	if(floating.getCell(i,j).occupied){
-		var x = i-offsetX;
-		var y = j-offsetY;
+		var x = i-placeX;
+		var y = j-placeY;
 		if(x<0||y<0||x>=floating.size||y>=floating.size){cancelMove();return;}
 	}
 
 	// successful move, place new poly
-	movePiece(floating,board,floating.getCell(mouseDX/cellSize,mouseDY/cellSize).id,offsetX,offsetY);
+	// TODO: add locks
+	goalFloatX = (downGX-mouseGX)*cellSize;
+	goalFloatY = (downGY-mouseGY)*cellSize;
+	snapping = true;
 	placeNewPoly();
-	dragging = false;
 });

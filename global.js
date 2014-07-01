@@ -6,6 +6,7 @@ gridSize           = 8;
 cellSize           = 32;
 initPieceCount     = 10;
 animSpeed          = 150;
+hoverOffset        = 4;
 
 //==  CONSTANTS  =============================================================//
 
@@ -25,7 +26,7 @@ var goldenAngle = 0.381966;
 var board,floating;
 var blockId,score;
 var mouse,dragging,snapping,mouseDX,mouseDY,downGX,downGY,mouseGX,mouseGY;
-var goalFloatX,goalFloatY,floatX,floatY;
+var goalFloatX,goalFloatY,floatX,floatY,placeX,placeY;
 var currentlyAnimating,triggerDetectSquares;
 
 //==  CANVAS VARS  ===========================================================//

@@ -69,8 +69,9 @@ function render(){
 		if(snapping &&
 		   Math.abs(floatX-goalFloatX)<0.5 &&
 		   Math.abs(floatY-goalFloatY)<0.5){
-			movePiece(floating,board,floating.getCell(mouseDX/cellSize,mouseDY/cellSize).id,0,0);
+			movePiece(floating,board,floating.getCell(mouseDX/cellSize,mouseDY/cellSize).id,placeX,placeY);
 			dragging = snapping = false;
+			triggerDetectSquares = true;
 		}
 	}
 

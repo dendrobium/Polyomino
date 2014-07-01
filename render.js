@@ -1,10 +1,9 @@
-// XXX XXX XXX: fix to accomodate new grid structure
 function renderGrid(g){
-	var hue = function(order){return (order*goldenAngle)%1;}
+	var hue = function(order){return(order*goldenAngle)%1;}
 
 	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
 		var c = g.getCell(i,j);
-		if(!c)continue;
+		if(!c.occupied)continue;
 		hsv(hue(c.order),1,0.6);
 		renderRect(i*cellSize+1,j*cellSize+1,(i+1)*cellSize-1,(j+1)*cellSize-1);
 		var right = g.getCell(i+1,j);
@@ -15,7 +14,7 @@ function renderGrid(g){
 
 	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
 		var c = g.getCell(i,j);
-		if(!c)continue;
+		if(!c.occupied)continue;
 		hsv(hue(c.order),1,1);
 		renderRect(i*cellSize+3,j*cellSize+3,(i+1)*cellSize-3,(j+1)*cellSize-3);
 		var right = g.getCell(i+1,j);
@@ -25,16 +24,17 @@ function renderGrid(g){
 	}
 }
 
-// XXX XXX XXX: fix to accomodate new grid structure
+// TODO: consider animation and floating/snapping locks
 function render(){
 	var currentTick = new Date().getTime();
 	elapsed = currentTick-tick;
 	tick = currentTick;
-	var currentlyAnimating = false;
-	var triggerDetectSquares = false;
 	gfx.clearRect(0,0,ww,wh);
 	gfx.save();
 	gfx.translate(4,4);
+
+	var currentlyAnimating = false;
+	var triggerDetectSquares = false;
 
 	// render grid lines
 	rgb(0.2,0.2,0.2);

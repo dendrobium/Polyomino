@@ -47,10 +47,4 @@ function processEvents(){
 	setting active id order vars
 	unlocking cell
 
-locked	occupied
-false	false	free
-false	true	open
-true	false	locked
-true	true	locked
-
 */

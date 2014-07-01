@@ -29,6 +29,8 @@ canvas.addEventListener("mousedown",function(e){
 	var id = c.id;
 	var order = c.order;
 	floating = new grid(board.size);
+	for(var i=0;i<floating.size;++i)for(var j=0;j<floating.size;++j)
+		floating.setCell(i,j,new cell(i,j));
 	movePiece(board,floating,c.id,0,0);
 
 	mouseDX = mouse.x;

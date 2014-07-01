@@ -1,3 +1,4 @@
+// XXX XXX XXX: fix to accomodate new grid structure
 function recurse(visited,x,y,c,f){
 	var e = board.getCell(x,y);
 	if(!e || c.id !== e.id)return;
@@ -10,6 +11,7 @@ function recurse(visited,x,y,c,f){
 	recurse(visited,x+1,y  ,c,f);
 };
 
+// XXX XXX XXX: fix to accomodate new grid structure
 // TODO: consider animations
 function recalculateIds(){
 	var visited = new grid(board.size);
@@ -26,6 +28,7 @@ function recalculateIds(){
 	}
 }
 
+// XXX XXX XXX: fix to accomodate new grid structure
 // TODO: consider animations
 function recalculateOrder(){
 	if(!orderDecay)return;
@@ -35,16 +38,14 @@ function recalculateOrder(){
 
 		// determine real order of cell
 		var count = 0;
-		recurse(new grid(board.size,board.size),
-		        i,j,c,function(e){++count;});
+		recurse(new grid(board.size),i,j,c,function(e){++count;});
 
 		// if counted order doesnt match assigned order,reassign
 		if(count === c.order)continue;
-		recurse(new grid(board.size,board.size),
-		        i,j,c,function(e){e.order = count;});
+		recurse(new grid(board.size),i,j,c,function(e){e.order = count;});
 	}
 }
-
+// XXX XXX XXX: fix to accomodate new grid structure
 // TODO: detect endgame
 // TODO: consider animations
 function detectSquares(){
@@ -103,3 +104,5 @@ function detectSquares(){
 	recalculateOrder();
 	if(squareCount>0)detectSquares(); // DELETE: this wont be recursive anymore because of animation
 }
+
+function detectSquares(){}

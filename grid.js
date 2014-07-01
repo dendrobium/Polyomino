@@ -16,13 +16,14 @@ var grid = function(size){
 	grid.getCell = function(x,y){
 		x = Math.floor(x);
 		y = Math.floor(y);
-		if(x<0||y<0||x>=grid.size||y>=grid.size)return undefined;
+		if(x<0||y<0||x>=grid.size||y>=grid.size)return null;
 		return grid[x][y];
 	}
 
 	return grid;
 }
 
+// XXX XXX XXX: fix to accomodate new grid structure
 function movePiece(from,to,id,offsetX,offsetY){
 	for(var i=0;i<from.size;++i)for(var j=0;j<from.size;++j){
 		var c = from.getCell(i+offsetX,j+offsetY);

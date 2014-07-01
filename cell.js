@@ -1,10 +1,19 @@
 function newId(){return ++blockId;}
 
-var cell = function(id,order){ // TODO: rename to cell
+var cell = function(x,y){
+	this.x = x;
+	this.y = y;
+
 	this.locked   = false;
 	this.occupied = false;
-	this.id = id;
-	this.order = order;
+	this.id = 0;
+	this.order = 0;
+
+	this.quickSet = function(occupied,id,order){
+		this.occupied = occupied;
+		this.id = id;
+		this.order = order;
+	}
 }
 
 var event = function(cell,startTick,endTick,func,onEnd){
@@ -37,5 +46,11 @@ function processEvents(){
 	setting animation vars
 	setting active id order vars
 	unlocking cell
+
+locked	occupied
+false	false	free
+false	true	open
+true	false	locked
+true	true	locked
 
 */

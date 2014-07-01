@@ -16,6 +16,7 @@ function getMousePos(evt){
 	return{x:evt.clientX-rect.left,y:evt.clientY-rect.top};
 }
 
+// XXX XXX XXX: fix to accomodate new grid structure
 // TODO: consider locked cells
 canvas.addEventListener("mousedown",function(e){
 	mouse = getMousePos(e);
@@ -52,6 +53,7 @@ canvas.addEventListener("mouseout",function(e){
 	cancelMove();
 });
 
+// XXX XXX XXX: fix to accomodate new grid structure
 // TODO: consider locked cells
 canvas.addEventListener("mouseup",function(e){
 	mouse = getMousePos(e);

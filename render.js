@@ -1,3 +1,4 @@
+// XXX XXX XXX: fix to accomodate new grid structure
 function renderGrid(g){
 	var hue = function(order){return (order*goldenAngle)%1;}
 
@@ -24,6 +25,7 @@ function renderGrid(g){
 	}
 }
 
+// XXX XXX XXX: fix to accomodate new grid structure
 function render(){
 	var currentTick = new Date().getTime();
 	elapsed = currentTick-tick;

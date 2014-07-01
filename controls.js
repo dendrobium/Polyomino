@@ -1,7 +1,7 @@
-var cancelMove = function(){
-	goalFloatX = goalFloatY = 0;
-	snapping = true;
-};
+function getMousePos(evt){
+	var rect = canvas.getBoundingClientRect();
+	return{x:evt.clientX-rect.left,y:evt.clientY-rect.top};
+}
 
 function calcMouseGridVars(){
 	downGX  = Math.floor(mouseDX/cellSize);
@@ -10,10 +10,11 @@ function calcMouseGridVars(){
 	mouseGY = Math.floor(mouse.y/cellSize);
 }
 
-function getMousePos(evt){
-	var rect = canvas.getBoundingClientRect();
-	return{x:evt.clientX-rect.left,y:evt.clientY-rect.top};
-}
+// TODO: consider locked cells
+var cancelMove = function(){
+	goalFloatX = goalFloatY = 0;
+	snapping = true;
+};
 
 // TODO: lock cells being picked up
 canvas.addEventListener("mousedown",function(e){
@@ -51,7 +52,6 @@ canvas.addEventListener("mouseout",function(e){
 	cancelMove();
 });
 
-// XXX XXX XXX: fix to accomodate new grid structure
 // TODO: consider locked cells
 canvas.addEventListener("mouseup",function(e){
 	mouse = getMousePos(e);

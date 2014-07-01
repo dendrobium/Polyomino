@@ -34,22 +34,22 @@ function placeNewPoly(){
 // this function assumes no cell locks are set to true
 function squareToPoly(x,y,order){
 	var filled = new grid(order);
-	for(var i=0;i<order;++i)for(var j=0;j<order;++j)filled.setCell(i,j,false);
+	for(var i=0;i<filled.size;++i)for(var j=0;j<filled.size;++j)filled.setCell(i,j,false);
 
 	// clear everything in bounding box
 	for(var i=x;i<x+order;++i)for(var j=y;j<y+order;++j)
 		board.getCell(i,j).occupied = false;
 
 	// generate random polyomino
-	var c = board.getCell(x+rInt(order),y+rInt(order));
+	var i = x+rInt(order);
+	var j = y+rInt(order);
+	var c = board.getCell(i,j);
 	c.quickSet(true,newId(),order);
 	filled.setCell(i-x,j-y,true);
 	for(var count=1;count<order;++count)while(true){
-		var i = x+rInt(order);
-		var j = y+rInt(order);
+		i = x+rInt(order);
+		j = y+rInt(order);
 		var b = board.getCell(i,j);
-		var f = filled.getCell(i-x,j-y);
-		if(!b||f===null)continue;
 		if(b.occupied)continue;
 
 		var u = filled.getCell(i-x  ,j-y-1);

@@ -1,3 +1,4 @@
+// TODO: consider animation
 function renderGrid(g){
 	var hue = function(order){return(order*goldenAngle)%1;}
 

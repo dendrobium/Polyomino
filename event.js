@@ -1,18 +1,4 @@
-function newId(){return ++blockId;}
-
-var cell = function(){
-	this.locked   = false;
-	this.occupied = false;
-	this.id = 0;
-	this.order = 0;
-
-	this.quickSet = function(occupied,id,order){
-		this.occupied = occupied;
-		this.id = id;
-		this.order = order;
-	}
-}
-
+// XXX: what about cell-less events
 var event = function(c,startTick,endTick,func,onEnd){
 	this.c = c;
 	this.startTick = startTick;
@@ -39,17 +25,14 @@ function processEvents(){
 	}
 }
 
-function unlockEvt(cell,unlockTick){
+function animEvt(){
+	// TODO: currentlyAnimating = true;
 }
 
-/*
+function setCellEvt(setTick,cell,occupied,id,order){
+}
 
-	setting animation vars
-	setting active id order vars
-	unlocking cell
-
-	set the following to true when appropriate:
-	currentlyAnimating
-	triggerDetectSquares
-
-*/
+function unlockEvt(unlockTick,cell){
+	// TODO: unlock cell
+	// TODO: triggerDetectSquares = true;
+}

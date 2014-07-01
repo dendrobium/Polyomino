@@ -1,7 +1,6 @@
 function recurse(visited,x,y,c,f){
 	var e = board.getCell(x,y);
-	if(!e)return;
-	if(!e.occupied || e.locked)return;
+	if(!e || !e.occupied || e.locked)return;
 	if(c.id !== e.id)return;
 	if(visited.getCell(x,y))return;
 	visited.setCell(x,y,true);
@@ -47,7 +46,8 @@ function recalculateOrder(){
 }
 
 // TODO: detect endgame
-// dont consider animations here, they should be delegated by squareToPoly, recalcIds and recalcOrder
+// dont do animations here, they should be delegated by squareToPoly, recalcIds and recalcOrder
+// TODO: combo animation here (multiple squares on placement)
 function detectSquares(){
 
 	// initialize squares grid

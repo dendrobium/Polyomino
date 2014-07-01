@@ -26,8 +26,6 @@ function placeNewPoly(){
 		case 2:genDomino(entry.x-1,entry.y);break;
 		case 3:genDomino(entry.x+1,entry.y);break;
 	}
-
-	detectSquares();
 }
 
 // TODO: consider animations

@@ -7,12 +7,12 @@ function newGame(){
 	dragging = false;
 	snapping = false;
 	for(var i=0;i<initPieceCount;++i)placeNewPoly();
-	canvas.width  = ww = gridSize*cellSize+8;
-	canvas.height = wh = gridSize*cellSize+8;
+	canvas.width  = ww = gridSize*cellSize+paneThickness*2;
+	canvas.height = wh = gridSize*cellSize+paneThickness*2;
 }
 
 function gameOver(){
-	// TODO
+	// TODO: spin off animation event, bool for temp control override (click to continue?)
 }
 
 (function main(){

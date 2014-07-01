@@ -1,3 +1,18 @@
+function newId(){return ++blockId;}
+
+var cell = function(){
+	this.locked   = false;
+	this.occupied = false;
+	this.id = 0;
+	this.order = 0;
+
+	this.quickSet = function(occupied,id,order){
+		this.occupied = occupied;
+		this.id = id;
+		this.order = order;
+	}
+}
+
 var grid = function(size){
 	var grid = [];
 	grid.size = size;

@@ -2,9 +2,10 @@
 
 detectHighestOrder = true;
 orderDecay         = true;
+paneThickness      = 4;
 gridSize           = 8;
 cellSize           = 32;
-initPieceCount     = 10;
+initPieceCount     = 1;
 animSpeed          = 150;
 hoverOffset        = 4;
 

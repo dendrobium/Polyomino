@@ -32,7 +32,7 @@ function render(){
 	tick = currentTick;
 	gfx.clearRect(0,0,ww,wh);
 	gfx.save();
-	gfx.translate(4,4);
+	gfx.translate(paneThickness,paneThickness);
 
 	currentlyAnimating   = false;
 	triggerDetectSquares = false;

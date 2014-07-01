@@ -23,13 +23,12 @@ var grid = function(size){
 	return grid;
 }
 
-// XXX XXX XXX: fix to accomodate new grid structure
 function movePiece(from,to,id,offsetX,offsetY){
 	for(var i=0;i<from.size;++i)for(var j=0;j<from.size;++j){
 		var c = from.getCell(i+offsetX,j+offsetY);
 		if(!c)continue;
 		if(c.id !== id)continue;
 		to.setCell(i,j,c);
-		from.setCell(i+offsetX,j+offsetY,null);
+		from.setCell(i+offsetX,j+offsetY,new cell());
 	}
 }

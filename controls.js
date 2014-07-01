@@ -1,5 +1,4 @@
 var cancelMove = function(){
-	for(var i=0;i<floating.size;++i)for(var j=0;j<floating.size;++j)
 	goalFloatX = goalFloatY = 0;
 	snapping = true;
 };
@@ -16,21 +15,18 @@ function getMousePos(evt){
 	return{x:evt.clientX-rect.left,y:evt.clientY-rect.top};
 }
 
-// XXX XXX XXX: fix to accomodate new grid structure
-// TODO: consider locked cells
+// TODO: lock cells being picked up
 canvas.addEventListener("mousedown",function(e){
 	mouse = getMousePos(e);
 	if(dragging)return;
 	var c = board.getCell(mouse.x/cellSize,mouse.y/cellSize);
-	if(!c)return;
+	if(!c.occupied || c.locked)return;
 
 	// move selected piece onto floating layer,remove from board
 	dragging = true;
-	var id = c.id;
-	var order = c.order;
 	floating = new grid(board.size);
 	for(var i=0;i<floating.size;++i)for(var j=0;j<floating.size;++j)
-		floating.setCell(i,j,new cell(i,j));
+		floating.setCell(i,j,new cell());
 	movePiece(board,floating,c.id,0,0);
 
 	mouseDX = mouse.x;
@@ -68,14 +64,16 @@ canvas.addEventListener("mouseup",function(e){
 	// check if floating is dropped on original position
 	if(downGX == mouseGX && downGY == mouseGY){cancelMove();return;}
 
-	// make sure pieces in floating and board aren't overlapping
+	// make sure pieces in floating arent dropped on existing pieces or locked cells
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
-	if(board.getCell(i,j))
-	if(floating.getCell(i+offsetX,j+offsetY)){cancelMove();return;}
+	if((board.getCell(i,j).occupied || board.getCell(i,j).locked) &&
+	   (floating.getCell(i+offsetX,j+offsetY) &&
+	    floating.getCell(i+offsetX,j+offsetY).occupied)
+	  ){cancelMove();return;}
 
 	// make sure pieces in floating aren't out of bounds in board
 	for(var i=0;i<floating.size;++i)for(var j=0;j<floating.size;++j)
-	if(floating.getCell(i,j)){
+	if(floating.getCell(i,j).occupied){
 		var x = i-offsetX;
 		var y = j-offsetY;
 		if(x<0||y<0||x>=floating.size||y>=floating.size){cancelMove();return;}

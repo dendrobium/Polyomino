@@ -4,11 +4,12 @@ function placeNewPoly(){
 	var emptyLs = [];
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
 		var c = board.getCell(i,j);
-		if(c && !c.locked && !c.occupied)emptyLs.push(c);
+		if(c && !c.locked && !c.occupied)emptyLs.push({cell:c,x:i,y:j});
 	}if(emptyLs.length === 0)return;
 
 	// select cell to drop monomino
-	var c = emptyLs[rInt(emptyLs.length)];
+	var entry = emptyLs[rInt(emptyLs.length)];
+	var c = entry.cell;
 	c.quickSet(true,newId(),1);
 
 	// if (lazily) possible, generate domino
@@ -20,10 +21,10 @@ function placeNewPoly(){
 	}
 
 	switch(rInt(4)){
-		case 0:genDomino(c.x,c.y-1);break;
-		case 1:genDomino(c.x,c.y+1);break;
-		case 2:genDomino(c.x-1,c.y);break;
-		case 3:genDomino(c.x+1,c.y);break;
+		case 0:genDomino(entry.x,entry.y-1);break;
+		case 1:genDomino(entry.x,entry.y+1);break;
+		case 2:genDomino(entry.x-1,entry.y);break;
+		case 3:genDomino(entry.x+1,entry.y);break;
 	}
 
 	detectSquares();

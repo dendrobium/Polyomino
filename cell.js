@@ -1,9 +1,6 @@
 function newId(){return ++blockId;}
 
-var cell = function(x,y){
-	this.x = x;
-	this.y = y;
-
+var cell = function(){
 	this.locked   = false;
 	this.occupied = false;
 	this.id = 0;

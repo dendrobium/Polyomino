@@ -1,50 +1,46 @@
-function keyframe(n){return tick+n*animSpeed;}
+function renderGridRaw(g,value,offset){
+	var hue = function(order){return(order*goldenAngle)%1;}
+	var cs = cellSize;
 
-function notAnimating(x,y){
-	var c = anim.getCell(x,y);
-	c = c[c.length-1];
-	if(!c)return true;
-	if(c.inOutFade === IN || c.inOutFade === OUT)return false;
-	return true;
+	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
+		var c = g.getCell(i,j);
+		if(!c.occupied)continue;
+		hsv(hue(c.order),1,value);
+		renderRect(i*cs+offset,j*cs+offset,(i+1)*cs-offset,(j+1)*cs-offset);
+		var right = g.getCell(i+1,j);
+		if(right && right.occupied && right.id === c.id)
+			renderRect((i+1)*cs-offset-1,j*cs+offset,(i+1)*cs+offset+1,(j+1)*cs-offset);
+		var down = g.getCell(i,j+1);
+		if(down && down.occupied && down.id === c.id)
+			renderRect(i*cs+offset,(j+1)*cs-offset-1,(i+1)*cs-offset,(j+1)*cs+offset+1);
+	}
 }
 
 function renderGrid(g){
-	var hue = function(order){return (order*goldenAngle)%1;}
-
-	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
-		var c = g.getCell(i,j);
-		if(c && notAnimating(i,j)){
-			hsv(hue(c.order),1,0.6);
-			renderRect(i*cellSize+1,j*cellSize+1,(i+1)*cellSize-1,(j+1)*cellSize-1);
-			var right = g.getCell(i+1,j);
-			if(right&&right.id === c.id)renderRect((i+1)*cellSize-2,j*cellSize+1,(i+1)*cellSize+2,(j+1)*cellSize-1);
-			var down = g.getCell(i,j+1);
-			if(down&&down.id === c.id)renderRect(i*cellSize+1,(j+1)*cellSize-2,(i+1)*cellSize-1,(j+1)*cellSize+2);
-		}
-	}
-
-	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
-		var c = g.getCell(i,j);
-		if(c && notAnimating(i,j)){
-			hsv(hue(c.order),1,1);
-			renderRect(i*cellSize+3,j*cellSize+3,(i+1)*cellSize-3,(j+1)*cellSize-3);
-			var right = g.getCell(i+1,j);
-			if(right&&right.id === c.id)renderRect((i+1)*cellSize-4,j*cellSize+3,(i+1)*cellSize+4,(j+1)*cellSize-3);
-			var down = g.getCell(i,j+1);
-			if(down&&down.id === c.id)renderRect(i*cellSize+3,(j+1)*cellSize-4,(i+1)*cellSize-3,(j+1)*cellSize+4);
-		}
-	}
+	renderGridRaw(g,0.6,1);
+	renderGridRaw(g,1,3);
 }
 
 function render(){
+	requestAnimationFrame(render);
 	var currentTick = new Date().getTime();
 	elapsed = currentTick-tick;
 	tick = currentTick;
-	var currentlyAnimating = false;
-	var triggerDetectSquares = false;
+
+	// preprocess event list
+	processInactiveEvents();
+
+	// detect squares if flagged
+	if(triggerDetectSquares)detectSquares();
+	triggerDetectSquares = false;
+
+	// render everything if flagged
+	if(!currentlyAnimating)return;
+	currentlyAnimating = false;
+
 	gfx.clearRect(0,0,ww,wh);
 	gfx.save();
-	gfx.translate(4,4);
+	gfx.translate(paneThickness,paneThickness);
 
 	// render grid lines
 	rgb(0.2,0.2,0.2);
@@ -54,54 +50,13 @@ function render(){
 	}
 
 	// render grid cells
-	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
-		rgb(0.02,0.02,0.02);
+	rgb(0.02,0.02,0.02);
+	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
 		renderRect(i*cellSize+2,j*cellSize+2,(i+1)*cellSize-2,(j+1)*cellSize-2);
-	}
 
-	// render board and animations
+	// render board and process events and animations
 	renderGrid(board);
-	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
-		var cLs = anim.getCell(i,j);
-		var c = cLs[cLs.length-1];
-		if(!c)continue;
-		currentlyAnimating = true;
-		if(tick>c.end){
-			cLs.pop();
-			c = cLs[cLs.length-1];
-			if(!c){
-				active.setCell(i,j,null);
-				triggerDetectSquares = true;
-				continue;
-			}
-		}
-
-		switch(c.inOutFade){
-			case IN:
-				if(tick>c.begin){
-					rgb(1,1,1);
-					var interp = (tick-c.begin)/(c.end-c.begin);
-					switch(c.direction){
-						case UP:   renderRect(i*cellSize,(j+1)*cellSize-interp*cellSize,(i+1)*cellSize,(j+1)*cellSize);break;
-						case DOWN: renderRect(i*cellSize,j*cellSize,(i+1)*cellSize,j*cellSize+interp*cellSize);break;
-						case LEFT: renderRect((i+1)*cellSize-interp*cellSize,j*cellSize,(i+1)*cellSize,(j+1)*cellSize);break;
-						case RIGHT:renderRect(i*cellSize,j*cellSize,i*cellSize+interp*cellSize,(j+1)*cellSize);break;
-					}
-				}break;
-			case OUT:
-				if(tick<c.begin){
-					rgb(1,1,1);
-				}else{
-				}break;
-			case OUTFADE:
-				if(tick<c.begin)rgb(1,1,1);
-				else{
-					var interp = 1-(tick-c.begin)/(c.end-c.begin);
-					gfx.fillStyle = "rgba(255,255,255,"+interp+")";
-				}renderRect(i*cellSize,j*cellSize,(i+1)*cellSize,(j+1)*cellSize);
-				break;
-		}
-	}
+	processActiveEvents();
 
 	// render floating layer
 	if(dragging){
@@ -111,6 +66,8 @@ function render(){
 
 		gfx.save();
 		gfx.translate(-floatX,-floatY);
+		// gfx.translate(Math.round(-floatX),Math.round(-floatY)); // no anti-alias version
+		//   if you want some sort of transparency going on in the floating layer, you need to use this or there will be artifacts
 		renderGrid(floating);
 		gfx.restore();
 
@@ -118,11 +75,10 @@ function render(){
 		if(snapping &&
 		   Math.abs(floatX-goalFloatX)<0.5 &&
 		   Math.abs(floatY-goalFloatY)<0.5){
-			for(var i=0;i<floating.size;++i)for(var j=0;j<floating.size;++j)
-			if(floating.getCell(i,j))
-				active.setCell(i,j,null);
-			movePiece(floating,board,floating.getCell(mouseDX/cellSize,mouseDY/cellSize).id,0,0);
+			movePiece(floating,board,floating.getCell(mouseDX/cellSize,mouseDY/cellSize).id,placeX,placeY);
+			if(placeAfterSnap)placeNewPoly(); // TODO: move this back to controls, remove place after snap, ADD LOCKS TO PREVENT BUGS!!!
 			dragging = snapping = false;
+			triggerDetectSquares = true;
 		}
 	}
 

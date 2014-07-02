@@ -1,3 +1,18 @@
+function newId(){return ++blockId;}
+
+var cell = function(){
+	this.locked   = false;
+	this.occupied = false;
+	this.id = 0;
+	this.order = 0;
+
+	this.quickSet = function(occupied,id,order){
+		this.occupied = occupied;
+		this.id = id;
+		this.order = order;
+	}
+}
+
 var grid = function(size){
 	var grid = [];
 	grid.size = size;
@@ -16,33 +31,20 @@ var grid = function(size){
 	grid.getCell = function(x,y){
 		x = Math.floor(x);
 		y = Math.floor(y);
-		if(x<0||y<0||x>=grid.size||y>=grid.size)return undefined;
+		if(x<0||y<0||x>=grid.size||y>=grid.size)return null;
 		return grid[x][y];
 	}
 
 	return grid;
 }
 
-var polyCell = function(id,order){
-	this.id = id;
-	this.order = order;
-}
-
-var animCell = function(begin,end,inOutFade,direction){
-	this.begin = begin;
-	this.end = end;
-	this.inOutFade = inOutFade;
-	this.direction = direction;
-}
-
-function newId(){return ++blockId;}
-
-function getInactiveCell(x,y){
-	if(active.getCell(x,y))return undefined;
-	return board.getCell(x,y);
-}
-
-function setAnim(x,y,begin,end,IOF,direction){
-	active.setCell(x,y,true);
-	anim.getCell(x,y).push(new animCell(begin,end,IOF,direction));
+// assumes piece isnt locked
+function movePiece(from,to,id,offsetX,offsetY){
+	for(var i=0;i<from.size;++i)for(var j=0;j<from.size;++j){
+		var c = from.getCell(i+offsetX,j+offsetY);
+		if(!c || !c.occupied)continue;
+		if(c.id !== id)continue;
+		to.getCell(i,j).quickSet(true,c.id,c.order);
+		from.getCell(i+offsetX,j+offsetY).occupied = false;
+	}
 }

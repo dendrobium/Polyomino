@@ -2,9 +2,13 @@
 
 detectHighestOrder = true;
 orderDecay         = true;
+paneThickness      = 4;
 gridSize           = 8;
 cellSize           = 32;
+initPieceCount     = 4;
 animSpeed          = 150;
+dragSpeed          = 0.3;
+hoverOffset        = 4;
 
 //==  CONSTANTS  =============================================================//
 
@@ -21,10 +25,11 @@ var goldenAngle = 0.381966;
 
 //==  GLOBAL VARS  ===========================================================//
 
-var board,floating,active,anim;
+var board,floating;
 var blockId,score;
 var mouse,dragging,snapping,mouseDX,mouseDY,downGX,downGY,mouseGX,mouseGY;
-var goalFloatX,goalFloatY,floatX,floatY;
+var goalFloatX,goalFloatY,floatX,floatY,placeX,placeY;
+var currentlyAnimating,triggerDetectSquares,placeAfterSnap;
 
 //==  CANVAS VARS  ===========================================================//
 

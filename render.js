@@ -84,7 +84,6 @@ function render(){
 
 	gfx.restore();
 
-	if(particleSystem) particleSystem.tick();
 	if(triggerDetectSquares)detectSquares();
 	if(currentlyAnimating)requestAnimationFrame(render);
 }

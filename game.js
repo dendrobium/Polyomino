@@ -9,9 +9,8 @@ function newGame(){
 	currentlyAnimating = true;
 	for(var i=0;i<initPieceCount;++i)placeNewPoly();
 
-	particleSystem = new ParticleSystem(document.getElementById("particles"));
-	particleSystem.canvas.width = canvas.width  = ww = gridSize*cellSize+paneThickness*2;
-	particleSystem.canvas.width = canvas.height = wh = gridSize*cellSize+paneThickness*2;
+	canvas.width  = ww = gridSize*cellSize+paneThickness*2;
+	canvas.height = wh = gridSize*cellSize+paneThickness*2;
 }
 
 function gameOver(){

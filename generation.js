@@ -1,6 +1,6 @@
 // TODO: consider animations
+// Used to generate a monomino or domino only
 function placeNewPoly(){
-    // Used to generate a monomino or domino only
 	// generate list of empty cells, verify a cell can be placed
 	var emptyLs = [];
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){

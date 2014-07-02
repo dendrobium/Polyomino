@@ -1,17 +1,17 @@
 var event = function(startTick,endTick,func,onEnd){
-	this.startTick = startTick;
-	this.endTick = endTick;
+	this.startTick = tick+startTick;
+	this.endTick = tick+endTick;
 	this.func  = func;
 	this.onEnd = onEnd;
-	inactiveEvttLs.push(this);
+	inactiveEvtLs.push(this);
 }
 
 var inactiveEvtLs = [];
 var activeEvtLs = [];
 function processInactiveEvents(){
-	// TODO: migrateLs = inactiveEvtLs.filter(startTick <= tick)
-	// TODO: inactiveEvtLs = inactiveEvtLs.filter(startTick > tick)
-	// TODO: activeEvtLs.concat(migrateLs)
+	var migrateLs = inactiveEvtLs.filter(function(e){return e.startTick <= tick;});
+	inactiveEvtLs = inactiveEvtLs.filter(function(e){return e.startTick > tick;});
+	activeEvtLs = activeEvtLs.concat(migrateLs);
 	if(activeEvtLs.length > 0)currentlyAnimating = true;
 }
 
@@ -26,10 +26,11 @@ function processActiveEvents(){
 	// process events
 	for(evt in activeEvtLs){
 		var e = activeEvtLs[evt];
-		if(e.startTick > tick)continue;
 		e.func(e.startTick,e.endTick);
 	}
 }
+
+//==  EVENT TYPES  ===========================================================//
 
 function animEvt(){
 	// TODO: currentlyAnimating = true;

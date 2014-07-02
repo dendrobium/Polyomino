@@ -31,8 +31,10 @@ function render(){
 	processInactiveEvents();
 
 	// detect squares if flagged
-	if(triggerDetectSquares)detectSquares();
-	triggerDetectSquares = false;
+	if(triggerDetectSquares){
+		detectSquares();
+		currentlyAnimating = true;
+	}triggerDetectSquares = false;
 
 	// render everything if flagged
 	if(!currentlyAnimating)return;

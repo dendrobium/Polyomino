@@ -7,6 +7,7 @@ function newGame(){
 	dragging = false;
 	snapping = false;
 	currentlyAnimating = true;
+	triggerDetectSquares = true;
 	for(var i=0;i<initPieceCount;++i)placeNewPoly();
 	canvas.width  = ww = gridSize*cellSize+paneThickness*2;
 	canvas.height = wh = gridSize*cellSize+paneThickness*2;

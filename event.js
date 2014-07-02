@@ -26,11 +26,25 @@ function processActiveEvents(){
 	// process events
 	for(evt in activeEvtLs){
 		var e = activeEvtLs[evt];
-		e.func(e.startTick,e.endTick);
+		e.func((tick-e.startTick)/(e.endTick-e.startTick));
 	}
 }
 
 //==  EVENT TYPES  ===========================================================//
+
+function orderChangeEvt(cell,oldOrder,newOrder,startTick,endTick){
+	cell.locked = true;
+	new event(startTick,endTick,function(interp){
+		cell.order = (newOrder-oldOrder)*interp+oldOrder;
+	},function(){cell.order = newOrder;});
+}
+
+function unlockEvt(cell,unlockTick){
+	new event(unlockTick,unlockTick,null,function(){
+		cell.locked = false;
+		triggerDetectSquares = true;
+	});
+}
 
 function animEvt(){
 	// TODO: currentlyAnimating = true;
@@ -39,7 +53,3 @@ function animEvt(){
 function setCellEvt(setTick,cell,occupied,id,order){
 }
 
-function unlockEvt(unlockTick,cell){
-	// TODO: unlock cell
-	// TODO: triggerDetectSquares = true;
-}

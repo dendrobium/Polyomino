@@ -83,7 +83,4 @@ function render(){
 	}
 
 	gfx.restore();
-
-	if(triggerDetectSquares)detectSquares();
-	if(currentlyAnimating)requestAnimationFrame(render);
 }

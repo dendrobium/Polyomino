@@ -10,8 +10,10 @@ function newGame(){
 	snapping = false;
 	for(var i=0;i<4;++i)placeNewPoly();
 
-	canvas.width  = ww = gridSize*cellSize+8;
-	canvas.height = wh = gridSize*cellSize+8;
+	particleSystem = new ParticleSystem(document.getElementById("particles"));
+
+	particleSystem.canvas.width  = canvas.width  = ww = gridSize*cellSize+8;
+	particleSystem.canvas.height = canvas.height = wh = gridSize*cellSize+8;
 }
 
 (function main(){

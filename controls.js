@@ -1,6 +1,6 @@
 function getMousePos(evt){
 	var rect = canvas.getBoundingClientRect();
-	return{x:evt.clientX-rect.left,y:evt.clientY-rect.top};
+	return{x:evt.clientX-rect.left-paneThickness,y:evt.clientY-rect.top-paneThickness};
 }
 
 function calcMouseGridVars(){

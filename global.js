@@ -21,7 +21,7 @@ var IN      = 0;
 var OUT     = 1;
 var OUTFADE = 2;
 
-var goldenAngle = 0.381966;
+//var goldenAngle = 0.381966;
 
 //==  GLOBAL VARS  ===========================================================//
 

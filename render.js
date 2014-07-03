@@ -1,11 +1,28 @@
 function renderGridRaw(g,value,offset){
-	var hue = function(order){return(order*goldenAngle)%1;}
+	//var hue = function(order){return(order*goldenAngle)%1;}
+
+
 	var cs = cellSize;
+    var goodColors = [
+        "#000000", //Never used
+        "#8B8C7A", //Stone  (monomino)
+        "#8B4513", //Bark (domino)
+        "#AB9371", //Taupe (tromino)
+        "#CC9966",  //Camel (tetromino)
+        "#C3C253",  //Olive (pentomino)
+        "#579244",  //Moss (hexomino)
+        "#708090", //Slate (octomino)
+        "#7F7B9C", //Heather (nonomino)
+        "#AD79AB",//Mauve (decomino)
+        "#9932CC",//This would be a different texture, or multi color (undecomino)
+        "#9932CC"//This would be a different texture, or multi color  (dodecomino)
+    ];
 
 	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
 		var c = g.getCell(i,j);
 		if(!c.occupied)continue;
-		hsv(hue(c.order),1,value);
+		//hsv(hue(c.order),1,value);
+        gfx.fillStyle=goodColors[c.order];
 		renderRect(i*cs+offset,j*cs+offset,(i+1)*cs-offset,(j+1)*cs-offset);
 		var right = g.getCell(i+1,j);
 		if(right && right.occupied && right.id === c.id)

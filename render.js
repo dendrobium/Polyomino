@@ -7,13 +7,13 @@ function renderGridRaw(g,value,offset){
         "#000000", //Never used
         "#8B8C7A", //Stone  (monomino)
         "#8B4513", //Bark (domino)
-        "#AB9371", //Taupe (tromino)
-        "#CC9966",  //Camel (tetromino)
-        "#C3C253",  //Olive (pentomino)
-        "#579244",  //Moss (hexomino)
-        "#708090", //Slate (octomino)
-        "#7F7B9C", //Heather (nonomino)
-        "#AD79AB",//Mauve (decomino)
+        "#FFBD4F",  //Orange (tromino)
+        "#B2B14C",  //Olive (tetromino)
+        "#579244",  //Moss (pentomino)
+        "#708090", //Slate (hexomino)
+        "#BE0028", //DarkRed (octomino)
+        "#AD79AB",//Mauve(nonomino)
+        "#9932CC",//This would be a different texture, or multi color (decomino)
         "#9932CC",//This would be a different texture, or multi color (undecomino)
         "#9932CC"//This would be a different texture, or multi color  (dodecomino)
     ];
@@ -63,6 +63,9 @@ function render(){
 
 	// render grid lines
 	rgb(0.2,0.2,0.2);
+
+    //renderRect(-2,1,board.size*cellSize+2,board.size*cellSize-1)
+    //Why does the above line cause not just a board outline to be drawn, but all internal grid boxes?
 	for(var i=0;i<=board.size;++i)for(var j=0;j<=board.size;++j){
 		renderRect(i*cellSize-4,j*cellSize-1,i*cellSize+4,j*cellSize+1);
 		renderRect(i*cellSize-1,j*cellSize-4,i*cellSize+1,j*cellSize+4);

@@ -46,7 +46,7 @@ function render(){
 
 	// render grid lines
 	rgb(0.2,0.2,0.2);
-	for(var i=1;i<board.size;++i)for(var j=1;j<board.size;++j){
+	for(var i=0;i<=board.size;++i)for(var j=0;j<=board.size;++j){
 		renderRect(i*cellSize-4,j*cellSize-1,i*cellSize+4,j*cellSize+1);
 		renderRect(i*cellSize-1,j*cellSize-4,i*cellSize+1,j*cellSize+4);
 	}

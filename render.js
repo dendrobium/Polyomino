@@ -79,8 +79,6 @@ function render(){
 
 	// render board and process events and animations
 	renderGrid(board);
-
-    gfx.gfx_blit("resources\FlipIcon.png", 1.0, 0.0)
     processActiveEvents();
 
 	// render floating layer
@@ -109,3 +107,6 @@ function render(){
 
 	gfx.restore();
 }
+
+
+showFlipPolyominoIcon()

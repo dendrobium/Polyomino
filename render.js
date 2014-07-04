@@ -7,15 +7,15 @@ function renderGridRaw(g,value,offset){
         "#000000", //Never used
         "#8B8C7A", //Stone  (monomino)
         "#8B4513", //Bark (domino)
-        "#FFBD4F",  //Orange (tromino)
-        "#B2B14C",  //Olive (tetromino)
-        "#579244",  //Moss (pentomino)
+        "#FFBD4F", //Orange (tromino)
+        "#B2B14C", //Olive (tetromino)
+        "#579244", //Moss (pentomino)
         "#708090", //Slate (hexomino)
         "#BE0028", //DarkRed (octomino)
-        "#AD79AB",//Mauve(nonomino)
-        "#9932CC",//This would be a different texture, or multi color (decomino)
-        "#9932CC",//This would be a different texture, or multi color (undecomino)
-        "#9932CC"//This would be a different texture, or multi color  (dodecomino)
+        "#AD79AB", //Mauve(nonomino)
+        "#9932CC", //Purple (decomino)
+        "#E3A6EC", //Iilac (undecomino)
+        "#CCCCCC"  //Light Gray  (dodecomino)
     ];
 
 	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
@@ -76,9 +76,12 @@ function render(){
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
 		renderRect(i*cellSize+2,j*cellSize+2,(i+1)*cellSize-2,(j+1)*cellSize-2);
 
+
 	// render board and process events and animations
 	renderGrid(board);
-	processActiveEvents();
+
+    gfx.gfx_blit("resources\FlipIcon.png", 1.0, 0.0)
+    processActiveEvents();
 
 	// render floating layer
 	if(dragging){

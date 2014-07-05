@@ -18,7 +18,7 @@ function processInactiveEvents(){
 function processActiveEvents(){
 	// execute all onEnd functions
 	var endLs = activeEvtLs.filter(function(e){return e.endTick <= tick;});
-	for(e in endLs)endLs[e].onEnd();
+	for(e in endLs)if(endLs[e].onEnd)endLs[e].onEnd();
 
 	// remove all expired events
 	activeEvtLs = activeEvtLs.filter(function(e){return e.endTick > tick;});
@@ -26,6 +26,7 @@ function processActiveEvents(){
 	// process events
 	for(evt in activeEvtLs){
 		var e = activeEvtLs[evt];
+		if(!e.func)continue;
 		e.func((tick-e.startTick)/(e.endTick-e.startTick));
 	}
 }
@@ -36,6 +37,7 @@ function orderChangeEvt(cell,oldOrder,newOrder,startTick,endTick){
 	cell.locked = true;
 	new event(startTick,endTick,function(interp){
 		cell.order = (newOrder-oldOrder)*interp+oldOrder;
+		// TODO: do rgb interpolation, not hsv
 	},function(){cell.order = newOrder;});
 }
 
@@ -46,10 +48,24 @@ function unlockEvt(cell,unlockTick){
 	});
 }
 
-function animEvt(){
-	// TODO: currentlyAnimating = true;
+// TODO: what about adjacent surrounds?
+function beginSurroundEvt(x,y,order,startTick,endTick){
+	new event(startTick,endTick,function(interp){
+		var len = interp*interp*interp*order*cellSize+6;
+		rgb(1,1,1);
+		renderRect(x*cellSize-3,(y+order)*cellSize+3-len,x*cellSize-1,(y+order)*cellSize+3); // left
+		renderRect(x*cellSize-3,y*cellSize-3,x*cellSize-3+len,y*cellSize-1); // top
+		renderRect((x+order)*cellSize+3,y*cellSize-3,(x+order)*cellSize+1,y*cellSize-3+len); // right
+		renderRect((x+order)*cellSize+3-len,(y+order)*cellSize+3,(x+order)*cellSize+3,(y+order)*cellSize+1); // bottom
+	},null);
 }
 
-function setCellEvt(setTick,cell,occupied,id,order){
+function surroundEvt(x,y,order,startTick,endTick){
+	new event(startTick,endTick,function(interp){
+		rgb(1,1,1);
+		renderRect(x*cellSize-3,y*cellSize-3,x*cellSize-1,(y+order)*cellSize+3);
+		renderRect(x*cellSize-3,y*cellSize-3,(x+order)*cellSize+3,y*cellSize-1);
+		renderRect((x+order)*cellSize+3,y*cellSize-3,(x+order)*cellSize+1,(y+order)*cellSize+3);
+		renderRect(x*cellSize-3,(y+order)*cellSize+3,(x+order)*cellSize+3,(y+order)*cellSize+1);
+	},null);
 }
-

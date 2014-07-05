@@ -79,6 +79,14 @@ function squareToPoly(x,y,order){
 		recurse(x+1,y  );
 	};recurse(0,0);
 
+	var recurseFlag = false;
 	for(var i=0;i<holes.size;++i)for(var j=0;j<holes.size;++j)
-		if(!holes.getCell(i,j))squareToPoly(x,y,order);
+		if(!holes.getCell(i,j)){
+			squareToPoly(x,y,order);
+			recurseFlag = true;
+		}
+	if(recurseFlag)return;
+
+	beginSurroundEvt(x,y,order,0,order*100);
+	surroundEvt(x,y,order,order*100,order*100+1000);
 }

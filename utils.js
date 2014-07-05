@@ -1,4 +1,4 @@
-function rfloat(x){return Math.random()*x;}
+function rFloat(x){return Math.random()*x;}
 function rInt(x){return Math.floor(Math.random()*x);}
 
 function rgb(r,g,b){gfx.fillStyle="rgb("+Math.floor(255*r)+","+Math.floor(255*g)+","+Math.floor(255*b)+")";}

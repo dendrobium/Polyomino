@@ -13,7 +13,8 @@ function recurse(visited,x,y,c,f){
 
 function recalculateIds(){
 	var visited = new grid(board.size);
-	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
+	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
+	if(!visited.getCell(i,j)){
 		var c = board.getCell(i,j);
 		if(!c.occupied || c.locked)continue;
 		recurse(visited,i,j,c);

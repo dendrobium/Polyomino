@@ -4,25 +4,33 @@ detectHighestOrder = true;
 orderDecay         = true;
 paneThickness      = 4;
 gridSize           = 8;
-cellSize           = 48;
+cellSize           = 32;
 initPieceCount     = 4;
-animSpeed          = 150;
 dragSpeed          = 0.3;
 hoverOffset        = 4;
 keyframeSpeed      = 150;
 
-//==  CONSTANTS  =============================================================//
+//==  POLYOMINO COLORS  ======================================================//
 
-var UP      = 0;
-var DOWN    = 1;
-var LEFT    = 2;
-var RIGHT   = 3;
+var polyColor = [
+	"#000000", // Never used
+	"#8B8C7A", // Stone  (monomino)
+	"#8B4513", // Bark (domino)
+	"#FFBD4F", // Orange (tromino)
+	"#B2B14C", // Olive (tetromino)
+	"#579244", // Moss (pentomino)
+	"#708090", // Slate (hexomino)
+	           // TODO: (heptomino)
+	"#BE0028", // DarkRed (octomino)
+	"#AD79AB", // Mauve(nonomino)
+	"#9932CC", // Purple (decomino)
+	"#E3A6EC", // Iilac (undecomino)
+	"#CCCCCC", // Light Gray  (dodecomino)
+];
 
-var IN      = 0;
-var OUT     = 1;
-var OUTFADE = 2;
-
-//var goldenAngle = 0.381966;
+// var goldenAngle = 0.381966;
+// var hue = function(order){return(order*goldenAngle)%1;}
+// hsv(hue(c.order),1,value);
 
 //==  GLOBAL VARS  ===========================================================//
 

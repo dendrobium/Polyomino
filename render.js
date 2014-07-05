@@ -78,7 +78,7 @@ function render(){
 		   Math.abs(floatX-goalFloatX)<0.5 &&
 		   Math.abs(floatY-goalFloatY)<0.5){
 			movePiece(floating,board,floating.getCell(mouseDX/cellSize,mouseDY/cellSize).id,placeX,placeY);
-			if(placeAfterSnap)placeNewPoly(); // TODO: move this back to controls, remove place after snap, ADD LOCKS TO PREVENT BUGS!!!
+			deselectGrid(board);
 			dragging = snapping = false;
 			triggerDetectSquares = true;
 		}

@@ -2,6 +2,7 @@ function newId(){return ++blockId;}
 
 var cell = function(){
 	this.locked   = false;
+	this.selected = false;
 	this.occupied = false;
 	this.id = 0;
 	this.order = 0;
@@ -38,7 +39,7 @@ var grid = function(size){
 	return grid;
 }
 
-// assumes piece isnt locked
+// ignores locks
 function movePiece(from,to,id,offsetX,offsetY){
 	for(var i=0;i<from.size;++i)for(var j=0;j<from.size;++j){
 		var c = from.getCell(i+offsetX,j+offsetY);
@@ -46,5 +47,12 @@ function movePiece(from,to,id,offsetX,offsetY){
 		if(c.id !== id)continue;
 		to.getCell(i,j).quickSet(true,c.id,c.order);
 		from.getCell(i+offsetX,j+offsetY).occupied = false;
+	}
+}
+
+function deselectGrid(g){
+	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
+		var c = g.getCell(i,j);
+		if(c.selected)c.selected = c.locked = false;
 	}
 }

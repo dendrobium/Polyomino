@@ -10,23 +10,25 @@ function calcMouseGridVars(){
 	mouseGY = Math.floor(mouse.y/cellSize);
 }
 
-// TODO: unlock after snapping
 var cancelMove = function(){
 	placeX = placeY = 0;
 	goalFloatX = goalFloatY = 0;
 	snapping = true;
-	placeAfterSnap = false;
 };
 
-// TODO: lock cells being picked up
 canvas.addEventListener("mousedown",function(e){
 	mouse = getMousePos(e);
 	if(dragging)return;
 	var c = board.getCell(mouse.x/cellSize,mouse.y/cellSize);
 	if(!c || !c.occupied || c.locked)return;
 
+	// set lock and selected flags for selected cells
+	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
+		var b = board.getCell(i,j);
+		if(b.id === c.id)b.locked = b.selected = true;
+	}
+
 	// move selected piece onto floating layer,remove from board
-	dragging = true;
 	floating = new grid(board.size);
 	for(var i=0;i<floating.size;++i)for(var j=0;j<floating.size;++j)
 		floating.setCell(i,j,new cell());
@@ -40,6 +42,7 @@ canvas.addEventListener("mousedown",function(e){
 	goalFloatX = floatX+hoverOffset;
 	goalFloatY = floatY+hoverOffset;
 
+	dragging = true;
 	currentlyAnimating = true;
 });
 
@@ -68,26 +71,49 @@ canvas.addEventListener("mouseup",function(e){
 	// check if floating is dropped on original position
 	if(downGX == mouseGX && downGY == mouseGY){cancelMove();return;}
 
-	// make sure pieces in floating arent dropped on existing pieces or locked cells
-	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
-	if((board.getCell(i,j).occupied || board.getCell(i,j).locked) &&
-	   (floating.getCell(i+placeX,j+placeY) &&
-	    floating.getCell(i+placeX,j+placeY).occupied)
-	  ){cancelMove();return;}
+	// make sure pieces in floating arent dropped on existing pieces or locked (and unselected) cells
+	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
+		var b = board.getCell(i,j);
+		var f = floating.getCell(i+placeX,j+placeY);
+		if((b.occupied || (b.locked && !b.selected)) && (f && f.occupied)){cancelMove();return;}
+	}
 
 	// make sure pieces in floating aren't out of bounds in board
 	for(var i=0;i<floating.size;++i)for(var j=0;j<floating.size;++j)
 	if(floating.getCell(i,j).occupied){
-		var x = i-placeX;
-		var y = j-placeY;
+		var x = i-placeX,y = j-placeY;
 		if(x<0||y<0||x>=floating.size||y>=floating.size){cancelMove();return;}
 	}
 
-	// successful move, place new poly
-	// TODO: add locks
-	// TODO: unlock original locked cells
+	// successful move, place new poly -----------------------------
+
+	// unlock and deselect original cells, add new locks
+	deselectGrid(board);
+	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
+		var b = board.getCell(i,j);
+		var f = floating.getCell(i+placeX,j+placeY);
+		if(f && f.occupied)b.locked = b.selected = true;
+	}
+
 	goalFloatX = (downGX-mouseGX)*cellSize;
 	goalFloatY = (downGY-mouseGY)*cellSize;
 	snapping = true;
-	placeAfterSnap = true; // TODO: replace with placeNewPoly() AFTER THE APPRORIATE LOCKS ARE IN PLACE
+	placeNewPoly();
 });
+
+/*
+
+on place
+x	set lock and selected flags true
+
+on successful release
+x	set all selected flags false
+x	set original locks false
+	set new locks true
+	[ render ] after snap, set new locks false
+
+on unsuccessful release
+x	set all selected flags false
+x	[ render ] after snap, set locks false
+
+*/

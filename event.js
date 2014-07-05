@@ -53,10 +53,10 @@ function beginSurroundEvt(x,y,order,startTick,endTick){
 	new event(startTick,endTick,function(interp){
 		var len = interp*interp*interp*order*cellSize+6;
 		rgb(1,1,1);
-		renderRect(x*cellSize-3,(y+order)*cellSize+3-len,x*cellSize-1,(y+order)*cellSize+3); // left
-		renderRect(x*cellSize-3,y*cellSize-3,x*cellSize-3+len,y*cellSize-1); // top
-		renderRect((x+order)*cellSize+3,y*cellSize-3,(x+order)*cellSize+1,y*cellSize-3+len); // right
-		renderRect((x+order)*cellSize+3-len,(y+order)*cellSize+3,(x+order)*cellSize+3,(y+order)*cellSize+1); // bottom
+		renderRect(x*cellSize-3,(y+order)*cellSize+3-len,x*cellSize-1,(y+order)*cellSize+3);
+		renderRect(x*cellSize-3,y*cellSize-3,x*cellSize-3+len,y*cellSize-1);
+		renderRect((x+order)*cellSize+3,y*cellSize-3,(x+order)*cellSize+1,y*cellSize-3+len);
+		renderRect((x+order)*cellSize+3-len,(y+order)*cellSize+3,(x+order)*cellSize+3,(y+order)*cellSize+1);
 	},null);
 }
 

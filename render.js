@@ -1,11 +1,28 @@
 function renderGridRaw(g,value,offset){
-	var hue = function(order){return(order*goldenAngle)%1;}
+	//var hue = function(order){return(order*goldenAngle)%1;}
+
+
 	var cs = cellSize;
+    var goodColors = [
+        "#000000", //Never used
+        "#8B8C7A", //Stone  (monomino)
+        "#8B4513", //Bark (domino)
+        "#FFBD4F", //Orange (tromino)
+        "#B2B14C", //Olive (tetromino)
+        "#579244", //Moss (pentomino)
+        "#708090", //Slate (hexomino)
+        "#BE0028", //DarkRed (octomino)
+        "#AD79AB", //Mauve(nonomino)
+        "#9932CC", //Purple (decomino)
+        "#E3A6EC", //Iilac (undecomino)
+        "#CCCCCC"  //Light Gray  (dodecomino)
+    ];
 
 	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
 		var c = g.getCell(i,j);
 		if(!c.occupied)continue;
-		hsv(hue(c.order),1,value);
+		//hsv(hue(c.order),1,value);
+        gfx.fillStyle=goodColors[c.order];
 		renderRect(i*cs+offset,j*cs+offset,(i+1)*cs-offset,(j+1)*cs-offset);
 		var right = g.getCell(i+1,j);
 		if(right && right.occupied && right.id === c.id)
@@ -46,7 +63,10 @@ function render(){
 
 	// render grid lines
 	rgb(0.2,0.2,0.2);
-	for(var i=1;i<board.size;++i)for(var j=1;j<board.size;++j){
+
+    //renderRect(-2,1,board.size*cellSize+2,board.size*cellSize-1)
+    //Why does the above line cause not just a board outline to be drawn, but all internal grid boxes?
+	for(var i=0;i<=board.size;++i)for(var j=0;j<=board.size;++j){
 		renderRect(i*cellSize-4,j*cellSize-1,i*cellSize+4,j*cellSize+1);
 		renderRect(i*cellSize-1,j*cellSize-4,i*cellSize+1,j*cellSize+4);
 	}
@@ -56,9 +76,10 @@ function render(){
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
 		renderRect(i*cellSize+2,j*cellSize+2,(i+1)*cellSize-2,(j+1)*cellSize-2);
 
+
 	// render board and process events and animations
 	renderGrid(board);
-	processActiveEvents();
+    processActiveEvents();
 
 	// render floating layer
 	if(dragging){
@@ -86,3 +107,6 @@ function render(){
 
 	gfx.restore();
 }
+
+
+showFlipPolyominoIcon()

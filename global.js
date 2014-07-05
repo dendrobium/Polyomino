@@ -4,7 +4,7 @@ detectHighestOrder = true;
 orderDecay         = true;
 paneThickness      = 4;
 gridSize           = 8;
-cellSize           = 32;
+cellSize           = 48;
 initPieceCount     = 4;
 animSpeed          = 150;
 dragSpeed          = 0.3;
@@ -22,7 +22,7 @@ var IN      = 0;
 var OUT     = 1;
 var OUTFADE = 2;
 
-var goldenAngle = 0.381966;
+//var goldenAngle = 0.381966;
 
 //==  GLOBAL VARS  ===========================================================//
 

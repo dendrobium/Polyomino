@@ -81,6 +81,7 @@ function render(){
 
 	// render board and process events and animations
 	renderGrid(board);
+	tickParticles();
 	processActiveEvents();
 
 	// render floating layer

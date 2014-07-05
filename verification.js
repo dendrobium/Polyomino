@@ -40,11 +40,8 @@ function recalculateOrder(){
 		// if counted order doesnt match assigned order,reassign
 		if(count === c.order)continue;
 		recurse(new grid(board.size),i,j,c,function(e){
-//			e.order = count; // DELETE
-			// TODO: event x y oldOrder newOrder beginTick endTick
-			// TODO: event x y unlock tick
-			orderChangeEvt(e,e.order,count,0,1000);
-			unlockEvt(e,1000);
+			orderChangeEvt(e,e.order,count,keyframe(0),keyframe(1));
+			unlockEvt(e,keyframe(1));
 		});
 	}
 }

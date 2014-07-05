@@ -59,7 +59,6 @@ canvas.addEventListener("mouseout",function(e){
 	cancelMove();
 });
 
-// TODO: consider locked cells
 canvas.addEventListener("mouseup",function(e){
 	mouse = getMousePos(e);
 	if(!dragging||snapping)return;
@@ -100,20 +99,3 @@ canvas.addEventListener("mouseup",function(e){
 	snapping = true;
 	placeNewPoly();
 });
-
-/*
-
-on place
-x	set lock and selected flags true
-
-on successful release
-x	set all selected flags false
-x	set original locks false
-	set new locks true
-	[ render ] after snap, set new locks false
-
-on unsuccessful release
-x	set all selected flags false
-x	[ render ] after snap, set locks false
-
-*/

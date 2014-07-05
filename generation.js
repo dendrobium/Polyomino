@@ -1,4 +1,3 @@
-// TODO: consider animations
 // Used to generate a monomino or domino only
 function placeNewPoly(){
 	// generate list of empty cells, verify a cell can be placed
@@ -11,21 +10,42 @@ function placeNewPoly(){
 	// select cell to drop monomino
 	var entry = emptyLs[rInt(emptyLs.length)];
 	var c = entry.cell;
-	c.quickSet(true,newId(),1);
+	var id = newId();
 
 	// if (lazily) possible, generate domino
+	var dominoGenerated = false;
+	var dir = rInt(4);
+
 	var genDomino = function(i,j){
 		var d = board.getCell(i,j);
 		if(!d || d.locked || d.occupied)return;
-		d.quickSet(true,c.id,2);
-		c.order = 2;
+		dominoGenerated = true;
+
+		// setup domino animation
+		slideInEvt[dir](i,j,keyframe(1),keyframe(2));
+		quickSetEvt(d,true,id,2,keyframe(2));
+		fadeOutEvt(i,j,keyframe(2),keyframe(3));
+		unlockEvt(d,keyframe(3));
 	}
 
-	switch(rInt(4)){
+	switch(dir){
 		case 0:genDomino(entry.x,entry.y-1);break;
 		case 1:genDomino(entry.x,entry.y+1);break;
 		case 2:genDomino(entry.x-1,entry.y);break;
 		case 3:genDomino(entry.x+1,entry.y);break;
+	}
+
+	// setup remaining animation
+	slideInEvt[dir](entry.x,entry.y,keyframe(0),keyframe(1));
+	if(dominoGenerated){
+		quickSetEvt(c,true,id,2,keyframe(1));
+		highlightEvt(entry.x,entry.y,keyframe(1),keyframe(2));
+		fadeOutEvt(entry.x,entry.y,keyframe(2),keyframe(3));
+		unlockEvt(c,keyframe(3));
+	}else{
+		quickSetEvt(c,true,id,1,keyframe(1));
+		fadeOutEvt(entry.x,entry.y,keyframe(1),keyframe(2));
+		unlockEvt(c,keyframe(2));
 	}
 }
 

@@ -9,6 +9,7 @@ initPieceCount     = 4;
 animSpeed          = 150;
 dragSpeed          = 0.3;
 hoverOffset        = 4;
+keyframeSpeed      = 150;
 
 //==  CONSTANTS  =============================================================//
 

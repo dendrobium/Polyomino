@@ -1,3 +1,5 @@
+function keyframe(x){return keyframeSpeed*x;}
+
 var event = function(startTick,endTick,func,onEnd){
 	this.startTick = tick+startTick;
 	this.endTick = tick+endTick;
@@ -42,11 +44,21 @@ function orderChangeEvt(cell,oldOrder,newOrder,startTick,endTick){
 }
 
 function unlockEvt(cell,unlockTick){
+	cell.locked = true;
 	new event(unlockTick,unlockTick,null,function(){
 		cell.locked = false;
 		triggerDetectSquares = true;
 	});
 }
+
+function quickSetEvt(cell,occupied,id,order,setTick){
+	cell.locked = true;
+	new event(setTick,setTick,null,function(){
+		cell.quickSet(occupied,id,order);
+	});
+}
+
+//============================================================================//
 
 // TODO: what about adjacent surrounds?
 function beginSurroundEvt(x,y,order,startTick,endTick){
@@ -67,5 +79,52 @@ function surroundEvt(x,y,order,startTick,endTick){
 		renderRect(x*cellSize-3,y*cellSize-3,(x+order)*cellSize+3,y*cellSize-1);
 		renderRect((x+order)*cellSize+3,y*cellSize-3,(x+order)*cellSize+1,(y+order)*cellSize+3);
 		renderRect(x*cellSize-3,(y+order)*cellSize+3,(x+order)*cellSize+3,(y+order)*cellSize+1);
+	},null);
+}
+
+//============================================================================//
+
+var slideInEvt = [
+	function(x,y,startTick,endTick){ // from bottom
+		new event(startTick,endTick,function(interp){
+			rgb(1,1,1);
+			renderRect(x*cellSize,(y+1)*cellSize-interp*cellSize,
+				   (x+1)*cellSize,(y+1)*cellSize);
+		},null);
+	},function(x,y,startTick,endTick){ // from top
+		new event(startTick,endTick,function(interp){
+			rgb(1,1,1);
+			renderRect(x*cellSize,y*cellSize,
+				   (x+1)*cellSize,y*cellSize+interp*cellSize);
+		},null);
+	},function(x,y,startTick,endTick){ // from right
+		new event(startTick,endTick,function(interp){
+			rgb(1,1,1);
+			renderRect((x+1)*cellSize-interp*cellSize,y*cellSize,
+				   (x+1)*cellSize,(y+1)*cellSize);
+		},null);
+	},function(x,y,startTick,endTick){ // from left
+		new event(startTick,endTick,function(interp){
+			rgb(1,1,1);
+			renderRect(x*cellSize,y*cellSize,
+				   x*cellSize+interp*cellSize,(y+1)*cellSize);
+		},null);
+	},
+];
+
+
+function highlightEvt(x,y,startTick,endTick){
+	new event(startTick,endTick,function(){
+		rgb(1,1,1);
+		renderRect(x*cellSize,y*cellSize,
+		           (x+1)*cellSize,(y+1)*cellSize);
+	},null);
+}
+
+function fadeOutEvt(x,y,startTick,endTick){
+	new event(startTick,endTick,function(interp){
+		gfx.fillStyle = "rgba(255,255,255,"+(1-interp)+")";
+		renderRect(x*cellSize,y*cellSize,
+		           (x+1)*cellSize,(y+1)*cellSize);
 	},null);
 }

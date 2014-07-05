@@ -4,7 +4,7 @@ function renderGridRaw(g,value,offset){
 	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
 		var c = g.getCell(i,j);
 		if(!c.occupied)continue;
-		gfx.fillStyle = polyColor[c.order];
+		rgb(polyColor[c.order].r,polyColor[c.order].g,polyColor[c.order].b);
 		renderRect(i*cs+offset,j*cs+offset,(i+1)*cs-offset,(j+1)*cs-offset);
 		var right = g.getCell(i+1,j);
 		if(right && right.occupied && right.id === c.id)

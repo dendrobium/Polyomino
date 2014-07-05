@@ -13,19 +13,20 @@ keyframeSpeed      = 150;
 //==  POLYOMINO COLORS  ======================================================//
 
 var polyColor = [
-	"#000000", // Never used
-	"#8B8C7A", // Stone  (monomino)
-	"#8B4513", // Bark (domino)
-	"#FFBD4F", // Orange (tromino)
-	"#B2B14C", // Olive (tetromino)
-	"#579244", // Moss (pentomino)
-	"#708090", // Slate (hexomino)
-	           // TODO: (heptomino)
-	"#BE0028", // DarkRed (octomino)
-	"#AD79AB", // Mauve(nonomino)
-	"#9932CC", // Purple (decomino)
-	"#E3A6EC", // Iilac (undecomino)
-	"#CCCCCC", // Light Gray  (dodecomino)
+    {r: 0.0000, g: 0.0000, b:0.0000},  // Never used
+    {r: 0.5451, g: 0.5490, b:0.4784}, // (monomino)
+    {r: 0.5451, g: 0.2706, b:0.0745},  // (domino)
+    {r: 0.9020, g: 0.6667, b:0.2784},  // (tromino)
+    {r: 0.6980, g: 0.7451, b:0.2314},  // (tetromino)
+    {r: 0.3412, g: 0.5725, b:0.2667},  // (pentomino)
+    {r: 0.2941, g: 0.4118, b:0.5137},  // (hexomino)
+    {r: 0.4510, g: 0.2510, b:0.4431},  // (heptomino)
+    {r: 0.7569, g: 0.4000, b:0.3529},  // (octomino)
+    {r: 0.9255, g: 0.3451, b:0.0000},  // (nonomino)
+    {r: 0.8196, g: 0.5804, b:0.0471},  // (decomino)
+    {r: 0.6667, g: 0.0000, b:0.0000},  // (undecomino)
+    {r: 0.7020, g: 0.5686, b:0.4118}   //(dodecomino)
+
 ];
 
 // var goldenAngle = 0.381966;

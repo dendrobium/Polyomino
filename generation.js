@@ -115,11 +115,9 @@ function squareToPoly(x,y,order){
 	for(var i=x;i<x+order;++i)for(var j=y;j<y+order;++j)
 		if(!board.getCell(i,j).occupied){
 		  /* do stuff here (cells are at i*cellSize, j*cellSize) */
-		  var color = polyColor[board.getCell(i,j).order];
-		  console.log(color);
-		  color = color.primary;
-		  new particle(i*cellSize+cellSize/2, j*cellSize+cellSize/2, 0, 0, 1000, color.r*255, color.g*255, color.b*255, 1, cellSize, 255, 255, 255, 0, cellSize/10, 1, 0);
-		  //slideInEvt[0](i,j,0,1000); // example
+		  var color = polyColor[board.getCell(i,j).order].primary;
+		  new particle(i*cellSize+cellSize/2, j*cellSize+cellSize/2, 0, 0, 750, color.r*255, color.g*255, color.b*255, 1, cellSize, 255, 255, 255, 0, cellSize/10, 1, 0);
+
 		}
 
 	beginSurroundEvt(x,y,order,0,order*100);

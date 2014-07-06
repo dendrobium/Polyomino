@@ -4,8 +4,8 @@ function getMousePos(evt){
 }
 
 function calcMouseGridVars(){
-	downGX  = Math.floor(mouseDX/cellSize);
-	downGY  = Math.floor(mouseDY/cellSize);
+	downGX	= Math.floor(mouseDX/cellSize);
+	downGY	= Math.floor(mouseDY/cellSize);
 	mouseGX = Math.floor(mouse.x/cellSize);
 	mouseGY = Math.floor(mouse.y/cellSize);
 }
@@ -15,6 +15,35 @@ var cancelMove = function(){
 	goalFloatX = goalFloatY = 0;
 	snapping = true;
 };
+
+function touchHandler(event)
+{
+	var touches = event.changedTouches,
+			first = touches[0],
+			type = "";
+
+	switch(event.type)
+	{
+			case "touchstart": type = "mousedown"; break;
+			case "touchmove":	type="mousemove"; break;
+			case "touchend":	 type="mouseup"; break;
+			default: return;
+	}
+
+	var simulatedEvent = document.createEvent("MouseEvent");
+	simulatedEvent.initMouseEvent(type, true, true, window, 1,
+															first.screenX, first.screenY,
+															first.clientX, first.clientY, false,
+														  false, false, false, 0/*left*/, null);
+	first.target.dispatchEvent(simulatedEvent);
+	event.preventDefault();
+}
+
+canvas.addEventListener("touchstart", touchHandler);
+
+canvas.addEventListener("touchmove", touchHandler);
+
+canvas.addEventListener("touchend", touchHandler);
 
 canvas.addEventListener("mousedown",function(e){
 	mouse = getMousePos(e);

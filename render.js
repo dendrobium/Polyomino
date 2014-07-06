@@ -1,18 +1,22 @@
-function renderGridRaw(g,value,offset){
+function interpColor(c1,c2,interp){
+	rgb(c1.r+(c2.r-c1.r)*interp,
+	    c1.g+(c2.g-c1.g)*interp,
+	    c1.b+(c2.b-c1.b)*interp);
+}
+
+function renderGridRaw(g,offset,usePrimary){
 	var cs = cellSize;
 
 	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
 		var c = g.getCell(i,j);
 		if(!c.occupied)continue;
 
-		if(c.order%1===0)rgb(polyColor[c.order].r,polyColor[c.order].g,polyColor[c.order].b);
-		else{
-			var interp = c.order%1;
-			var c1 = polyColor[Math.floor(c.order)];
-			var c2 = polyColor[Math.ceil(c.order)];
-			rgb(c1.r+(c2.r-c1.r)*interp,
-			    c1.g+(c2.g-c1.g)*interp,
-			    c1.b+(c2.b-c1.b)*interp);
+		if(usePrimary){
+			if(Math.floor(c.order)===0)rgb(polyColor[c.order].primary.r,polyColor[c.order].primary.g,polyColor[c.order].primary.b);
+			else interpColor(polyColor[Math.floor(c.order)].primary,polyColor[Math.ceil(c.order)].primary,c.order%1);
+		}else{
+			if(Math.floor(c.order)===0)rgb(polyColor[c.order].secondary.r,polyColor[c.order].secondary.g,polyColor[c.order].secondary.b);
+			else interpColor(polyColor[Math.floor(c.order)].secondary,polyColor[Math.ceil(c.order)].secondary,c.order%1);
 		}
 
 		renderRect(i*cs+offset,j*cs+offset,(i+1)*cs-offset,(j+1)*cs-offset);
@@ -26,8 +30,8 @@ function renderGridRaw(g,value,offset){
 }
 
 function renderGrid(g){
-	renderGridRaw(g,0.6,1);
-	renderGridRaw(g,1,3);
+	renderGridRaw(g,1,false);
+	renderGridRaw(g,3,true);
 }
 
 function render(){
@@ -91,7 +95,7 @@ function render(){
 
 	// render board and process events and animations
 	renderGrid(board);
-	tickParticles();
+//	tickParticles();
 	processActiveEvents();
 
 	// render floating layer

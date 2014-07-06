@@ -32,6 +32,8 @@ function processActiveEvents(){
 		if(!e.func)continue;
 		e.func((tick-e.startTick)/(e.endTick-e.startTick));
 	}
+
+	saveGame();
 }
 
 //==  EVENT TYPES  ===========================================================//
@@ -50,6 +52,7 @@ function unlockEvt(cell,unlockTick){
 		cell.locked = false;
 		triggerDetectSquares = true;
 	});
+
 }
 
 function quickSetEvt(cell,occupied,id,order,setTick){

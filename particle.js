@@ -1,6 +1,13 @@
 particles = [];
+effects = [];
 
 function tickParticles(){
+	for(var e = 0; e < effects.length; e++){
+		if(effects[e].makeParticle()){
+			effects.splice(e, 1);
+			e--;
+		}
+	}
 	for(var p = 0; p < particles.length; p++){
 		if(particles[p].tick()){ //kill the particle
 			particles.splice(p, 1);
@@ -9,44 +16,94 @@ function tickParticles(){
 	}
 }
 
-function testParticles(){
-	
+function addEffect(effect){
+	effects.push(effect);
+	currentlyAnimating = true;
+}
 
-	for(var i = 0; i < 20; i++){
-		var x = 100;
-		var y = 100;
+function testParticles(a, b){
+
+	for(var i = 0; i < 3; i++){
+		var x = a;
+		var y = b;
 		var vx = undefined;
 		var vy = undefined;
 		var lifetime = rInt(1000) + 500;
-		var startr = 255
-		var startg = 130;
-		var startb = 60;
+		var startr = 255;
+		var startg = 255;
+		var startb = 99;
 		var starta = 1;
-		var startscale = rInt(30);
-		var endr = 0;
-		var endg = 60;
-		var endb = 255;
+		var startscale = rInt(20);
+		var endr = 255;
+		var endg = 0;
+		var endb = 0;
 		var enda = 0;
-		var endscale = rInt(30);
+		var endscale = rInt(20);
 		var border = 1;
-		new particle(x, y, vx, vy, lifetime, startr, startg, startb, starta, startscale, endr, endg, endb, enda, endscale, border)}
+		var gravity = rFloat(0.0025)+0.0025
+		new particle(x, y, vx, vy, lifetime, startr, startg, startb, starta, startscale, endr, endg, endb, enda, endscale, border, gravity)}
+}
+
+function squareEffect(x, y, size){
+	this.x = x;
+	this.y = y;
+	this.size = size;
+	this.segment = 1;
+	this.stepsize = 30;
+	this.iter = 0;
+
+	this.makeParticle = function(){
+		var i = this.iter += this.stepsize;
+		if(i/this.segment >= this.size){
+			this.segment++;
+		}
+		if(this.segment > 4)
+			return true;
+
+		switch(this.segment){
+			case 1:
+				this.x += this.stepsize;
+				break;
+			case 2:
+				this.y += this.stepsize;
+				break;
+			case 3:
+				this.x -= this.stepsize;
+				break;
+			case 4:
+				this.y -= this.stepsize;
+				break;
+		}
+		testParticles(this.x, this.y);
+		return false;
+	}
+}
+
+function testParticleSquare(){
+	for(var i = 100; i < 200; i+= 10){
+		testParticles(100, i);
+		testParticles(200, i);
+		testParticles(i, 100);
+		testParticles(i, 200);
+	}
+
 }
 
 
-function particle(x, y, vx, vy, lifetime, startr, startg, startb, starta, startscale, endr, endg, endb, enda, endscale, border){
+function particle(x, y, vx, vy, lifetime, startr, startg, startb, starta, startscale, endr, endg, endb, enda, endscale, border, gravity){
 	this.x = x;
 	this.y = y;
-	this.vx = vx || rFloat(6)-3;
-	this.vy = vy || rFloat(6)-3;
+	this.vx = vx || rFloat(2)-1;
+	this.vy = vy || rFloat(2)-1;
 	if(!(vx && vy)){
-		var invmag = (rFloat(6)-3)/(this.vx * this.vx + this.vy * this.vy);
+		var invmag = (rFloat(2)-1)/(this.vx * this.vx + this.vy * this.vy);
 		this.vx *= invmag;
 		this.vy *= invmag;
 	}
 	this.lifetime = lifetime || 1000;
 	this.endTick = tick+this.lifetime;
 	this.startTick = tick;
-
+	this.gravity = gravity || 0;
 	this.startr = startr;
 	this.startg = startg;
 	this.startb = startb;
@@ -73,6 +130,7 @@ function particle(x, y, vx, vy, lifetime, startr, startg, startb, starta, starts
 		var interp = (tick - this.startTick)/this.lifetime;
 		this.x += this.vx;
 		this.y += this.vy;
+		this.vy += gravity * elapsed;
 		this.scale = this.startscale + (this.endscale-this.startscale)*interp;
 		this.r = this.startr + (this.endr-this.startr)*interp;
 		this.g = this.startg + (this.endg-this.startg)*interp;

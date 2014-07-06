@@ -49,8 +49,10 @@ function squareEffect(x, y, size){
 	this.y = y;
 	this.size = size;
 	this.segment = 1;
-	this.stepsize = 30;
+	this.stepsize = 5;
 	this.iter = 0;
+
+	var sparkColors = [{r:255,g:10,b:10},{r:255,g:255,b:60},{r:200,g:100,b:0}];
 
 	this.makeParticle = function(){
 		var i = this.iter += this.stepsize;
@@ -74,7 +76,14 @@ function squareEffect(x, y, size){
 				this.y -= this.stepsize;
 				break;
 		}
-		testParticles(this.x, this.y);
+		var num = rInt(2)+2;
+		for(var n = 0; n < num; n++){
+			var c = sparkColors[rInt(sparkColors.length)];
+			new particle(this.x, this.y, undefined, undefined, rInt(200)+100,
+				c.r, c.g, c.b, 1, rInt(10),
+				c.r, c.g, c.b, 1, rInt(10),
+				1, rFloat(0.0025)+0.0025);
+		}
 		return false;
 	}
 }
@@ -95,11 +104,11 @@ function particle(x, y, vx, vy, lifetime, startr, startg, startb, starta, starts
 	this.y = y;
 	this.vx = vx;
 	this.vy = vy;
-
+	var velamt = 0.01;
 	if(vx === undefined && vy === undefined){
-		this.vx = rFloat(2)-1;
-		this.vy = rFloat(2)-1;
-		var invmag = (rFloat(2)-1)/(this.vx * this.vx + this.vy * this.vy);
+		this.vx = rFloat(velamt)-(velamt/2);
+		this.vy = rFloat(velamt)-(velamt/2);
+		var invmag = (rFloat(velamt)-(velamt/2))/(this.vx * this.vx + this.vy * this.vy);
 		this.vx *= invmag;
 		this.vy *= invmag;
 	}

@@ -13,19 +13,19 @@ keyframeSpeed      = 150;
 //==  POLYOMINO COLORS  ======================================================//
 
 var polyColor = [
-	{primary:{r:0.0000,g:0.0000,b:0.0000},secondary:{r:0.00000,g:0.00000,b:0.00000}}, // Never used
-	{primary:{r:0.5451,g:0.5490,b:0.4784},secondary:{r:0.27255,g:0.27450,b:0.23920}}, // monomino
-	{primary:{r:0.5451,g:0.2706,b:0.0745},secondary:{r:0.27255,g:0.13530,b:0.03725}}, // domino
-	{primary:{r:0.9020,g:0.6667,b:0.2784},secondary:{r:0.45100,g:0.33335,b:0.13920}}, // tromino
-	{primary:{r:0.6980,g:0.7451,b:0.2314},secondary:{r:0.34900,g:0.37255,b:0.11570}}, // tetromino
-	{primary:{r:0.3412,g:0.5725,b:0.2667},secondary:{r:0.17060,g:0.28625,b:0.13335}}, // pentomino
-	{primary:{r:0.2941,g:0.4118,b:0.5137},secondary:{r:0.14705,g:0.20590,b:0.25685}}, // hexomino
-	{primary:{r:0.4510,g:0.2510,b:0.4431},secondary:{r:0.22550,g:0.12550,b:0.22155}}, // heptomino
-	{primary:{r:0.7569,g:0.4000,b:0.3529},secondary:{r:0.37845,g:0.20000,b:0.17645}}, // octomino
-	{primary:{r:0.9255,g:0.3451,b:0.0000},secondary:{r:0.46275,g:0.17255,b:0.00000}}, // nonomino
-	{primary:{r:0.8196,g:0.5804,b:0.0471},secondary:{r:0.40980,g:0.29020,b:0.02355}}, // decomino
-	{primary:{r:0.6667,g:0.0000,b:0.0000},secondary:{r:0.33335,g:0.00000,b:0.00000}}, // undecomino
-	{primary:{r:0.7020,g:0.5686,b:0.4118},secondary:{r:0.35100,g:0.28430,b:0.20590}}, // dodecomino
+	{primary:{r:0.0000,g:0.0000,b:0.0000},secondary:{r:0.00000,g:0.00000,b:0.00000}}, // never used
+	{primary:{r:0.5451,g:0.5490,b:0.4784},secondary:{r:0.38157,g:0.38430,b:0.33487}}, // monomino
+	{primary:{r:0.5451,g:0.2706,b:0.0745},secondary:{r:0.38157,g:0.18942,b:0.05214}}, // domino
+	{primary:{r:0.9020,g:0.6667,b:0.2784},secondary:{r:0.63140,g:0.46668,b:0.19487}}, // tromino
+	{primary:{r:0.6980,g:0.7451,b:0.2314},secondary:{r:0.48859,g:0.52157,b:0.16197}}, // tetromino
+	{primary:{r:0.3412,g:0.5725,b:0.2667},secondary:{r:0.23884,g:0.40075,b:0.18669}}, // pentomino
+	{primary:{r:0.2941,g:0.4118,b:0.5137},secondary:{r:0.20586,g:0.28825,b:0.35959}}, // hexomino
+	{primary:{r:0.4510,g:0.2510,b:0.4431},secondary:{r:0.31570,g:0.17570,b:0.31017}}, // heptomino
+	{primary:{r:0.7569,g:0.4000,b:0.3529},secondary:{r:0.52983,g:0.27999,b:0.24702}}, // octomino
+	{primary:{r:0.9255,g:0.3451,b:0.0000},secondary:{r:0.64784,g:0.24157,b:0.00000}}, // nonomino
+	{primary:{r:0.8196,g:0.5804,b:0.0471},secondary:{r:0.57372,g:0.40628,b:0.03297}}, // decomino
+	{primary:{r:0.6667,g:0.0000,b:0.0000},secondary:{r:0.46668,g:0.00000,b:0.00000}}, // undecomino
+	{primary:{r:0.7020,g:0.5686,b:0.4118},secondary:{r:0.49139,g:0.39802,b:0.28825}}, // dedecomino
 ];
 
 // var goldenAngle = 0.381966;

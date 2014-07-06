@@ -95,7 +95,7 @@ function render(){
 
 	// render board and process events and animations
 	renderGrid(board);
-//	tickParticles();
+	tickParticles();
 	processActiveEvents();
 
 	// render floating layer

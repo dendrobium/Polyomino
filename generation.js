@@ -107,6 +107,12 @@ function squareToPoly(x,y,order){
 		}
 	if(recurseFlag)return;
 
+	// XXX [ezra]: for(var i=x;i<x+order;++i)for(var j=y;j<y+order;++j)
+	// XXX [ezra]: if(!board.getCell(i,j).occupied){
+	// XXX [ezra]:   /* do stuff here (cells are at i*cellSize, j*cellSize) */
+	// XXX [ezra]:   slideInEvt[0](i,j,0,1000); // example
+	// XXX [ezra]: }
+
 	beginSurroundEvt(x,y,order,0,order*100);
 	surroundEvt(x,y,order,order*100,order*100+1000);
 }

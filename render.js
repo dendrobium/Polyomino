@@ -49,6 +49,7 @@ function render(){
 		currentlyAnimating = true;
 	}triggerDetectSquares = false;
 
+
 	// render everything if flagged
 	if(!currentlyAnimating)return;
 	currentlyAnimating = false;

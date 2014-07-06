@@ -33,7 +33,20 @@ function processActiveEvents(){
 		e.func((tick-e.startTick)/(e.endTick-e.startTick));
 	}
 
-	saveGame();
+	//////////////////////////////////////////////
+	// XXX Luke
+	// XXX Wasn't sure where to put these calls
+	// XXX put them here because it seemed like a reasonable guess
+	// XXX but not sure about efficiency
+
+	if(!dragging)
+		saveGame();
+
+	//check lose condition
+	checkGameOver();
+
+	///////////////////////////////////////////////
+
 }
 
 //==  EVENT TYPES  ===========================================================//
@@ -51,6 +64,7 @@ function unlockEvt(cell,unlockTick){
 	new_event(unlockTick,unlockTick,null,function(){
 		cell.locked = false;
 		triggerDetectSquares = true;
+
 	});
 
 }

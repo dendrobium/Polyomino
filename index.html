@@ -27,9 +27,75 @@
 	  text-decoration: none;
 	}
 
+	.modalDialog {
+		position: fixed;
+		font-family: Arial, Helvetica, sans-serif;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		top:-10%;
+		background: rgba(0,0,0,0.8);
+		z-index: 99999;
+		opacity:0;
+		-webkit-transition: top 400ms ease-in, opacity 400ms ease-in;
+		-moz-transition: top 400ms ease-in, opacity 400ms ease-in;
+		transition: top 400ms ease-in, opacity 400ms ease-in;
+		pointer-events: none;
+	}
+
+	.modalDialog:target {
+		opacity:1;
+		top:0%;
+		pointer-events: auto;
+	}
+
+	.modalDialog > div {
+		width: 400px;
+		position: relative;
+		margin: 10% auto;
+		padding: 5px 20px 13px 20px;
+		border-radius: 0px;
+		background: #fff;
+		background: -moz-linear-gradient(#fff, #ddd);
+		background: -webkit-linear-gradient(#fff, #ddd);
+		background: -o-linear-gradient(#fff, #ddd);
+	}
+
+	.close {
+		background: #606061;
+		color: #FFFFFF;
+		line-height: 25px;
+		position: absolute;
+		right: 50%;
+		margin-right:-50px;
+		text-align: center;
+		top: 84%;
+		width: 100px;
+		text-decoration: none;
+		font-weight: bold;
+		-webkit-border-radius: 0px;
+		-moz-border-radius: 0px;
+		border-radius: 0px;
+		-moz-box-shadow: 1px 1px 3px #000;
+		-webkit-box-shadow: 1px 1px 3px #000;
+		box-shadow: 1px 1px 3px #000;
+	}
+
+
+	.close:hover { background: #404041; }
+
 	</style>
 	<div >
 		<button class="btn" onclick="newGame()">New Game</button>
+	</div>
+
+
+	<div id="gameOver" class="modalDialog">
+		<div style="font:25px arial;letter-spacing:-1px;font-weight:800;color:black;">
+			<a style="font:20px arial;" onClick="newGame()" href="#close" title="Close" class="close">New Game</a>
+			<h2 style="text-align:center">Game Over</h2>
+			<p>Your Score: [TODO SHOW SCORE]</p>
+		</div>
 	</div>
 
 	<canvas style="color:white" id="canvas">Sorry, your browser does not support HTML5 Canvas</canvas>
@@ -45,5 +111,4 @@
 	<script type="text/javascript" src="particle.js"></script>
 	<script type="text/javascript" src="render.js"></script>
 	<script type="text/javascript" src="game.js"></script>
-
 </body></html>

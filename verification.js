@@ -11,6 +11,13 @@ function recurse(visited,x,y,c,f){
 	recurse(visited,x+1,y  ,c,f);
 };
 
+//opens game-over dialog if game is lost; otherwise returns
+function checkGameOver(){
+	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
+		if(!board[i][j].occupied || board[i][j].locked) return;
+	location = '#gameOver'; //CSS/HTML
+}
+
 function recalculateIds(){
 	var visited = new grid(board.size);
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)

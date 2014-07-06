@@ -93,9 +93,12 @@ function testParticleSquare(){
 function particle(x, y, vx, vy, lifetime, startr, startg, startb, starta, startscale, endr, endg, endb, enda, endscale, border, gravity){
 	this.x = x;
 	this.y = y;
-	this.vx = vx || rFloat(2)-1;
-	this.vy = vy || rFloat(2)-1;
-	if(!(vx && vy)){
+	this.vx = vx;
+	this.vy = vy;
+
+	if(vx === undefined && vy === undefined){
+		this.vx = rFloat(2)-1;
+		this.vy = rFloat(2)-1;
 		var invmag = (rFloat(2)-1)/(this.vx * this.vx + this.vy * this.vy);
 		this.vx *= invmag;
 		this.vy *= invmag;
@@ -141,12 +144,12 @@ function particle(x, y, vx, vy, lifetime, startr, startg, startb, starta, starts
 		gfx.fillRect(this.x-this.scale/2, this.y-this.scale/2, this.scale, this.scale);
 		gfx.fillStyle = 'rgba(' + Math.floor(this.r) + ',' + Math.floor(this.g) + ',' + Math.floor(this.b) + ',' + this.a + ')';
 		gfx.fillRect(this.x-this.scale/2+this.border, this.y-this.scale/2+this.border, this.scale-(this.border*2), this.scale-(this.border*2));
-	
+
 		currentlyAnimating = true;
 		if(tick >= this.endTick){
 			return true;
 		}
-		
+
 		return false;
 	}
 

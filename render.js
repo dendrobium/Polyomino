@@ -124,3 +124,11 @@ function render(){
 
 	gfx.restore();
 }
+
+
+window.onresize = function(){
+	canvas.height = 0.75*window.innerHeight;
+	canvas.width = ww = wh = canvas.height;
+	cellSize = (canvas.width - paneThickness*2)/gridSize;
+	currentlyAnimating = true;
+}

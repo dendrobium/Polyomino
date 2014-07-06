@@ -40,9 +40,7 @@ function touchHandler(event)
 }
 
 canvas.addEventListener("touchstart", touchHandler);
-
 canvas.addEventListener("touchmove", touchHandler);
-
 canvas.addEventListener("touchend", touchHandler);
 
 canvas.addEventListener("mousedown",function(e){

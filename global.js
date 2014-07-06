@@ -1,10 +1,10 @@
 //==  RULES  =================================================================//
 
 detectHighestOrder = true;
-orderDecay         = true;
+orderDecay         = false;
 paneThickness      = 4;
 gridSize           = 8;
-cellSize           = 32;
+cellSize           = 32; //may vary during runtime as the application SHOULD size grid cells according to window size.
 initPieceCount     = 4;
 dragSpeed          = 0.3;
 hoverOffset        = 4;

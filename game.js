@@ -17,8 +17,7 @@ function newGame(){
 	// 		board.getCell(i,j).quickSet(true,id,i+1);
 	// }
 
-	canvas.width  = ww = gridSize*cellSize+paneThickness*2;
-	canvas.height = wh = gridSize*cellSize+paneThickness*2;
+
 }
 
 function gameOver(){
@@ -46,8 +45,6 @@ function loadGame(){
 		snapping = false;
 		currentlyAnimating = true;
 		triggerDetectSquares = true;
-		canvas.width  = ww = gridSize*cellSize+paneThickness*2;
-		canvas.height = wh = gridSize*cellSize+paneThickness*2;
 		return true;
 	}
 	return false;
@@ -65,5 +62,9 @@ function saveGame(){
 	tick=new Date().getTime();
 	if(!loadGame())
 		newGame();
+
+	// canvas.width  = ww = gridSize*cellSize+paneThickness*2;
+	// canvas.height = wh = gridSize*cellSize+paneThickness*2;
+	window.onresize();
 	render();
 })();

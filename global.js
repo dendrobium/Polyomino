@@ -37,6 +37,10 @@ var blockId,score;
 var mouse,dragging,snapping,mouseDX,mouseDY,downGX,downGY,mouseGX,mouseGY;
 var goalFloatX,goalFloatY,floatX,floatY,placeX,placeY;
 var currentlyAnimating,triggerDetectSquares;
+var highScore = 0;
+var gameWon = false; //so that we don't continually trigger the game won screen if they keep building big polyominos
+var scoreTick = 0;
+var scoreCombo = 0;
 
 //==  CANVAS VARS  ===========================================================//
 

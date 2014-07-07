@@ -40,7 +40,7 @@
 		margin-right: 1%;
 	}
 
-	.score, .best {
+	.score, .highscore {
 		position: relative;
 		display: inline-block;
 		letter-spacing: 0px;
@@ -55,7 +55,8 @@
 		margin-top: 8px;
 		text-align: center;
 	}
-	.score:after, .best:after {
+
+	.score:after, .highscore:after {
 		position: absolute;
 		width: 100%;
 		top: 10px;
@@ -65,28 +66,12 @@
 		text-align: center;
 		color: #909090;
 	}
-	.score .score-addition, .best .score-addition {
-		position: absolute;
-		right: 30px;
-		color: red;
-		font-size: 25px;
-		line-height: 25px;
-		font-weight: bold;
-		color: rgba(119, 110, 101, 0.9);
-		z-index: 100;
-		-webkit-animation: move-up 600ms ease-in;
-		-moz-animation: move-up 600ms ease-in;
-		animation: move-up 600ms ease-in;
-		-webkit-animation-fill-mode: both;
-		-moz-animation-fill-mode: both;
-		animation-fill-mode: both;
-	}
 
 	.score:after {
 		content: "Score";
 	}
 
-	.best:after {
+	.highscore:after {
 		content: "Record";
 	}
 
@@ -198,7 +183,7 @@
 			Polyomino
 			<div class="scoreContainer">
 				<div class="score">0</div>
-				<div class="best">0</div>
+				<div class="highscore">0</div>
 		  </div>
 		</div>
 

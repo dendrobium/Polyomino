@@ -147,3 +147,24 @@ function fadeOutEvt(x,y,startTick,endTick){
 		           (x+1)*cellSize,(y+1)*cellSize);
 	},null);
 }
+
+
+//============================================================================//
+
+
+function addScoreEvt(order){
+	new_event(0,10, null, function(){
+		addToScore(order);
+	});
+	if(scoreTick === tick)
+		scoreCombo++;
+	else
+		scoreCombo = 1;
+}
+
+
+function gameWonEvt(){
+	new_event(0,10,null,function(){
+		location = "#gameWon";
+	});
+}

@@ -53,6 +53,14 @@ function placeNewPoly(){
 // Used to generate domino through polyomino.
 // this function assumes no cell locks are set to true
 function squareToPoly(x,y,order){
+
+	// XXX Luke, this isn't maybe the best way to do scores but I wanted to have something to work with
+	addScoreEvt(order);
+	if(order > goalOrder && !gameWon){
+		gameWon = true;
+		gameWonEvt();
+	}
+
 	var filled = new grid(order);
 	for(var i=0;i<filled.size;++i)for(var j=0;j<filled.size;++j)filled.setCell(i,j,false);
 

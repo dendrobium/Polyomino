@@ -18,7 +18,7 @@
 		font-size: 5px;
 		font-size: 0.75em;
 		width: 48%;
-		border-radius:2px;
+		border-radius: 0px;
 		border: 0px;
 		background: #3F3F3F;
 		padding: 1% 2% 1% 2%;
@@ -37,7 +37,6 @@
 	.scoreContainer {
 		float: right;
 		text-align: right;
-		margin-right: 1%;
 	}
 
 	.score, .highscore {
@@ -50,7 +49,7 @@
 		height: 25px;
 		line-height: 47px;
 		font-weight: bold;
-		border-radius: 2px;
+		border-radius: 0ppx;
 		color: #f0f0f0;
 		margin-top: 8px;
 		text-align: center;
@@ -103,7 +102,7 @@
 		position: relative;
 		margin: 10% auto;
 		padding: 5px 20px 13px 20px;
-		border-radius: 2px;
+		border-radius: 0ppx;
 		color: #3F3F3F;
 		background: #c0c0c0;"
 	}
@@ -115,7 +114,7 @@
 		font-size: 5px;
 		font-size: 0.75em;
 		width: 48%;
-		border-radius:2px;
+		border-radius: 0px;
 		border: 0px;
 		background: #3F3F3F;
 		padding: 1% 2% 1% 2%;
@@ -129,7 +128,7 @@
 		margin-right:-75px;
 		text-align: center;
 		top: 75%;
-		border-radius:2px;
+		border-radius: 0px;
 		width: 150px;
 		text-decoration: none;
 	}
@@ -178,7 +177,7 @@
 	</div>
 
 	<!-- Section main content -->
-	<div id="game_div" style="position:fixed; right:0; left:0; bottom:0; top:0; margin:auto 10%">
+	<div id="game_div" style="border: 1px solid #00ff00; position:fixed; right:0; left:0; bottom:0; top:0; margin:auto 10%">
 		<div style="font:48px arial;letter-spacing:-3px;font-weight:800;color:#3F3F3F;">
 			Polyomino
 			<div class="scoreContainer">
@@ -192,26 +191,27 @@
 
 		<div style="font-size: 2.5vw">
 			<button class="btn" onclick="newGame()">New Game</button>
-			<button class="btn" style="float:right; margin-right:1%" onclick="location='#instructions'">Instructions</button>
+			<button class="btn" style="float:right;" onclick="location='#instructions'">Instructions</button>
 		</div>
 
 
 
 		<br/>
 
-		<canvas class="cvs" style="position:absolute; background:#3F3F3F; margin-top:2px; border:0px; border-radius:2px; color:white" id="canvas">Sorry, your browser does not support HTML5 Canvas</canvas>
+		<canvas class="cvs" style="position:absolute; background:#3F3F3F; margin-top:2px; border:1px solid #ff0000; border-radius: 0px; color:white" id="canvas">Sorry, your browser does not support HTML5 Canvas</canvas>
 	</div>
 
+	<script type="text/javascript" src="scripts/lib/jquery-1.11.1.min.js"></script>
 
-	<script type="text/javascript" src="utils.js"       ></script>
-	<script type="text/javascript" src="global.js"      ></script>
-	<script type="text/javascript" src="grid.js"        ></script>
-	<script type="text/javascript" src="event.js"       ></script>
-	<script type="text/javascript" src="verification.js"></script>
-	<script type="text/javascript" src="generation.js"  ></script>
-	<script type="text/javascript" src="controls.js"    ></script>
-	<script type="text/javascript" src="particle.js"    ></script>
-	<script type="text/javascript" src="render.js"      ></script>
-	<script type="text/javascript" src="shapes.js"        ></script>
-	<script type="text/javascript" src="game.js"        ></script>
+	<script type="text/javascript" src="scripts/utils.js"       ></script>
+	<script type="text/javascript" src="scripts/global.js"      ></script>
+	<script type="text/javascript" src="scripts/grid.js"        ></script>
+	<script type="text/javascript" src="scripts/event.js"       ></script>
+	<script type="text/javascript" src="scripts/verification.js"></script>
+	<script type="text/javascript" src="scripts/generation.js"  ></script>
+	<script type="text/javascript" src="scripts/controls.js"    ></script>
+	<script type="text/javascript" src="scripts/particle.js"    ></script>
+	<script type="text/javascript" src="scripts/render.js"      ></script>
+	<script type="text/javascript" src="scripts/shapes.js"        ></script>
+	<script type="text/javascript" src="scripts/game.js"        ></script>
 </body></html>

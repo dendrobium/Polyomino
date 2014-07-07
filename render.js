@@ -153,7 +153,7 @@ window.onresize = function(){
 		goalOrder = (gridSize == 10) ? 6 : 5;
 	}
 
-	cellSize = (canvas.width - paneThickness*2)/gridSize;
+	cellSize = Math.floor((canvas.width - paneThickness*2)/gridSize);
 	currentlyAnimating = true;
 
 	//update css

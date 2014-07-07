@@ -127,8 +127,8 @@ function render(){
 
 		// break animation if snapping is complete
 		if(snapping &&
-		   Math.abs(floatX-goalFloatX)<0.5 &&
-		   Math.abs(floatY-goalFloatY)<0.5){
+			Math.abs(floatX-goalFloatX)<0.5 &&
+			Math.abs(floatY-goalFloatY)<0.5){
 			movePiece(floating,board,floating.getCell(mouseDX/cellSize,mouseDY/cellSize).id,placeX,placeY);
 			deselectGrid(board);
 			dragging = snapping = false;

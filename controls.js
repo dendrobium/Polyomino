@@ -34,7 +34,7 @@ function touchHandler(event)
 	simulatedEvent.initMouseEvent(type, true, true, window, 1,
 															first.screenX, first.screenY,
 															first.clientX, first.clientY, false,
-														  false, false, false, 0/*left*/, null);
+															false, false, false, 0/*left*/, null);
 	first.target.dispatchEvent(simulatedEvent);
 	event.preventDefault();
 }

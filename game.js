@@ -3,7 +3,7 @@ function newGame(){
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
 		board.setCell(i,j,new cell());
 
-  initShapes();
+	initShapes();
 	blockId = 0;
 	score = 0;
 	dragging = false;

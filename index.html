@@ -1,7 +1,7 @@
 <!DOCTYPE html><html><head><title>Polyomino</title><meta charset="UTF-8">
 
 
-<body bgcolor="a0a0af">
+<body bgcolor="c0c0c0">
 	<style>
 
 	.cvs {
@@ -14,13 +14,13 @@
 	}
 	.btn {
 	  font-family: Arial;
-	  color: #808080;
+	  color: #f0f0f0;
 	  font-size: 5px;
 	  font-size: 0.75em;
 	  width: 48%;
 	  border-radius:2px;
 	  border: 0px;
-	  background: #eae0e0;
+	  background: #3F3F3F;
 	  padding: 1% 2% 1% 2%;
 	  letter-spacing: 0px;
 	  font-weight:800;
@@ -37,21 +37,21 @@
 	.scoreContainer {
 		float: right;
 		text-align: right;
-		margin-right: 0.75%;
+		margin-right: 1%;
 	}
 
 	.score, .best {
 		position: relative;
 		display: inline-block;
 		letter-spacing: 0px;
-		background: #eae0e0;
+		background: #3F3F3F;
 		padding: 15px 25px;
 		font-size: 25px;
 		height: 25px;
 		line-height: 47px;
 		font-weight: bold;
 		border-radius: 2px;
-		color: white;
+		color: #f0f0f0;
 		margin-top: 8px;
 		text-align: center;
 	}
@@ -120,7 +120,7 @@
 		margin: 10% auto;
 		padding: 5px 20px 13px 20px;
 		border-radius: 2px;
-		color: #eae0e0;
+		color: #3F3F3F;
 		background: #a0a0af;
 	}
 
@@ -133,7 +133,7 @@
 	  width: 48%;
 	  border-radius:2px;
 	  border: 0px;
-	  background: #eae0e0;
+	  background: #3F3F3F;
 	  padding: 1% 2% 1% 2%;
 	  letter-spacing: 0px;
 	  font-weight:800;
@@ -195,7 +195,7 @@
 
 	<!-- Section main content -->
 	<div id="game_div" style="position:fixed; right:0; left:0; bottom:0; top:0; margin:auto 10%">
-		<div style="font:48px arial;letter-spacing:-3px;font-weight:800;color:#eae0e0;">
+		<div style="font:48px arial;letter-spacing:-3px;font-weight:800;color:#3F3F3F;">
 			Polyomino
 			<div class="scoreContainer">
 				<div class="score">0</div>
@@ -205,16 +205,17 @@
 
 		<br/>
 
+
 		<div style="font-size: 2.5vw">
 			<button class="btn" onclick="newGame()">New Game</button>
-			<button class="btn" style="float:right; margin-right:0.75%" onclick="location='#instructions'">Instructions</button>
+			<button class="btn" style="float:right; margin-right:1%" onclick="location='#instructions'">Instructions</button>
 		</div>
 
 
 
 		<br/>
 
-		<canvas class="cvs" style="position:absolute; background:#eae0e0; margin-top:2px; border:0px; border-radius:2px; color:white" id="canvas">Sorry, your browser does not support HTML5 Canvas</canvas>
+		<canvas class="cvs" style="position:absolute; background:#3F3F3F; margin-top:2px; border:0px; border-radius:2px; color:white" id="canvas">Sorry, your browser does not support HTML5 Canvas</canvas>
 	</div>
 
 

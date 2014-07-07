@@ -12,7 +12,7 @@ var NONOMINO = 9;
 var DECOMINO = 10;
 var DEDECOMINO = 11;
 
-var MAX_PREDEFINED_ORDER = TETROMINO;
+var MAX_PREDEFINED_ORDER = PENTOMINO;
 var SHAPE = new Array(MAX_PREDEFINED_ORDER + 1);
 var gamePolyominoTotal = new Array(MAX_PREDEFINED_ORDER + 1);
 var gameFreeShapeCount = new Array(MAX_PREDEFINED_ORDER + 1);
@@ -27,9 +27,23 @@ function initShapes() {
   //Thus, SHAPE[order][shapeNum][row] === 11 defines a row with blocks: XX X
   SHAPE[MONOMINO] = [[1]];
   SHAPE[DOMINO] = [[1,1]];
-  SHAPE[TROMINO] = [[1,1,1], [1,3,0]];
-  SHAPE[TETROMINO] = [[1,1,1,1],[1,1,3,0],[1,3,2,0],[3,3,0,0],[1,3,1,0]];
+  SHAPE[TROMINO] = [[1,1,1], [1,3]];
+  SHAPE[TETROMINO] = [[1,1,1,1],[1,1,3],[1,3,2],[3,3],[1,3,1]];
 
+  SHAPE[PENTOMINO] = [
+    [1,1,1,1,1],
+    [6,3,2],
+    [1,1,1,3],
+    [3,3,1],
+    [1,1,3,2],
+    [7,2,2],
+    [7,5],
+    [1,1,7],
+    [3,6,4],
+    [2,7,2],
+    [1,3,1,1],
+    [3,2,6]
+  ];
 
   //== POLYOMINO GAME COUNTS
   for (var order = MONOMINO; order <= MAX_PREDEFINED_ORDER; order++) {

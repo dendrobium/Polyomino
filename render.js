@@ -89,7 +89,7 @@ function render(){
 	renderRect(gridSize*cellSize-1,gridSize*cellSize-4,gridSize*cellSize+1,gridSize*cellSize+1);
 
 	// render grid cells
-	rgb(0.05,0.05,0.05);
+	rgb(0.15,0.15,0.15);
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
 		renderRect(i*cellSize+2,j*cellSize+2,(i+1)*cellSize-2,(j+1)*cellSize-2);
 

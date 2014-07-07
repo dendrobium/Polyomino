@@ -3,12 +3,14 @@
 detectHighestOrder = true;
 orderDecay         = false;
 paneThickness      = 4;
-gridSize           = 8;
+gridSize           = 10;
 cellSize           = 32; //may vary during runtime as the application SHOULD size grid cells according to window size.
 initPieceCount     = 4;
 dragSpeed          = 0.3;
 hoverOffset        = 4;
 keyframeSpeed      = 150;
+goalOrder          = 6; //for now, trying 6/5 with gridsize = 10/8, respectively
+cellSizeThreshold  = 42; //may need tweaking
 
 //==  POLYOMINO COLORS  ======================================================//
 

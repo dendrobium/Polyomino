@@ -89,7 +89,7 @@ function render(){
 	renderRect(gridSize*cellSize-1,gridSize*cellSize-4,gridSize*cellSize+1,gridSize*cellSize+1);
 
 	// render grid cells
-	rgb(0.02,0.02,0.02);
+	rgb(0.25,0.25,0.25);
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
 		renderRect(i*cellSize+2,j*cellSize+2,(i+1)*cellSize-2,(j+1)*cellSize-2);
 
@@ -126,11 +126,23 @@ function render(){
 	gfx.restore();
 }
 
-
+var firsttime = true;
 window.onresize = function(){
 	canvas.height = 0.75*window.innerHeight;
 	canvas.width = (canvas.height > 0.95*window.innerWidth) ? (canvas.height = 0.95*window.innerWidth) : canvas.height;
 	ww = wh = canvas.width;
+
+	//Don't want to do this while game is running!!
+	if(firsttime){
+		if( (canvas.width - paneThickness*2)/gridSize < cellSizeThreshold ) gridSize = 8;
+		else gridSize = 10;
+		firsttime = false;
+		goalOrder = (gridSize == 10) ? 6 : 5;
+	}
+
 	cellSize = (canvas.width - paneThickness*2)/gridSize;
 	currentlyAnimating = true;
+
+	//update css
+	document.getElementById("game_div").style.margin = "auto " + (window.innerWidth/2 - canvas.width/2 - paneThickness) + "px";
 }

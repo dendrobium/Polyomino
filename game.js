@@ -28,25 +28,28 @@ bypassLoad = false;
 function loadGame(){
 	if(bypassLoad)
 		return false;
-	if(typeof(Storage) !== "undefined") {
-		var storedboard = JSON.parse(localStorage.getItem("board"));
-		if(!storedboard)
-			return false;
-		board = new grid(gridSize);
-		for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
-			board.setCell(i, j, new cell());
-			board[i][j].occupied = storedboard[i][j].occupied;
-			board[i][j].id = storedboard[i][j].id;
-			board[i][j].order = storedboard[i][j].order;
+	try { //try... catch to protect against corrupted savegames
+		if(typeof(Storage) !== "undefined") {
+			var storedboard = JSON.parse(localStorage.getItem("board"));
+			if(!storedboard)
+				return false;
+			board = new grid(gridSize);
+			for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
+				board.setCell(i, j, new cell());
+				board[i][j].occupied = storedboard[i][j].occupied;
+				board[i][j].id = storedboard[i][j].id;
+				board[i][j].order = storedboard[i][j].order;
+			}
+			blockId = localStorage.getItem("blockId");
+			score = localStorage.getItem("score");
+			dragging = false;
+			snapping = false;
+			currentlyAnimating = true;
+			triggerDetectSquares = true;
+			return true;
 		}
-		blockId = localStorage.getItem("blockId");
-		score = localStorage.getItem("score");
-		dragging = false;
-		snapping = false;
-		currentlyAnimating = true;
-		triggerDetectSquares = true;
-		return true;
 	}
+	catch(e){ return false}
 	return false;
 }
 
@@ -58,13 +61,32 @@ function saveGame(){
 	}
 }
 
+function setupInstruction(){
+	var txt = "Can you reach the " + ((gridSize === 10) ? "hexomino" : "pentomino") + "? (contains " + ((gridSize === 10) ? '6' : '5') +  " squares)";
+	document.getElementById("inst_inner").innerHTML = txt;
+}
+
 (function main(){
 	tick=new Date().getTime();
+
+	//determine grid/cell size
+	window.onresize();
+
+	//setup instructions based on grid size
+	setupInstruction();
+
+	//see if first-time visitor and needs instructions
+	if(typeof(Storage) !== "undefined"){
+		var visited = localStorage.getItem("visited");
+		if(!visited)
+			location = "#instructions";
+		else
+			location = "#close";
+		localStorage.setItem("visited", true);
+	}
+
 	if(!loadGame())
 		newGame();
 
-	// canvas.width  = ww = gridSize*cellSize+paneThickness*2;
-	// canvas.height = wh = gridSize*cellSize+paneThickness*2;
-	window.onresize();
 	render();
 })();

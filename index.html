@@ -1,31 +1,96 @@
 <!DOCTYPE html><html><head><title>Polyomino</title><meta charset="UTF-8">
-<style>*{
-	-moz-user-select:      none;
-	-khtml-user-select:    none;
-	-webkit-user-select:   none;
-	-webkit-touch-callout: none;
-	-ms-user-select:       none;
-	user-select:           none;
-}</style>
 
-<body bgcolor="000000">
+
+<body bgcolor="a0a0af">
 	<style>
-		.btn {
+
+	.cvs {
+		-moz-user-select:      none;
+		-khtml-user-select:    none;
+		-webkit-user-select:   none;
+		-webkit-touch-callout: none;
+		-ms-user-select:       none;
+		user-select:           none;
+	}
+	.btn {
 	  font-family: Arial;
-	  color: #ffffff;
-	  font-size: 24px;
-	  background: #2b2b2b;
-	  padding: 5px 10px 5px 10px;
-	  border: solid #c2c2c2 2px;
-	  text-decoration: none;
-	  letter-spacing: -1px;
+	  color: #808080;
+	  font-size: 5px;
+	  font-size: 0.75em;
+	  width: 48%;
+	  border-radius:2px;
+	  border: 0px;
+	  background: #eae0e0;
+	  padding: 1% 2% 1% 2%;
+	  letter-spacing: 0px;
 	  font-weight:800;
+
 	}
 
 	.btn:hover {
-	  background: #5c5c5c;
-	  text-decoration: none;
+	  background: #cfcaca;
+	  -moz-box-shadow: 1px 1px 3px #000;
+		-webkit-box-shadow: 1px 1px 3px #000;
+		box-shadow: 1px 1px 3px #000;
 	}
+
+	.scoreContainer {
+		float: right;
+		text-align: right;
+		margin-right: 0.75%;
+	}
+
+	.score, .best {
+		position: relative;
+		display: inline-block;
+		letter-spacing: 0px;
+		background: #eae0e0;
+		padding: 15px 25px;
+		font-size: 25px;
+		height: 25px;
+		line-height: 47px;
+		font-weight: bold;
+		border-radius: 2px;
+		color: white;
+		margin-top: 8px;
+		text-align: center;
+	}
+	.score:after, .best:after {
+		position: absolute;
+		width: 100%;
+		top: 10px;
+		left: 0;
+		text-transform: uppercase;
+		font-size: 13px;
+		line-height: 13px;
+		text-align: center;
+		color: #909090;
+	}
+	.score .score-addition, .best .score-addition {
+		position: absolute;
+		right: 30px;
+		color: red;
+		font-size: 25px;
+		line-height: 25px;
+		font-weight: bold;
+		color: rgba(119, 110, 101, 0.9);
+		z-index: 100;
+		-webkit-animation: move-up 600ms ease-in;
+		-moz-animation: move-up 600ms ease-in;
+		animation: move-up 600ms ease-in;
+		-webkit-animation-fill-mode: both;
+		-moz-animation-fill-mode: both;
+		animation-fill-mode: both;
+	}
+
+	.score:after {
+		content: "Score";
+	}
+
+	.best:after {
+		content: "Best";
+	}
+
 
 	.modalDialog {
 		position: fixed;
@@ -50,65 +115,117 @@
 	}
 
 	.modalDialog > div {
-		width: 400px;
+		width: 80%;
 		position: relative;
 		margin: 10% auto;
 		padding: 5px 20px 13px 20px;
-		border-radius: 0px;
-		background: #fff;
-		background: -moz-linear-gradient(#fff, #ddd);
-		background: -webkit-linear-gradient(#fff, #ddd);
-		background: -o-linear-gradient(#fff, #ddd);
+		border-radius: 2px;
+		color: #eae0e0;
+		background: #a0a0af;
 	}
 
 	.close {
-		background: #606061;
-		color: #FFFFFF;
+
+		font-family: Arial;
+	  color: #808080;
+	  font-size: 5px;
+	  font-size: 0.75em;
+	  width: 48%;
+	  border-radius:2px;
+	  border: 0px;
+	  background: #eae0e0;
+	  padding: 1% 2% 1% 2%;
+	  letter-spacing: 0px;
+	  font-weight:800;
+
+
 		line-height: 25px;
 		position: absolute;
 		right: 50%;
-		margin-right:-50px;
+		margin-right:-75px;
 		text-align: center;
-		top: 84%;
-		width: 100px;
+		top: 80%;
+		border-radius:2px;
+		width: 150px;
 		text-decoration: none;
-		font-weight: bold;
-		-webkit-border-radius: 0px;
-		-moz-border-radius: 0px;
-		border-radius: 0px;
+	}
+
+
+	.close:hover {
+		background: #404041;
 		-moz-box-shadow: 1px 1px 3px #000;
 		-webkit-box-shadow: 1px 1px 3px #000;
 		box-shadow: 1px 1px 3px #000;
 	}
 
-
-	.close:hover { background: #404041; }
-
 	</style>
-	<div >
-		<button class="btn" onclick="newGame()">New Game</button>
-	</div>
 
+	<!-- Section modals -->
+	<div id="gameWon" class="modalDialog">
+		<div style="font:25px arial;letter-spacing:-1px;font-weight:800;">
+			<a style="font:20px arial; margin-right:-200px" onClick="newGame()" href="#close" title="Close" class="close">New Game</a>
+			<a style="font:20px arial; margin-right:50px" href="#close" title="Close" class="close">Keep Playing</a>
+			<h2 style="text-align:center">You Win!</h2>
 
-	<div id="gameOver" class="modalDialog">
-		<div style="font:25px arial;letter-spacing:-1px;font-weight:800;color:black;">
-			<a style="font:20px arial;" onClick="newGame()" href="#close" title="Close" class="close">New Game</a>
-			<h2 style="text-align:center">Game Over</h2>
-			<p>Your Score: [TODO SHOW SCORE]</p>
+			<p>Score: [TODO SHOW SCORE]</p>
+			<br />
 		</div>
 	</div>
 
-	<canvas style="color:white" id="canvas">Sorry, your browser does not support HTML5 Canvas</canvas>
-<div style="font:48px arial;letter-spacing:-3px;font-weight:800;color:white;">Polyomino</div>
+	<div id="gameOver" class="modalDialog">
+		<div style="font:25px arial;letter-spacing:-1px;font-weight:800;">
+			<a style="font:20px arial;" onClick="newGame()" href="#close" title="Close" class="close">New Game</a>
+			<h2 style="text-align:center">Game Over</h2>
+			<p>Your Score: [TODO SHOW SCORE]</p>
+			<br />
+		</div>
+	</div>
 
-	<script type="text/javascript" src="utils.js"></script>
-	<script type="text/javascript" src="global.js"></script>
-	<script type="text/javascript" src="grid.js"></script>
-	<script type="text/javascript" src="event.js"></script>
+	<div id="instructions" class="modalDialog">
+		<div style="font:25px arial;letter-spacing:-1px;font-weight:800;">
+			<a style="font:20px arial; margin-top:35px" href="#close" title="Close" class="close">Close</a>
+			<h2 style="text-align:center">Instructions</h2>
+			<p>Combine 1x1 "monominos" into 2x2 squares to spawn 2x1 "dominos"</p>
+			<p>Combine dominos into 3x3 squares to spawn "trominos", etc. </p>
+
+			<p id="inst_inner" style="text-align:center">	</p>
+			<br />
+		</div>
+	</div>
+
+	<!-- Section main content -->
+	<div id="game_div" style="position:fixed; right:0; left:0; bottom:0; top:0; margin:auto 10%">
+		<div style="font:48px arial;letter-spacing:-3px;font-weight:800;color:#eae0e0;">
+			Polyomino
+			<div class="scoreContainer">
+				<div class="score">0</div>
+				<div class="best">0</div>
+		  </div>
+		</div>
+
+		<br/>
+
+		<div style="font-size: 2.5vw">
+			<button class="btn" onclick="newGame()">New Game</button>
+			<button class="btn" style="float:right; margin-right:0.75%" onclick="location='#instructions'">Instructions</button>
+		</div>
+
+
+
+		<br/>
+
+		<canvas class="cvs" style="position:absolute; background:#eae0e0; margin-top:2px; border:0px; border-radius:2px; color:white" id="canvas">Sorry, your browser does not support HTML5 Canvas</canvas>
+	</div>
+
+
+	<script type="text/javascript" src="utils.js"       ></script>
+	<script type="text/javascript" src="global.js"      ></script>
+	<script type="text/javascript" src="grid.js"        ></script>
+	<script type="text/javascript" src="event.js"       ></script>
 	<script type="text/javascript" src="verification.js"></script>
-	<script type="text/javascript" src="generation.js"></script>
-	<script type="text/javascript" src="controls.js"></script>
-	<script type="text/javascript" src="particle.js"></script>
-	<script type="text/javascript" src="render.js"></script>
-	<script type="text/javascript" src="game.js"></script>
+	<script type="text/javascript" src="generation.js"  ></script>
+	<script type="text/javascript" src="controls.js"    ></script>
+	<script type="text/javascript" src="particle.js"    ></script>
+	<script type="text/javascript" src="render.js"      ></script>
+	<script type="text/javascript" src="game.js"        ></script>
 </body></html>

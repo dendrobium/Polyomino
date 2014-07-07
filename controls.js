@@ -81,10 +81,13 @@ canvas.addEventListener("mousemove",function(e){
 	goalFloatY = (downGY-mouseGY)*cellSize+hoverOffset;
 });
 
-canvas.addEventListener("mouseout",function(e){
-	if(!dragging||snapping)return;
-	cancelMove();
-});
+
+// I found that this was more annoying than helpful, honestly.
+//
+// canvas.addEventListener("mouseout",function(e){
+// 	if(!dragging||snapping)return;
+// 	cancelMove();
+// });
 
 canvas.addEventListener("mouseup",function(e){
 	mouse = getMousePos(e);

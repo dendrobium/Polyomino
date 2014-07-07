@@ -4,14 +4,16 @@ function interpColor(c1,c2,interp){
 	    c1.b+(c2.b-c1.b)*interp);
 }
 
-function renderGridRaw(g,offset,usePrimary){
+function renderGridRaw(g,offset,usePrimary, overrideColor){
 	var cs = cellSize;
 
 	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
 		var c = g.getCell(i,j);
 		if(!c.occupied)continue;
 
-		if(usePrimary){
+		if(overrideColor){
+			gfx.fillStyle = overrideColor;
+		}else if(usePrimary){
 			if(Math.floor(c.order)===0)rgb(polyColor[c.order].primary.r,polyColor[c.order].primary.g,polyColor[c.order].primary.b);
 			else interpColor(polyColor[Math.floor(c.order)].primary,polyColor[Math.ceil(c.order)].primary,c.order%1);
 		}else{
@@ -105,10 +107,21 @@ function render(){
 		floatX += (goalFloatX-floatX)*0.3;
 		floatY += (goalFloatY-floatY)*0.3;
 
+		//render a "hole" where the floating one originated
+		renderGridRaw(floating,1,false, "#505050");
+
+		//render a shadow
+		gfx.save();
+		gfx.translate(-floatX+3, -floatY+3);
+		renderGridRaw(floating,1,false, "#000000");
+		gfx.restore();
+
+		//render the floating layer itself
 		gfx.save();
 		gfx.translate(-floatX,-floatY);
 		// gfx.translate(Math.round(-floatX),Math.round(-floatY)); // no anti-alias version
 		//   if you want some sort of transparency going on in the floating layer, you need to use this or there will be artifacts
+
 		renderGrid(floating);
 		gfx.restore();
 

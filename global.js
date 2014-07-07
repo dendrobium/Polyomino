@@ -30,6 +30,10 @@ var polyColor = [
 	{primary:{r:0.7020,g:0.5686,b:0.4118},secondary:{r:0.49139,g:0.39802,b:0.28825}}, // dedecomino
 ];
 
+
+
+
+
 //==  GLOBAL VARS  ===========================================================//
 
 var board,floating;

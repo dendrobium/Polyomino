@@ -31,10 +31,13 @@ function renderRect(x0,y0,x1,y1){
 }
 
 
-function matrix( rows, columns, defaultValue){
+function matrix(rows, columns, defaultValue){
   var arr = new Array(rows);
-  for (var i = 0; i < rows; i++) {
+  for (var i=0; i<rows; i++) {
     arr[i] = new Array(columns);
+    for (var j=0; j<columns; j++) {
+      arr[i][j] = defaultValue;
+    }
   }
   return arr;
 }

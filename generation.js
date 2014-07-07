@@ -1,8 +1,3 @@
-var TETROMINO = [[1,1,1,1],[1,1,3,0],[1,3,2,0],[3,3,0,0],[1,3,1,0]];
-var tetrominoCount = [1, 1, 1, 1, 1];
-var tetrominoTotal = tetrominoCount.length;
-
-
 // Used to generate a monomino or domino only
 function placeNewPoly(){
 	// generate list of empty cells, verify a cell can be placed
@@ -75,7 +70,7 @@ function squareToPoly(left,top,order){
   }
 
 	// generate random polyomino
-  if (order === 4) spawnBiasedRandomPoly(filled, order, left, top);
+  if (order <= MAX_PREDEFINED_ORDER) spawnBiasedRandomPoly(filled, order, left, top);
   else {
     var i = left + rInt(order);
     var j = top + rInt(order);
@@ -148,43 +143,50 @@ function squareToPoly(left,top,order){
 function spawnBiasedRandomPoly(filled, order, left, top) {
   var spawnGrid = matrix(order, order, false);
 
-  if (order === 4) {
-    //var shapeIdx = rInt(TETROMINO.length);
+  var shapeIdx = 0;
+  var r = Math.random();
 
-    var shapeIdx = 0;
-    var r = Math.random();
-    var cumulativeProbability = 0;
-    for(var i=0; i<TETROMINO.length; i++) {
-      cumulativeProbability += (tetrominoTotal - tetrominoCount[i])/(tetrominoTotal*(TETROMINO.length-1));
-      //console.log("  ==> r="+r+", cumulativeProbability="+cumulativeProbability);
-      if (r < cumulativeProbability) {
-        shapeIdx = i;
-        break;
-      }
+
+  //var total = gamePolyominoTotal[order] + SHAPE[order].length;
+  var sumSquare = 0;
+  for(var i=0; i<SHAPE[order].length; i++) {
+    //console.log("gamePolyominoTotal["+order+"]="+gamePolyominoTotal[order] +
+    //"gameFreeShapeCount["+order+"]["+i+"]="+gameFreeShapeCount[order][i]);
+    var diff = 1 + (gamePolyominoTotal[order] - gameFreeShapeCount[order][i]);
+    sumSquare += diff*diff;
+  }
+
+  var cumulativeSum = 0;
+  for(var i=0; i<SHAPE[order].length; i++) {
+    var diff = 1 + (gamePolyominoTotal[order] - gameFreeShapeCount[order][i]);
+
+    cumulativeSum += (diff * diff)/sumSquare;
+    //console.log("  ==> r="+r+"  sumSquare="+sumSquare+", diff="+diff+", cumulativeSum="+cumulativeSum);
+    if (r < cumulativeSum) {
+      shapeIdx = i;
+      break;
     }
+  }
 
-    //console.log("TETROMINO.length=" + TETROMINO.length);
-    //console.log("shape=" + TETROMINO[shapeIdx]);
-    tetrominoCount[shapeIdx]++;
-    tetrominoTotal++;
+  gameFreeShapeCount[order][shapeIdx]++;
+  gamePolyominoTotal[order]++;
 
-    setBaseShape(spawnGrid, order, TETROMINO[shapeIdx]);
-    spawnGrid = gridRotateRandom(spawnGrid, order);
-    spawnGrid = gridFlipRandom(spawnGrid, order);
-    spawnGrid = gridTranslateRandom(spawnGrid, order);
+  setBaseShape(spawnGrid, order, SHAPE[order][shapeIdx]);
+  spawnGrid = gridRotateRandom(spawnGrid, order);
+  spawnGrid = gridFlipRandom(spawnGrid, order);
+  spawnGrid = gridTranslateRandom(spawnGrid, order);
 
 
-    //Copy tmpGrid into Luke's game grids
-    var id = newId();
-    for (var x = 0; x < order; x++) {
-      for (var y = 0; y < order; y++) {
-        if (spawnGrid[x][y]) {
-          var i = x + left;
-          var j = y + top;
-          var cell = board.getCell(i, j);
-          cell.quickSet(true, id, order);
-          filled.setCell(i, j, true);
-        }
+  //Copy tmpGrid into Luke's game grids
+  var id = newId();
+  for (var x = 0; x < order; x++) {
+    for (var y = 0; y < order; y++) {
+      if (spawnGrid[x][y]) {
+        var i = x + left;
+        var j = y + top;
+        var cell = board.getCell(i, j);
+        cell.quickSet(true, id, order);
+        filled.setCell(i, j, true);
       }
     }
   }

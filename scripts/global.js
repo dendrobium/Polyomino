@@ -1,5 +1,6 @@
 //==  RULES  =================================================================//
 
+bypassLoadGame     = false;
 detectHighestOrder = true;
 orderDecay         = true;
 paneThickness      = 2;
@@ -9,7 +10,7 @@ initPieceCount     = 4;
 dragSpeed          = 0.3;
 hoverOffset        = 4;
 keyframeSpeed      = 150;
-goalOrder          = 6; //for now, trying 6/5 with gridsize = 10/8, respectively
+goalOrder          = 6;  //for now, trying 6/5 with gridsize = 10/8, respectively
 cellSizeThreshold  = 50; //may need tweaking
 
 //==  POLYOMINO COLORS  ======================================================//
@@ -48,20 +49,24 @@ var mouse,dragging,snapping,mouseDX,mouseDY,downGX,downGY,mouseGX,mouseGY;
 var floatingBlockID = -1;
 
 var goalFloatX,goalFloatY,floatX,floatY,placeX,placeY;
+
 var currentlyAnimating;
 var triggerDetectSquares;
+
+
+var gameWon = false; // so that we don't continually trigger the game won screen if they keep building big polyominos
 var highScore = 0;
-var gameWon = false; //so that we don't continually trigger the game won screen if they keep building big polyominos
-var scoreTick = 0;
-var scoreCombo = 0;
+var scoreTick = 0;  // XXX: this is unnecessary, see addScoreEvt definition
+var scoreCombo = 0; // XXX: this is unnecessary, see addScoreEvt definition
+var saveFlag = false;
 
 //==  CANVAS VARS  ===========================================================//
 
-var canvas = null; //to be set on page load
+var canvas = null;
 var gfx = null;
 var tick,elapsed;
 var canvasWidth, canvasHeight;
 
-
 //== DEBUG OPTIONS ===========================================================//
 var DEBUG_LOG_SHAPE_PROBABILITIES = true;
+

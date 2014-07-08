@@ -33,20 +33,8 @@ function processActiveEvents(){
 		e.func((tick-e.startTick)/(e.endTick-e.startTick));
 	}
 
-	//////////////////////////////////////////////
-	// XXX Luke
-	// XXX Wasn't sure where to put these calls
-	// XXX put them here because it seemed like a reasonable guess
-	// XXX but not sure about efficiency
-
-	if(!dragging)
-		saveGame();
-
-	//check lose condition
+	// check lose condition | TODO: this should not be here, move it to the appropriate function 
 	checkGameOver();
-
-	///////////////////////////////////////////////
-
 }
 
 //==  EVENT TYPES  ===========================================================//
@@ -55,7 +43,6 @@ function orderChangeEvt(cell,oldOrder,newOrder,startTick,endTick){
 	cell.locked = true;
 	new_event(startTick,endTick,function(interp){
 		cell.order = (newOrder-oldOrder)*interp+oldOrder;
-		// TODO: do rgb interpolation, not hsv
 	},function(){cell.order = newOrder;});
 }
 
@@ -64,9 +51,7 @@ function unlockEvt(cell,unlockTick){
 	new_event(unlockTick,unlockTick,null,function(){
 		cell.locked = false;
 		triggerDetectSquares = true;
-
 	});
-
 }
 
 function quickSetEvt(cell,occupied,id,order,setTick){
@@ -74,6 +59,10 @@ function quickSetEvt(cell,occupied,id,order,setTick){
 	new_event(setTick,setTick,null,function(){
 		cell.quickSet(occupied,id,order);
 	});
+}
+
+function saveGameEvt(saveTick){
+	new_event(saveTick,saveTick,null,saveGame);
 }
 
 //============================================================================//
@@ -148,10 +137,9 @@ function fadeOutEvt(x,y,startTick,endTick){
 	},null);
 }
 
-
 //============================================================================//
 
-
+// XXX: score tick is unnecessary, combos can and should be handled in detectSquares [look at TODO's in detectSquares to see where combos should be handled]
 function addScoreEvt(order){
 	new_event(0,10, null, function(){
 		addToScore(order);
@@ -161,7 +149,6 @@ function addScoreEvt(order){
 	else
 		scoreCombo = 1;
 }
-
 
 function gameWonEvt(){
 	new_event(0,10,null,function(){

@@ -1,5 +1,6 @@
 // Used to generate a monomino or domino only
 function placeNewPoly(){
+
 	// generate list of empty cells, verify a cell can be placed
 	var emptyLs = [];
 	for(var i=0;i<gridSize;++i)for(var j=0;j<gridSize;++j){
@@ -42,10 +43,12 @@ function placeNewPoly(){
 		highlightEvt(entry.x,entry.y,keyframe(1),keyframe(2));
 		fadeOutEvt(entry.x,entry.y,keyframe(2),keyframe(3));
 		unlockEvt(c,keyframe(3));
+		saveGameEvt(keyframe(3));
 	}else{
 		quickSetEvt(c,true,id,1,keyframe(1));
 		fadeOutEvt(entry.x,entry.y,keyframe(1),keyframe(2));
 		unlockEvt(c,keyframe(2));
+		saveGameEvt(keyframe(3));
 	}
 }
 
@@ -54,7 +57,8 @@ function placeNewPoly(){
 // this function assumes no cell locks are set to true
 function squareToPoly(left,top,order){
 
-	// XXX Luke, this isn't maybe the best way to do scores but I wanted to have something to work with
+	// XXX: Luke, this isn't maybe the best way to do scores but I wanted to have something to work with
+	// XXX: this doesn't need to be an event, as adding a number to score doesn't need to happen at a later time... [also, seed notes in addScoreEvt definition]
 	addScoreEvt(order);
 	if(order > goalOrder && !gameWon){
 		gameWon = true;
@@ -121,6 +125,7 @@ function squareToPoly(left,top,order){
 			}
 		if (recurseFlag)return;
 	}
+
 	// XXX [ezra]: for(var i=x;i<x+order;++i)for(var j=y;j<y+order;++j)
 	// XXX [ezra]: if(!board.getCell(i,j).occupied){
 	// XXX [ezra]:	 /* do stuff here (cells are at i*cellSize, j*cellSize) */
@@ -135,11 +140,11 @@ function squareToPoly(left,top,order){
 
 		}
 	}
+
 	beginSurroundEvt(left, top,order,0,order*100);
 	surroundEvt(left, top,order,order*100,order*100+1000);
+	saveGame();
 }
-
-
 
 function spawnBiasedRandomPoly(filled, order, left, top) {
 	var spawnGrid = matrix(order, order, false);
@@ -198,7 +203,6 @@ function spawnBiasedRandomPoly(filled, order, left, top) {
 		}
 	}
 }
-
 
 function setBaseShape(spawnGrid, order, shape)
 {

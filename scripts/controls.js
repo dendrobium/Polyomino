@@ -16,80 +16,77 @@ var cancelMove = function(){
 	goalFloatX = goalFloatY = 0;
 };
 
-function touchHandler(event)
-{
-	var touches = event.changedTouches,
-			first = touches[0],
-			type = "";
+function touchHandler(event){
+	var touches = event.changedTouches;
+	var first   = touches[0];
+	var type    = "";
 
-	switch(event.type)
-	{
-			case "touchstart": type = "mousedown"; break;
-			case "touchmove":	type="mousemove"; break;
-			case "touchend":	 type="mouseup"; break;
-			default: return;
+	switch(event.type){
+		case "touchstart" : type = "mousedown"; break;
+		case "touchmove"  : type = "mousemove"; break;
+		case "touchend"   : type = "mouseup";   break;
+		default:return;
 	}
 
 	var simulatedEvent = document.createEvent("MouseEvent");
 	simulatedEvent.initMouseEvent(type, true, true, window, 1,
-															first.screenX, first.screenY,
-															first.clientX, first.clientY, false,
-															false, false, false, 0/*left*/, null);
+	                              first.screenX, first.screenY,
+	                              first.clientX, first.clientY, false,
+	                              false, false, false, 0/*left*/, null);
 	first.target.dispatchEvent(simulatedEvent);
 	event.preventDefault();
 }
 
+function setupControls() {
+  canvas.addEventListener("touchstart", touchHandler);
+  canvas.addEventListener("touchmove", touchHandler);
+  canvas.addEventListener("touchend", touchHandler);
 
-function setupControls(){
-	canvas.addEventListener("touchstart", touchHandler);
-	canvas.addEventListener("touchmove", touchHandler);
-	canvas.addEventListener("touchend", touchHandler);
-
-	canvas.addEventListener("mousedown",function(event){
+  canvas.addEventListener("mousedown", function (event) {
 
     //console.log("mousedown:  dragging="+dragging+", snapping="+snapping);
 
     mouse = getMousePos(event);
-		if(dragging)return;
+    if (dragging)return;
 
 
-		var c = boardMain.getCell(mouse.x/cellSize, mouse.y/cellSize);
-		if(!c.occupied || c.locked) return;
+    var c = boardMain.getCell(mouse.x / cellSize, mouse.y / cellSize);
+    if (!c.occupied || c.locked) return;
 
     floatPiece(c.id);
 
-		mouseDX = mouse.x;
-		mouseDY = mouse.y;
-		calcMouseGridVars();
-		floatX = (downGX-mouseGX)*cellSize;
-		floatY = (downGY-mouseGY)*cellSize;
-		goalFloatX = floatX+hoverOffset;
-		goalFloatY = floatY+hoverOffset;
+    mouseDX = mouse.x;
+    mouseDY = mouse.y;
+    calcMouseGridVars();
+    floatX = (downGX - mouseGX) * cellSize;
+    floatY = (downGY - mouseGY) * cellSize;
+    goalFloatX = floatX + hoverOffset;
+    goalFloatY = floatY + hoverOffset;
 
-		dragging = true;
-		currentlyAnimating = true;
-	});
+    dragging = true;
+    currentlyAnimating = true;
+  });
 
-	canvas.addEventListener("mousemove",function(e){
-		mouse = getMousePos(e);
-		if(!dragging||snapping)return;
-		calcMouseGridVars();
-		goalFloatX = (downGX-mouseGX)*cellSize+hoverOffset;
-		goalFloatY = (downGY-mouseGY)*cellSize+hoverOffset;
-	});
+  canvas.addEventListener("mousemove", function (e) {
+    mouse = getMousePos(e);
+    if (!dragging || snapping)return;
+    calcMouseGridVars();
+    goalFloatX = (downGX - mouseGX) * cellSize + hoverOffset;
+    goalFloatY = (downGY - mouseGY) * cellSize + hoverOffset;
+  });
 
 
-	// I found that this was more annoying than helpful, honestly.
+  // I found that this was more annoying than helpful, honestly.
   //  I (Joel) know that the above I is not Joel. That leaves Ezra or Luke.
   //   Next time, attach a recording of your voice to the comment. Then I will know who I am and have
   //   reached Nirvana.
-	//
-	// canvas.addEventListener("mouseout",function(e){
-	// 	if(!dragging||snapping)return;
-	// 	cancelMove();
-	// });
+  //
+  // canvas.addEventListener("mouseout",function(e){
+  // 	if(!dragging||snapping)return;
+  // 	cancelMove();
+  // });
 
-  canvas.addEventListener('contextmenu', function(event) {
+  canvas.addEventListener('contextmenu', function (event) {
     if (!dragging)return;
 
     //TODO: for now, I have rightclick rotate the floating block - while this rotate interface is used,
@@ -102,27 +99,27 @@ function setupControls(){
   }, false);
 
 
-	canvas.addEventListener("mouseup",function(event){
-		mouse = getMousePos(event);
-		if(!dragging||snapping)return;
+  canvas.addEventListener("mouseup", function (event) {
+    mouse = getMousePos(event);
 
-    if(event.button === MOUSE_RIGHT_BUTTON) return;
+    if (!dragging || snapping)return;
+
+    if (event.button === MOUSE_RIGHT_BUTTON) return;
     dragging = false;
 
-		calcMouseGridVars();
-		placeX = downGX-mouseGX;
-		placeY = downGY-mouseGY;
+    calcMouseGridVars();
+    placeX = downGX - mouseGX;
+    placeY = downGY - mouseGY;
 
-		// check if floating is dropped on original position
+    // check if floating is dropped on original position
     // This is not true with rotation:
-		//if(downGX == mouseGX && downGY == mouseGY){cancelMove();return;}
-    if (!isMoveValid())
-    { //console.log("mouseup:  isMoveValid() == false");
+    //if(downGX == mouseGX && downGY == mouseGY){cancelMove();return;}
+    if (!isMoveValid()) { //console.log("mouseup:  isMoveValid() == false");
       cancelMove();
       return;
     }
 
-		// make sure pieces in floating arent dropped on existing pieces or locked (and unselected) cells
+    // make sure pieces in floating arent dropped on existing pieces or locked (and unselected) cells
 //		for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
 //			var b = board.getCell(i,j);
 //			var f = floating.getCell(i+placeX,j+placeY);
@@ -136,14 +133,13 @@ function setupControls(){
 //			if(x<0||y<0||x>=floating.size||y>=floating.size){cancelMove();return;}
 //		}
 
-		// successful move, place new poly -----------------------------
+    // successful move, place new poly -----------------------------
     unfloatPiece(true)
-    goalFloatX = (downGX-mouseGX)*cellSize;
-    goalFloatY = (downGY-mouseGY)*cellSize;
-		placeNewPoly();
-	});
+    goalFloatX = (downGX - mouseGX) * cellSize;
+    goalFloatY = (downGY - mouseGY) * cellSize;
+    placeNewPoly();
+  });
 }
-
 
 function userRotateBlock90() {
 
@@ -158,7 +154,7 @@ function userRotateBlock90() {
   var minY = MAX_POLYOMINO_ORDER;
 
   var anyCellOfFloatingBlock;
-  for(var x=0; x<gridSize; x++)    for(var y=0; y<gridSize; y++) {
+  for (var x = 0; x < gridSize; x++)    for (var y = 0; y < gridSize; y++) {
     var cell = boardFloating.getCell(x, y);
     if (!cell || !cell.occupied) continue;
 
@@ -175,7 +171,7 @@ function userRotateBlock90() {
 
   //console.log("   ==> order="+order+", id="+id+ ", range=("+minX+", "+minY+") - ("+maxX+", "+maxY+")");
 
-  for(var x=0; x<gridSize; x++)    for(var y=0; y<gridSize; y++) {
+  for (var x = 0; x < gridSize; x++)    for (var y = 0; y < gridSize; y++) {
     var floatingCell = boardFloating.getCell(x, y);
     if (!floatingCell.occupied) continue;
 
@@ -185,7 +181,7 @@ function userRotateBlock90() {
 
   rotationGrid = gridRotate90(rotationGrid, order);
 
-  for(var x=0; x<order; x++)    for(var y=0; y<order; y++) {
+  for (var x = 0; x < order; x++)    for (var y = 0; y < order; y++) {
     if (rotationGrid[x][y]) {
       rotationGrid[x][y] = true;
       var xx = x + minX;
@@ -199,4 +195,6 @@ function userRotateBlock90() {
   }
   return true;
 }
+
+
 

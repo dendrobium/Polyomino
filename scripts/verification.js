@@ -21,6 +21,7 @@ function checkGameOver(){
 function recalculateIds(){
 	var visited = new grid(gridSize);
 	for(var i=0;i<gridSize;++i)for(var j=0;j<gridSize;++j)
+
 	if(!visited.getCell(i,j)){
 		var c = boardMain.getCell(i,j);
 		if(!c.occupied || c.locked)continue;
@@ -29,10 +30,12 @@ function recalculateIds(){
 		for(var x=0;x<gridSize;++x)for(var y=0;y<gridSize;++y){
 			var chk = boardMain.getCell(x,y);
 			if(!chk.occupied || chk.locked)continue;
-			if(chk.id === c.id && !visited.getCell(x,y))
+			if(chk.id === c.id && !visited.getCell(x,y)){
 				chk.id = id;
+				saveFlag = true;
+			}
 		}
-	}
+	}if(saveFlag)saveGame();
 }
 
 function recalculateOrder(){
@@ -50,8 +53,16 @@ function recalculateOrder(){
 		recurse(new grid(gridSize),i,j,c,function(e){
 			orderChangeEvt(e,e.order,count,keyframe(0),keyframe(1));
 			unlockEvt(e,keyframe(1));
+			saveGameEvt(keyframe(1));
 		});
 	}
+}
+
+// opens game-over dialog if game is lost
+function checkGameOver(){
+	for(var i=0;i<gridSize;++i)for(var j=0;j<gridSize;++j)
+		if(!boardMain[i][j].occupied || boardMain[i][j].locked) return;
+	location = '#gameOver'; //CSS/HTML
 }
 
 // TODO: detect endgame
@@ -92,10 +103,10 @@ function detectSquares(){
 		}
 	}
 
-
 	// scan 2, detect largest squares on squares grid
 	for(var x=0;x<gridSize;++x)
 	outer:for(var y=0;y<gridSize;++y){
+
 		var c = squares.getCell(x,y);
 		if(c<=0)continue;
 		for(var i=x;i<x+c;++i)for(var j=y;j<y+c;++j)
@@ -103,7 +114,11 @@ function detectSquares(){
 		for(var i=x;i<x+c;++i)for(var j=y;j<y+c;++j)
 			squares.setCell(i,j,0);
 		squareToPoly(x,y,c);
+		//++combo;
 	}
+
+	// TODO: handle combos here [combo information doesn't need to be global]
+	//if(combo > 1){}
 
 	// placing these here rather than right after squareToPoly allows for comboing
 	recalculateIds();

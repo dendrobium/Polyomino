@@ -112,20 +112,26 @@ function render(){
 	// render grid cells
 	// I (Ezra) added a shadow
 
-	var shadowSize = 1;
+
+  var shadowSizeV = 1;
+  var shadowSizeH = 2;
 	for(var i=0;i<gridSize;++i)for(var j=0;j<gridSize;++j){
+
+	// XXX: the shadows look like actual pieces, moreso than the actual polyominos in my [Luke] opinion...
+
+
 		var x0 = i*cellSize+2;
 		var y0 = j*cellSize+2;
 		var x1 = (i+1)*cellSize-2;
 		var y1 = (j+1)*cellSize-2;
 
 		rgb(0.01, 0.01, 0.01);
-		renderRect(x1, y1, x0, y1+shadowSize);
-		renderRect(x1, y1+shadowSize, x1+shadowSize, y0);
+		renderRect(x0, y1, x1+shadowSizeV, y1+shadowSizeH);
+		renderRect(x1, y0, x1+shadowSizeV, y1+shadowSizeH);
 
-		rgb(0.5, 0.5, 0.5);
-		renderRect(x0, y1+shadowSize, x0-shadowSize, y0);
-		renderRect(x1+shadowSize, y0-shadowSize, x0-shadowSize, y0);
+		rgb(0.3, 0.3, 0.3);
+		renderRect(x0, y0, x0-shadowSizeV, y1+shadowSizeV);
+		renderRect(x1+shadowSizeV, y0-shadowSizeV, x0-shadowSizeV, y0);
 
 		rgb(0.15,0.15,0.15);
 		renderRect(x0,y0,x1,y1);
@@ -142,13 +148,11 @@ function render(){
 		floatX += (goalFloatX-floatX)*0.3;
 		floatY += (goalFloatY-floatY)*0.3;
 
-		//render a "hole" where the floating one originated
-		//renderGridRaw(floating,1,false, "#505050");
-
 		//render a shadow
 		gfx.save();
-		gfx.translate(-floatX+3, -floatY+3);
-		renderGridRaw(boardFloating,1,false, "#000000");
+		gfx.translate(-floatX+4, -floatY+4);
+		renderGridRaw(boardFloating,1,false, "rgba(0,0,0,0.5)");
+
 		gfx.restore();
 
 		//render the floating layer itself
@@ -171,35 +175,37 @@ function render(){
 		}
 	}
 
+
   //Joel TODO: change right click rotate to pass-over icon
   //gfx.font="36px Arial";
   //gfx.fillStyle = "white";
   //gfx.fillText("↻",100,canvasHeight);
 
 
-
 	gfx.restore();
-
-
-
-
 }
 
 var firsttime = true;
 window.onresize = function(){
 
+
 	//Setup width/height to look good
+	// resize text if need be
+
 	var offset = $('#canvas').offset();
-  var inGameControlSpace = 40;
+	var inGameControlSpace = 40;
 	$('#game_div').width(Math.min(window.innerHeight - 2 * offset.top, window.innerWidth - 2 * offset.left));
-  $('#game_div').height(Math.min(window.innerHeight - 2 * offset.top, window.innerWidth - 2 * offset.left));
+	$('#game_div').height(Math.min(window.innerHeight - 2 * offset.top, window.innerWidth - 2 * offset.left));
 
 
 	//force canvas to be square -- offset width is VERY important to preserve scale!!
   canvasWidth = canvasHeight =canvas.height = canvas.offsetHeight = canvas.width = canvas.offsetWidth;
 
-	//Don't want to do this while game is running!!
+
+	// Don't want to do this while game is running!!
 	if(firsttime){
+		// XXX: why is grid size a function of how large the window is?
+		// XXX: you can lose save states because of this (play game in small window, resize to large window, refresh)
 		if( (canvasWidth - paneThickness*2)/gridSize < cellSizeThreshold ) gridSize = 8;
 		else gridSize = 10;
 		firsttime = false;

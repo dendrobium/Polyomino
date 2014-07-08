@@ -85,12 +85,11 @@
 
 .score {
 	border-right: 1px solid #f0f0f0;
-	margin-right:-7%;
+	margin-right:-6%;
 }
 
 .highscore {
-	border-left: 1px solid #f0f0f0;
-	margin-right: 3.5%;
+	margin-right: 3%;
 }
 
 .score:after, .highscore:after {

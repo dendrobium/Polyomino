@@ -166,8 +166,8 @@ window.onresize = function(){
 	var offset = $('#canvas').offset();
 	$('#game_div').width(Math.min(window.innerHeight - 2 * offset.top, window.innerWidth - 2 * offset.left));
 
-	//force canvas to be square
-	ww = wh = canvas.clientWidth = canvas.clientHeight = canvas.height = canvas.width;
+	//force canvas to be square -- offset width is VERY important to preserve scale!!
+  ww = wh =canvas.height = canvas.offsetHeight = canvas.width = canvas.offsetWidth;;
 
 	//Don't want to do this while game is running!!
 	if(firsttime){

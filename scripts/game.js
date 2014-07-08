@@ -70,7 +70,7 @@ function saveGame(){
 }
 
 function setupInstruction(){
-	var txt = "Can you reach the " + ((gridSize === 10) ? "hexomino" : "pentomino") + "? (contains " + ((gridSize === 10) ? '6' : '5') +  " squares)";
+	var txt = "Can you reach the " + ((gridSize === 10) ? "<i>hexomino</i>" : "<i>pentomino</i>") + "? (contains " + ((gridSize === 10) ? '6' : '5') +  " squares)";
 	document.getElementById("inst_inner").innerHTML = txt;
 }
 

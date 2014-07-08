@@ -156,7 +156,17 @@ function render(){
 		}
 	}
 
+  gfx.font="36px Arial";
+  gfx.fillStyle = "white";
+  gfx.fillText("↻",100,canvasHeight);
+
+
+
 	gfx.restore();
+
+
+
+
 }
 
 var firsttime = true;
@@ -164,7 +174,10 @@ window.onresize = function(){
 
 	//Setup width/height to look good
 	var offset = $('#canvas').offset();
+  var inGameControlSpace = 40;
 	$('#game_div').width(Math.min(window.innerHeight - 2 * offset.top, window.innerWidth - 2 * offset.left));
+  $('#game_div').height(Math.min(window.innerHeight - 2 * offset.top, window.innerWidth - 2 * offset.left));
+
 
 	//force canvas to be square -- offset width is VERY important to preserve scale!!
   canvasWidth = canvasHeight =canvas.height = canvas.offsetHeight = canvas.width = canvas.offsetWidth;;

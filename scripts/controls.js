@@ -44,32 +44,40 @@ function setupControls(){
 
 	canvas.addEventListener("mousedown",function(e){
 		mouse = getMousePos(e);
-		if(dragging)return;
-		var c = board.getCell(mouse.x/cellSize,mouse.y/cellSize);
-		if(!c || !c.occupied || c.locked)return;
+		switch(e.which){
+			case 1:
+				if(dragging)return;
+				var c = board.getCell(mouse.x/cellSize,mouse.y/cellSize);
+				if(!c || !c.occupied || c.locked)return;
 
-		// set lock and selected flags for selected cells
-		for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
-			var b = board.getCell(i,j);
-			if(b.id === c.id)b.locked = b.selected = true;
+				// set lock and selected flags for selected cells
+				for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
+					var b = board.getCell(i,j);
+					if(b.id === c.id)b.locked = b.selected = true;
+				}
+
+				// move selected piece onto floating layer,remove from board
+				floating = new grid(board.size);
+				for(var i=0;i<floating.size;++i)for(var j=0;j<floating.size;++j)
+					floating.setCell(i,j,new cell());
+				movePiece(board,floating,c.id,0,0);
+
+				mouseDX = mouse.x;
+				mouseDY = mouse.y;
+				calcMouseGridVars();
+				floatX = (downGX-mouseGX)*cellSize;
+				floatY = (downGY-mouseGY)*cellSize;
+				goalFloatX = floatX+hoverOffset;
+				goalFloatY = floatY+hoverOffset;
+
+				dragging = true;
+				currentlyAnimating = true;
+				return;
+			case 3:
+				if(!dragging)return;
+				goalRot += Math.PI/2;
+				return;
 		}
-
-		// move selected piece onto floating layer,remove from board
-		floating = new grid(board.size);
-		for(var i=0;i<floating.size;++i)for(var j=0;j<floating.size;++j)
-			floating.setCell(i,j,new cell());
-		movePiece(board,floating,c.id,0,0);
-
-		mouseDX = mouse.x;
-		mouseDY = mouse.y;
-		calcMouseGridVars();
-		floatX = (downGX-mouseGX)*cellSize;
-		floatY = (downGY-mouseGY)*cellSize;
-		goalFloatX = floatX+hoverOffset;
-		goalFloatY = floatY+hoverOffset;
-
-		dragging = true;
-		currentlyAnimating = true;
 	});
 
 	canvas.addEventListener("mousemove",function(e){
@@ -82,7 +90,8 @@ function setupControls(){
 
 	canvas.addEventListener("mouseup",function(e){
 		mouse = getMousePos(e);
-		if(!dragging||snapping)return;
+		if(!(e.which === 1))return;
+		if(!dragging || snapping)return;
 
 		calcMouseGridVars();
 		placeX = downGX-mouseGX;

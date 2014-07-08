@@ -37,10 +37,11 @@ var polyColor = [
 
 //==  GLOBAL VARS  ===========================================================//
 
-var board,floating;
 var blockId,score;
+var board,origFloating,floating;
 var mouse,dragging,snapping,mouseDX,mouseDY,downGX,downGY,mouseGX,mouseGY;
 var goalFloatX,goalFloatY,floatX,floatY,placeX,placeY;
+var goalRot,rot;
 var currentlyAnimating,triggerDetectSquares;
 
 var gameWon = false; // so that we don't continually trigger the game won screen if they keep building big polyominos

@@ -56,7 +56,7 @@ function render(){
 	if(!currentlyAnimating)return;
 	currentlyAnimating = false;
 
-	gfx.clearRect(0,0,ww,wh);
+	gfx.clearRect(0,0,canvasWidth,canvasHeight);
 	gfx.save();
 	gfx.translate(paneThickness,paneThickness);
 
@@ -167,7 +167,7 @@ window.onresize = function(){
 	$('#game_div').width(Math.min(window.innerHeight - 2 * offset.top, window.innerWidth - 2 * offset.left));
 
 	//force canvas to be square -- offset width is VERY important to preserve scale!!
-  ww = wh =canvas.height = canvas.offsetHeight = canvas.width = canvas.offsetWidth;;
+  canvasWidth = canvasHeight =canvas.height = canvas.offsetHeight = canvas.width = canvas.offsetWidth;;
 
 	//Don't want to do this while game is running!!
 	if(firsttime){

@@ -51,7 +51,7 @@ var scoreCombo = 0;
 var canvas = null; //to be set on page load
 var gfx = null;
 var tick,elapsed;
-var ww,wh;
+var canvasWidth, canvasHeight;
 
 
 //== DEBUG OPTIONS ===========================================================//

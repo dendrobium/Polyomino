@@ -44,7 +44,7 @@ function testParticles(a, b){
 		new particle(x, y, vx, vy, lifetime, startr, startg, startb, starta, startscale, endr, endg, endb, enda, endscale, border, gravity)}
 }
 
-function squareEffect(x, y, size){
+function squareEffect(x, y, size, time){
 	this.x = x;
 	this.y = y;
 	this.size = size;

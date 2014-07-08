@@ -171,6 +171,10 @@ function render(){
 
 var firsttime = true;
 window.onresize = function(){
+	//resize text if need be
+
+	document.getElementById('header_div').style.fontSize = (window.innerWidth < 480) ? "30px" : "48px";
+
 
 	//Setup width/height to look good
 	var offset = $('#canvas').offset();

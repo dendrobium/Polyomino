@@ -2,7 +2,7 @@
 
 detectHighestOrder = true;
 orderDecay         = false;
-paneThickness      = 4;
+paneThickness      = 2;
 gridSize           = 10;
 cellSize           = 32; //may vary during runtime as the application SHOULD size grid cells according to window size.
 initPieceCount     = 4;
@@ -48,7 +48,7 @@ var scoreCombo = 0;
 
 //==  CANVAS VARS  ===========================================================//
 
-var canvas = document.getElementById("canvas");
-var gfx = canvas.getContext("2d");
+var canvas = null; //to be set on page load
+var gfx = null;
 var tick,elapsed;
 var ww,wh;

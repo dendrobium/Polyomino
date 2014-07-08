@@ -60,41 +60,61 @@ function render(){
 	gfx.save();
 	gfx.translate(paneThickness,paneThickness);
 
-	// render internal grid lines
-	rgb(0.2,0.2,0.2);
-	for(var i=1;i<board.size;++i)for(var j=1;j<board.size;++j){
-		renderRect(i*cellSize-4,j*cellSize-1,i*cellSize+4,j*cellSize+1);
-		renderRect(i*cellSize-1,j*cellSize-4,i*cellSize+1,j*cellSize+4);
-	}
+	// //Removed to get rid of the optical illusion that Joel noticed; kept as a comment in case we want it back
 
-	// render edge grid lines
-	for(var i=1;i<board.size;++i){
-		renderRect(i*cellSize-4,-1,i*cellSize+4,1);
-		renderRect(i*cellSize-1,-1,i*cellSize+1,4);
-		renderRect(i*cellSize-4,gridSize*cellSize-1,i*cellSize+4,gridSize*cellSize+1);
-		renderRect(i*cellSize-1,gridSize*cellSize-4,i*cellSize+1,gridSize*cellSize+1);
-	}for(var j=1;j<board.size;++j){
-		renderRect(-1,j*cellSize-1,4,j*cellSize+1);
-		renderRect(-1,j*cellSize-4,1,j*cellSize+4);
-		renderRect(gridSize*cellSize-4,j*cellSize-1,gridSize*cellSize+1,j*cellSize+1);
-		renderRect(gridSize*cellSize-1,j*cellSize-4,gridSize*cellSize+1,j*cellSize+4);
-	}
+	// // render internal grid lines
+	// rgb(0.4,0.4,0.4);
+	// var length = 4;
+	// var lw = 1;
+	// for(var i=1;i<board.size;++i)for(var j=1;j<board.size;++j){
+	// 	renderRect(i*cellSize-length,j*cellSize-1,i*cellSize+length,j*cellSize+1);
+	// 	renderRect(i*cellSize-1,j*cellSize-length,i*cellSize+1,j*cellSize+length);
+	// }
 
-	// render corner grid lines
-	renderRect(-1,-1,4,1);
-	renderRect(-1,-1,1,4);
-	renderRect(gridSize*cellSize-4,-1,gridSize*cellSize+1,1);
-	renderRect(gridSize*cellSize-1,-1,gridSize*cellSize+1,4);
-	renderRect(-1,gridSize*cellSize-4,1,gridSize*cellSize+1);
-	renderRect(-1,gridSize*cellSize-1,4,gridSize*cellSize+1);
-	renderRect(gridSize*cellSize-4,gridSize*cellSize-1,gridSize*cellSize+1,gridSize*cellSize+1);
-	renderRect(gridSize*cellSize-1,gridSize*cellSize-4,gridSize*cellSize+1,gridSize*cellSize+1);
+	// // render edge grid lines
+	// for(var i=1;i<board.size;++i){
+	// 	renderRect(i*cellSize-length,-1,i*cellSize+length,1);
+	// 	renderRect(i*cellSize-1,-1,i*cellSize+1,length);
+	// 	renderRect(i*cellSize-length,gridSize*cellSize-1,i*cellSize+length,gridSize*cellSize+1);
+	// 	renderRect(i*cellSize-1,gridSize*cellSize-length,i*cellSize+1,gridSize*cellSize+1);
+	// }for(var j=1;j<board.size;++j){
+	// 	renderRect(-1,j*cellSize-1,length,j*cellSize+1);
+	// 	renderRect(-1,j*cellSize-length,1,j*cellSize+length);
+	// 	renderRect(gridSize*cellSize-length,j*cellSize-1,gridSize*cellSize+1,j*cellSize+1);
+	// 	renderRect(gridSize*cellSize-1,j*cellSize-length,gridSize*cellSize+1,j*cellSize+length);
+	// }
+
+	// // render corner grid lines
+	// renderRect(-1,-1,length,1);
+	// renderRect(-1,-1,1,length);
+	// renderRect(gridSize*cellSize-length,-1,gridSize*cellSize+1,1);
+	// renderRect(gridSize*cellSize-1,-1,gridSize*cellSize+1,length);
+	// renderRect(-1,gridSize*cellSize-length,1,gridSize*cellSize+1);
+	// renderRect(-1,gridSize*cellSize-1,length,gridSize*cellSize+1);
+	// renderRect(gridSize*cellSize-length,gridSize*cellSize-1,gridSize*cellSize+1,gridSize*cellSize+1);
+	// renderRect(gridSize*cellSize-1,gridSize*cellSize-length,gridSize*cellSize+1,gridSize*cellSize+1);
 
 	// render grid cells
-	rgb(0.15,0.15,0.15);
-	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
-		renderRect(i*cellSize+2,j*cellSize+2,(i+1)*cellSize-2,(j+1)*cellSize-2);
+	// I (Ezra) added a shadow
 
+	var shadowSize = 1;
+	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
+		var x0 = i*cellSize+2;
+		var y0 = j*cellSize+2;
+		var x1 = (i+1)*cellSize-2;
+		var y1 = (j+1)*cellSize-2;
+
+		rgb(0.01, 0.01, 0.01);
+		renderRect(x1, y1, x0, y1+shadowSize);
+		renderRect(x1, y1+shadowSize, x1+shadowSize, y0);
+
+		rgb(0.5, 0.5, 0.5);
+		renderRect(x0, y1+shadowSize, x0-shadowSize, y0);
+		renderRect(x1+shadowSize, y0-shadowSize, x0-shadowSize, y0);
+
+		rgb(0.15,0.15,0.15);
+		renderRect(x0,y0,x1,y1);
+	}
 
 	// render board and process events and animations
 	renderGrid(board);
@@ -141,21 +161,22 @@ function render(){
 
 var firsttime = true;
 window.onresize = function(){
-	canvas.height = 0.75*window.innerHeight;
-	canvas.width = (canvas.height > 0.95*window.innerWidth) ? (canvas.height = 0.95*window.innerWidth) : canvas.height;
-	ww = wh = canvas.width;
+
+	//Setup width/height to look good
+	var offset = $('#canvas').offset();
+	$('#game_div').width(Math.min(window.innerHeight - 2 * offset.top, window.innerWidth - 2 * offset.left));
+
+	//force canvas to be square
+	ww = wh = canvas.clientWidth = canvas.clientHeight = canvas.height = canvas.width;
 
 	//Don't want to do this while game is running!!
 	if(firsttime){
-		if( (canvas.width - paneThickness*2)/gridSize < cellSizeThreshold ) gridSize = 8;
+		if( (ww - paneThickness*2)/gridSize < cellSizeThreshold ) gridSize = 8;
 		else gridSize = 10;
 		firsttime = false;
 		goalOrder = (gridSize == 10) ? 6 : 5;
 	}
 
-	cellSize = Math.floor((canvas.width - paneThickness*2)/gridSize);
+	cellSize = Math.floor((ww - paneThickness*2)/gridSize);
 	currentlyAnimating = true;
-
-	//update css
-	document.getElementById("game_div").style.margin = "auto " + (window.innerWidth/2 - canvas.width/2 - paneThickness) + "px";
 }

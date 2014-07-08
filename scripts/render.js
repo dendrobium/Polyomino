@@ -130,12 +130,12 @@ function render(){
 		floatY += (goalFloatY-floatY)*0.3;
 
 		//render a "hole" where the floating one originated
-		renderGridRaw(floating,1,false, "#505050");
+		renderGridRaw(floating,1,false, "#404040");
 
 		//render a shadow
 		gfx.save();
-		gfx.translate(-floatX+3, -floatY+3);
-		renderGridRaw(floating,1,false, "#000000");
+		gfx.translate(-floatX+4, -floatY+4);
+		renderGridRaw(floating,1,false, "rgba(0,0,0,0.5)");
 		gfx.restore();
 
 		//render the floating layer itself

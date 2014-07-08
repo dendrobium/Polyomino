@@ -12,14 +12,14 @@ var NONOMINO = 9;
 var DECOMINO = 10;
 var DEDECOMINO = 11;
 
-var MAX_PREDEFINED_ORDER = PENTOMINO;
+var MAX_PREDEFINED_ORDER = HEXOMINO;
 var SHAPE = new Array(MAX_PREDEFINED_ORDER + 1);
 var gamePolyominoTotal = new Array(MAX_PREDEFINED_ORDER + 1);
 var gameFreeShapeCount = new Array(MAX_PREDEFINED_ORDER + 1);
 
 function initShapes() {
 
-	console.log("initShapes()");
+	//console.log("initShapes()");
 	//Each list within SHAPE is the set of free polyoninos for that shape.
 	//Each list within SHAPE[order] is a particular shape.
 	//Each element of SHAPE[order][shapeNum] defines a row of the shape.
@@ -31,19 +31,20 @@ function initShapes() {
 	SHAPE[TETROMINO] = [[1,1,1,1],[1,1,3],[1,3,2],[3,3],[1,3,1]];
 
 	SHAPE[PENTOMINO] = [
-		[1,1,1,1,1],
-		[6,3,2],
-		[1,1,1,3],
-		[3,3,1],
-		[1,1,3,2],
-		[7,2,2],
-		[7,5],
-		[1,1,7],
-		[3,6,4],
-		[2,7,2],
-		[1,3,1,1],
-		[3,2,6]
+		[1,1,1,1,1],  [6,3,2],    [1,1,1,3],   [3,3,1],
+		[1,1,3,2],    [7,2,2],    [7,5],       [1,1,7],
+		[3,6,4],      [2,7,2],    [1,3,1,1],   [3,2,6]
 	];
+
+  SHAPE[HEXOMINO] = [
+    [1,1,1,1,1,1], [3,1,1,1,1],  [1,3,1,1,1],  [1,1,3,1,1],  [2,3,1,1,1],
+    [3,3,1,1],     [3,1,3,1],    [3,1,1,3],    [1,3,3,1],    [7,1,1,1],
+    [1,7,1,1],     [7,2,2,2],    [6,3,2,2],    [6,2,3,2],    [6,2,2,3],
+    [2,6,3,2],     [2,7,2,2],    [2,7,1,1],    [2,3,1,3],    [2,2,3,1,1],
+    [2,3,3,1],     [3,3,3],      [4,7,2,2],    [7,6,2],      [4,6,3,2],
+    [4,7,1,1],     [6,3,1,1],    [7,5,1],      [5,7,1],      [5,7,2],
+    [6,2,3,1],     [1,3,7],      [2,7,3],      [4,7,3],      [4,6,3,1]
+  ];
 
 	//== POLYOMINO GAME COUNTS
 	for (var order = MONOMINO; order <= MAX_PREDEFINED_ORDER; order++) {

@@ -56,7 +56,7 @@ function render(){
 	if(!currentlyAnimating)return;
 	currentlyAnimating = false;
 
-	gfx.clearRect(0,0,ww,wh);
+	gfx.clearRect(0,0,canvasWidth,canvasHeight);
 	gfx.save();
 	gfx.translate(paneThickness,paneThickness);
 
@@ -171,16 +171,16 @@ window.onresize = function(){
 	$('#game_div').width(Math.min(window.innerHeight - 2 * offset.top, window.innerWidth - 2 * offset.left));
 
 	//force canvas to be square -- offset width is VERY important to preserve scale!!
-  ww = wh =canvas.height = canvas.offsetHeight = canvas.width = canvas.offsetWidth;;
+  canvasWidth = canvasHeight =canvas.height = canvas.offsetHeight = canvas.width = canvas.offsetWidth;;
 
 	//Don't want to do this while game is running!!
 	if(firsttime){
-		if( (ww - paneThickness*2)/gridSize < cellSizeThreshold ) gridSize = 8;
+		if( (canvasWidth - paneThickness*2)/gridSize < cellSizeThreshold ) gridSize = 8;
 		else gridSize = 10;
 		firsttime = false;
 		goalOrder = (gridSize == 10) ? 6 : 5;
 	}
 
-	cellSize = Math.floor((ww - paneThickness*2)/gridSize);
+	cellSize = Math.floor((canvasWidth - paneThickness*2)/gridSize);
 	currentlyAnimating = true;
 }

@@ -1,7 +1,7 @@
 //==  RULES  =================================================================//
 
 detectHighestOrder = true;
-orderDecay         = false;
+orderDecay         = true;
 paneThickness      = 2;
 gridSize           = 10;
 cellSize           = 32; //may vary during runtime as the application SHOULD size grid cells according to window size.
@@ -27,7 +27,7 @@ var polyColor = [
 	{primary:{r:0.9255,g:0.3451,b:0.0000},secondary:{r:0.64784,g:0.24157,b:0.00000}}, // nonomino
 	{primary:{r:0.8196,g:0.5804,b:0.0471},secondary:{r:0.57372,g:0.40628,b:0.03297}}, // decomino
 	{primary:{r:0.6667,g:0.0000,b:0.0000},secondary:{r:0.46668,g:0.00000,b:0.00000}}, // undecomino
-	{primary:{r:0.7020,g:0.5686,b:0.4118},secondary:{r:0.49139,g:0.39802,b:0.28825}}, // dedecomino
+	{primary:{r:0.7020,g:0.5686,b:0.4118},secondary:{r:0.49139,g:0.39802,b:0.28825}} // dedecomino
 ];
 
 
@@ -51,4 +51,8 @@ var scoreCombo = 0;
 var canvas = null; //to be set on page load
 var gfx = null;
 var tick,elapsed;
-var ww,wh;
+var canvasWidth, canvasHeight;
+
+
+//== DEBUG OPTIONS ===========================================================//
+var DEBUG_LOG_SHAPE_PROBABILITIES = true

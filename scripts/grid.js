@@ -4,8 +4,8 @@ var cell = function(){
 	this.locked   = false;
 	this.selected = false;
 	this.occupied = false;
-	this.id = 0;
-	this.order = 0;
+	this.id = -1;
+	this.order = -1;
 
 	this.quickSet = function(occupied,id,order){
 		this.occupied = occupied;
@@ -39,21 +39,114 @@ var grid = function(size){
 	return grid;
 }
 
+
+
+
 // ignores locks
-function movePiece(from,to,id,offsetX,offsetY){
-	for(var i=0;i<from.size;++i)for(var j=0;j<from.size;++j){
-		var c = from.getCell(i+offsetX,j+offsetY);
-		if(!c || !c.occupied)continue;
-		if(c.id !== id)continue;
-		to.getCell(i,j).quickSet(true,c.id,c.order);
-		from.getCell(i+offsetX,j+offsetY).occupied = false;
-	}
+function floatPiece(id){
+
+  //console.log("grid.floatPiece(): ID="+id);
+  floatingBlockID = id;
+
+  // set lock and selected flags for selected cells
+  for(var i=0; i<gridSize; ++i)for(var j=0; j<gridSize; ++j){
+    var boardCell = boardMain.getCell(i,j);
+    var floatingCell = boardFloating.getCell(i,j);
+
+    floatingCell.occupied = false;
+    floatingCell.selected = false;
+    floatingCell.locked = false;
+
+    if(!boardCell.occupied) continue;
+    if(boardCell.id !== id) continue;
+
+    //console.log("grid.floatPiece(): i="+i+", j="+j);
+
+    boardCell.locked = true;
+    boardCell.selected = true;
+    boardCell.occupied = false;
+
+    floatingCell.quickSet(true, id, boardCell.order);
+  }
 }
 
-function deselectGrid(g){
-	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
-		var c = g.getCell(i,j);
-		if(c.selected)c.selected = c.locked = false;
-	}
+
+function unfloatPiece(placeFloatingPieceOnBoard){
+
+  //console.log("grid.unfloatPiece(): floatingBlockID="+floatingBlockID);
+
+  for(var i=0; i<gridSize; i++) for(var j=0; j<gridSize; j++){
+
+    var floatingCell = boardFloating.getCell(i,j);
+    floatingCell.locked = false;
+
+    if (!floatingCell.occupied) continue;
+
+    floatingCell.occupied = false;
+
+    if (placeFloatingPieceOnBoard) {
+
+      var gridX = i - placeX;
+      var gridY = j - placeY;
+
+      //console.log("  ===>place Piece: ("+gridX +", "+gridY+")");
+      var boardCell = boardMain.getCell(gridX, gridY);
+      boardCell.quickSet(true, floatingBlockID, floatingCell.order);
+      boardCell.locked = false;
+    }
+  }
+
+  for(var i=0; i<gridSize; i++) for(var j=0; j<gridSize; j++)
+  {
+    var boardCell = boardMain.getCell(i, j);
+    if (boardCell.selected)
+    {
+      boardCell.selected = false;
+      boardCell.locked = false;
+      if (!placeFloatingPieceOnBoard) {
+      boardCell.occupied = true;
+      }
+    }
+
+  }
+
+  dragging = false;
+  snapping = false;
+  floatingBlockID = -1;
+}
+
+
+function isMoveValid() {
+
+  //console.log("isMoveValid(): floatingBlockID="+floatingBlockID);
+  var targetLocationIsSameAsStart = true;
+  // make sure pieces in floating arent dropped on existing pieces or locked (and unselected) cells
+  for (var i = 0; i < gridSize; ++i)  for (var j = 0; j < gridSize; ++j) {
+
+    var floatingCell = boardFloating.getCell(i, j);
+
+    if (!floatingCell) continue;
+    if (!floatingCell.occupied) continue;
+
+    var gridX = i - placeX;
+    var gridY = j - placeY;
+
+    //console.log("  ==>gridX="+gridX + ", gridY="+gridY);
+    if (gridX < 0 || gridY < 0 || gridX >= gridSize || gridY >= gridSize) return false;
+
+    var boardCell = boardMain.getCell(gridX, gridY);
+
+    //console.log("  ==>boardCell.id="+boardCell.id + ", boardCell.occupied="+boardCell.occupied
+    //    + ", boardCell.locked="+boardCell.locked);
+
+    if (boardCell.id !== floatingBlockID) targetLocationIsSameAsStart = false;
+
+    if (boardCell.occupied) return false;
+    if (boardCell.locked && !boardCell.selected) return false;
+  }
+
+
+  if (targetLocationIsSameAsStart) return false;
+  return true;
 }
 

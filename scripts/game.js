@@ -1,7 +1,10 @@
 function newGame(){
-	board = new grid(gridSize);
-	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
-		board.setCell(i,j,new cell());
+	boardMain = new grid(gridSize);
+  boardFloating = new grid(gridSize);
+	for(var i=0;i<gridSize;++i)for(var j=0;j<gridSize;++j) {
+    boardMain.setCell(i, j, new cell());
+    boardFloating.setCell(i, j, new cell());
+  }
 
 	initShapes();
 	blockId = 0;
@@ -35,13 +38,20 @@ function loadGame(){
 			var storedboard = JSON.parse(localStorage.getItem("board"));
 			if(!storedboard)
 				return false;
-			board = new grid(gridSize);
-			for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
-				board.setCell(i, j, new cell());
-				board[i][j].occupied = storedboard[i][j].occupied;
-				board[i][j].id = storedboard[i][j].id;
-				board[i][j].order = storedboard[i][j].order;
+			boardMain = new grid(gridSize);
+      boardFloating = new grid(gridSize);
+			for(var i=0;i<gridSize;++i)for(var j=0;j<gridSize;++j){
+        boardMain .setCell(i, j, new cell());
+        boardMain [i][j].occupied = storedboard[i][j].occupied;
+        boardMain [i][j].id = storedboard[i][j].id;
+        boardMain [i][j].order = storedboard[i][j].order;
+
+        boardFloating.setCell(i, j, new cell());
 			}
+
+
+
+
 			blockId = parseInt(localStorage.getItem("blockId"));
 			score = parseInt(localStorage.getItem("score"));
 			var testscoreFuncVersion = parseInt(localStorage.getItem("scoreFuncVersion"));
@@ -62,7 +72,7 @@ function loadGame(){
 
 function saveGame(){
 	if(typeof(Storage) !== "undefined") {
-		localStorage.setItem("board", JSON.stringify(board));
+		localStorage.setItem("board", JSON.stringify(boardMain));
 		localStorage.setItem("blockId", blockId);
 		localStorage.setItem("score", score);
 		localStorage.setItem("scoreFuncVersion", scoreFuncVersion);

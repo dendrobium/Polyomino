@@ -2,8 +2,8 @@
 function placeNewPoly(){
 	// generate list of empty cells, verify a cell can be placed
 	var emptyLs = [];
-	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
-		var c = board.getCell(i,j);
+	for(var i=0;i<gridSize;++i)for(var j=0;j<gridSize;++j){
+		var c = boardMain.getCell(i,j);
 		if(c && !c.locked && !c.occupied)emptyLs.push({cell:c,x:i,y:j});
 	}if(emptyLs.length === 0)return;
 
@@ -17,7 +17,7 @@ function placeNewPoly(){
 	var dir = rInt(4);
 
 	var genDomino = function(i,j){
-		var d = board.getCell(i,j);
+		var d = boardMain.getCell(i,j);
 		if(!d || d.locked || d.occupied)return;
 		dominoGenerated = true;
 
@@ -66,7 +66,7 @@ function squareToPoly(left,top,order){
 
 	// clear everything in bounding box
 	for(var i=left;i<left+order;++i)for(var j=top;j<top+order;++j) {
-		board.getCell(i, j).occupied = false;
+		boardMain.getCell(i, j).occupied = false;
 	}
 
 	// generate random polyomino
@@ -74,14 +74,14 @@ function squareToPoly(left,top,order){
 	else {
 		var i = left + rInt(order);
 		var j = top + rInt(order);
-		var c = board.getCell(i, j);
+		var c = boardMain.getCell(i, j);
 		c.quickSet(true, newId(), order);
 		filled.setCell(i - left, j - top, true);
 		for (var count = 1; count < order; ++count) {
 			while (true) {
 				i = left + rInt(order);
 				j = top + rInt(order);
-				var b = board.getCell(i, j);
+				var b = boardMain.getCell(i, j);
 				if (b.occupied)continue;
 
 				var u = filled.getCell(i - left, j - top - 1);
@@ -127,9 +127,10 @@ function squareToPoly(left,top,order){
 	// XXX [ezra]:	 slideInEvt[0](i,j,0,1000); // example
 	// XXX [ezra]: }
 	for(var i=left;i<left+order;++i)for(var j=top;j<top+order;++j) {
-		if (!board.getCell(i, j).occupied) {
+    var boardCell = boardMain.getCell(i, j);
+		if (!boardCell.occupied) {
 			/* do stuff here (cells are at i*cellSize, j*cellSize) */
-			var color = polyColor[board.getCell(i, j).order].primary;
+			var color = polyColor[boardCell.order].primary;
 			new particle(i * cellSize + cellSize / 2, j * cellSize + cellSize / 2, 0, 0, 750, color.r * 255, color.g * 255, color.b * 255, 1, cellSize, 255, 255, 255, 0, cellSize / 10, 1, 0);
 
 		}
@@ -151,12 +152,12 @@ function spawnBiasedRandomPoly(filled, order, left, top) {
     console.log("	==> random number[0->1)=" + r);
   }
 
-	var sumSquare = 0;
+	var sumOfDiffSquared = 0;
 	for(var i=0; i<SHAPE[order].length; i++) {
 		//console.log("gamePolyominoTotal["+order+"]="+gamePolyominoTotal[order] +
 		//"gameFreeShapeCount["+order+"]["+i+"]="+gameFreeShapeCount[order][i]);
 		var diff = 1 + (gamePolyominoTotal[order] - gameFreeShapeCount[order][i]);
-		sumSquare += diff*diff;
+    sumOfDiffSquared += diff*diff;
 	}
 
 
@@ -164,9 +165,9 @@ function spawnBiasedRandomPoly(filled, order, left, top) {
 	for(var i=0; i<SHAPE[order].length; i++) {
 		var diff = 1 + (gamePolyominoTotal[order] - gameFreeShapeCount[order][i]);
 
-		cumulativeSum += (diff * diff)/sumSquare;
+		cumulativeSum += (diff * diff)/sumOfDiffSquared;
     if (DEBUG_LOG_SHAPE_PROBABILITIES) {
-      console.log("	==> sumSquare=" + sumSquare + ", diff=" + diff + ", cumulativeSum=" + cumulativeSum);
+      console.log("	==> sumOfDiffSquared=" + sumOfDiffSquared + ", diff=" + diff + ", cumulativeSum=" + cumulativeSum);
     }
 		if (r < cumulativeSum) {
 			shapeIdx = i;
@@ -190,7 +191,7 @@ function spawnBiasedRandomPoly(filled, order, left, top) {
 			if (spawnGrid[x][y]) {
 				var i = x + left;
 				var j = y + top;
-				var cell = board.getCell(i, j);
+				var cell = boardMain.getCell(i, j);
 				cell.quickSet(true, id, order);
 				filled.setCell(i, j, true);
 			}

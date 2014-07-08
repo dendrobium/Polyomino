@@ -4,16 +4,31 @@ function interpColor(c1,c2,interp){
 	    c1.b+(c2.b-c1.b)*interp);
 }
 
+
 function renderGridRaw(g,offset,usePrimary, overrideColor){
 	var cs = cellSize;
-
+  //console.log("render.renderGridRaw()");
 	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
 		var c = g.getCell(i,j);
-		if(!c.occupied)continue;
 
-		if(overrideColor){
-			gfx.fillStyle = overrideColor;
-		}else if(usePrimary){
+    if (c.selected) {
+      gfx.fillStyle = "#505050";
+      renderRect(i*cs+offset,j*cs+offset,(i+1)*cs-offset,(j+1)*cs-offset);
+      var right = g.getCell(i+1,j);
+      if(right && right.selected && right.id === c.id)
+        renderRect((i+1)*cs-offset-1,j*cs+offset,(i+1)*cs+offset+1,(j+1)*cs-offset);
+      var down = g.getCell(i,j+1);
+      if(down && down.selected && down.id === c.id)
+        renderRect(i*cs+offset,(j+1)*cs-offset-1,(i+1)*cs-offset,(j+1)*cs+offset+1);
+
+      continue;
+    }
+
+    if(!c.occupied) continue;
+
+		if(overrideColor) {
+      gfx.fillStyle = overrideColor;
+    }else if(usePrimary){
 			if(Math.floor(c.order)===0)rgb(polyColor[c.order].primary.r,polyColor[c.order].primary.g,polyColor[c.order].primary.b);
 			else interpColor(polyColor[Math.floor(c.order)].primary,polyColor[Math.ceil(c.order)].primary,c.order%1);
 		}else{
@@ -98,7 +113,7 @@ function render(){
 	// I (Ezra) added a shadow
 
 	var shadowSize = 1;
-	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
+	for(var i=0;i<gridSize;++i)for(var j=0;j<gridSize;++j){
 		var x0 = i*cellSize+2;
 		var y0 = j*cellSize+2;
 		var x1 = (i+1)*cellSize-2;
@@ -117,7 +132,7 @@ function render(){
 	}
 
 	// render board and process events and animations
-	renderGrid(board);
+	renderGrid(boardMain);
 	tickParticles();
 	processActiveEvents();
 
@@ -128,12 +143,12 @@ function render(){
 		floatY += (goalFloatY-floatY)*0.3;
 
 		//render a "hole" where the floating one originated
-		renderGridRaw(floating,1,false, "#505050");
+		//renderGridRaw(floating,1,false, "#505050");
 
 		//render a shadow
 		gfx.save();
 		gfx.translate(-floatX+3, -floatY+3);
-		renderGridRaw(floating,1,false, "#000000");
+		renderGridRaw(boardFloating,1,false, "#000000");
 		gfx.restore();
 
 		//render the floating layer itself
@@ -142,23 +157,24 @@ function render(){
 		// gfx.translate(Math.round(-floatX),Math.round(-floatY)); // no anti-alias version
 		//   if you want some sort of transparency going on in the floating layer, you need to use this or there will be artifacts
 
-		renderGrid(floating);
+		renderGrid(boardFloating);
 		gfx.restore();
 
 		// break animation if snapping is complete
 		if(snapping &&
 			Math.abs(floatX-goalFloatX)<0.5 &&
 			Math.abs(floatY-goalFloatY)<0.5){
-			movePiece(floating,board,floating.getCell(mouseDX/cellSize,mouseDY/cellSize).id,placeX,placeY);
-			deselectGrid(board);
+			//movePiece(floating,board,floating.getCell(mouseDX/cellSize,mouseDY/cellSize).id,placeX,placeY);
+      //unfloatPiece(board, floating, floating.getCell(mouseDX/cellSize,mouseDY/cellSize).id, placeX, placeY);
 			dragging = snapping = false;
 			triggerDetectSquares = true;
 		}
 	}
 
-  gfx.font="36px Arial";
-  gfx.fillStyle = "white";
-  gfx.fillText("↻",100,canvasHeight);
+  //Joel TODO: change right click rotate to pass-over icon
+  //gfx.font="36px Arial";
+  //gfx.fillStyle = "white";
+  //gfx.fillText("↻",100,canvasHeight);
 
 
 
@@ -171,10 +187,6 @@ function render(){
 
 var firsttime = true;
 window.onresize = function(){
-	//resize text if need be
-
-	document.getElementById('header_div').style.fontSize = (window.innerWidth < 480) ? "30px" : "48px";
-
 
 	//Setup width/height to look good
 	var offset = $('#canvas').offset();
@@ -184,7 +196,7 @@ window.onresize = function(){
 
 
 	//force canvas to be square -- offset width is VERY important to preserve scale!!
-  canvasWidth = canvasHeight =canvas.height = canvas.offsetHeight = canvas.width = canvas.offsetWidth;;
+  canvasWidth = canvasHeight =canvas.height = canvas.offsetHeight = canvas.width = canvas.offsetWidth;
 
 	//Don't want to do this while game is running!!
 	if(firsttime){

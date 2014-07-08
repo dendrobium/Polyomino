@@ -4,7 +4,7 @@ detectHighestOrder = true;
 orderDecay         = true;
 paneThickness      = 2;
 gridSize           = 10;
-cellSize           = 32; //may vary during runtime as the application SHOULD size grid cells according to window size.
+var cellSize; //any value set here is overwritten in render.js, so do not set it here - it gives the false idea that changing it here will have an effect.
 initPieceCount     = 4;
 dragSpeed          = 0.3;
 hoverOffset        = 4;
@@ -27,20 +27,29 @@ var polyColor = [
 	{primary:{r:0.9255,g:0.3451,b:0.0000},secondary:{r:0.64784,g:0.24157,b:0.00000}}, // nonomino
 	{primary:{r:0.8196,g:0.5804,b:0.0471},secondary:{r:0.57372,g:0.40628,b:0.03297}}, // decomino
 	{primary:{r:0.6667,g:0.0000,b:0.0000},secondary:{r:0.46668,g:0.00000,b:0.00000}}, // undecomino
-	{primary:{r:0.7020,g:0.5686,b:0.4118},secondary:{r:0.49139,g:0.39802,b:0.28825}} // dedecomino
+	{primary:{r:0.7020,g:0.5686,b:0.4118},secondary:{r:0.49139,g:0.39802,b:0.28825}}  // dedecomino
 ];
 
+var MAX_POLYOMINO_ORDER = polyColor.length - 1;
 
+var MOUSE_LEFT_BUTTON = 1;
+var MOUSE_RIGHT_BUTTON = 2;
 
 
 
 //==  GLOBAL VARS  ===========================================================//
 
-var board,floating;
-var blockId,score;
+var boardMain, boardFloating;
+var blockId; //TODO: Why is blockId a global variable? if it has some special meaning
+             // such as the blockId of the corrently floating block, then name it in a way that
+             // this is clear (i.e. floatingBlockId). If it is realy a local variable, then declare it locally.
+var score;
 var mouse,dragging,snapping,mouseDX,mouseDY,downGX,downGY,mouseGX,mouseGY;
+var floatingBlockID = -1;
+
 var goalFloatX,goalFloatY,floatX,floatY,placeX,placeY;
-var currentlyAnimating,triggerDetectSquares;
+var currentlyAnimating;
+var triggerDetectSquares;
 var highScore = 0;
 var gameWon = false; //so that we don't continually trigger the game won screen if they keep building big polyominos
 var scoreTick = 0;
@@ -55,4 +64,4 @@ var canvasWidth, canvasHeight;
 
 
 //== DEBUG OPTIONS ===========================================================//
-var DEBUG_LOG_SHAPE_PROBABILITIES = true
+var DEBUG_LOG_SHAPE_PROBABILITIES = true;

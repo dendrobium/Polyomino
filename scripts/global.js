@@ -1,7 +1,7 @@
 //==  RULES  =================================================================//
 
 detectHighestOrder = true;
-orderDecay         = false;
+orderDecay         = true;
 paneThickness      = 4;
 gridSize           = 10;
 cellSize           = 32; //may vary during runtime as the application SHOULD size grid cells according to window size.
@@ -52,3 +52,7 @@ var canvas = document.getElementById("canvas");
 var gfx = canvas.getContext("2d");
 var tick,elapsed;
 var ww,wh;
+
+
+//== DEBUG OPTIONS ===========================================================//
+var DEBUG_LOG_SHAPE_PROBABILITIES = true

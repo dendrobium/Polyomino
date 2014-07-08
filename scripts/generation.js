@@ -146,8 +146,11 @@ function spawnBiasedRandomPoly(filled, order, left, top) {
 	var shapeIdx = 0;
 	var r = Math.random();
 
+  if (DEBUG_LOG_SHAPE_PROBABILITIES) {
+    console.log("\ngeneration.spawnBiasedRandomPoly(order="+order+", left="+left+", top="+top+")");
+    console.log("	==> random number[0->1)=" + r);
+  }
 
-	//var total = gamePolyominoTotal[order] + SHAPE[order].length;
 	var sumSquare = 0;
 	for(var i=0; i<SHAPE[order].length; i++) {
 		//console.log("gamePolyominoTotal["+order+"]="+gamePolyominoTotal[order] +
@@ -156,12 +159,15 @@ function spawnBiasedRandomPoly(filled, order, left, top) {
 		sumSquare += diff*diff;
 	}
 
+
 	var cumulativeSum = 0;
 	for(var i=0; i<SHAPE[order].length; i++) {
 		var diff = 1 + (gamePolyominoTotal[order] - gameFreeShapeCount[order][i]);
 
 		cumulativeSum += (diff * diff)/sumSquare;
-		//console.log("	==> r="+r+"	sumSquare="+sumSquare+", diff="+diff+", cumulativeSum="+cumulativeSum);
+    if (DEBUG_LOG_SHAPE_PROBABILITIES) {
+      console.log("	==> sumSquare=" + sumSquare + ", diff=" + diff + ", cumulativeSum=" + cumulativeSum);
+    }
 		if (r < cumulativeSum) {
 			shapeIdx = i;
 			break;

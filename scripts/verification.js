@@ -19,6 +19,7 @@ function checkGameOver(){
 }
 
 function recalculateIds(){
+	var saveFlag = false;
 	var visited = new grid(board.size);
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
 	if(!visited.getCell(i,j)){
@@ -29,10 +30,12 @@ function recalculateIds(){
 		for(var x=0;x<board.size;++x)for(var y=0;y<board.size;++y){
 			var chk = board.getCell(x,y);
 			if(!chk.occupied || chk.locked)continue;
-			if(chk.id === c.id && !visited.getCell(x,y))
+			if(chk.id === c.id && !visited.getCell(x,y)){
 				chk.id = id;
+				saveFlag = true;
+			}
 		}
-	}
+	}if(saveFlag)saveGame();
 }
 
 function recalculateOrder(){
@@ -50,6 +53,7 @@ function recalculateOrder(){
 		recurse(new grid(board.size),i,j,c,function(e){
 			orderChangeEvt(e,e.order,count,keyframe(0),keyframe(1));
 			unlockEvt(e,keyframe(1));
+			saveGameEvt(keyframe(1));
 		});
 	}
 }

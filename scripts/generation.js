@@ -42,10 +42,12 @@ function placeNewPoly(){
 		highlightEvt(entry.x,entry.y,keyframe(1),keyframe(2));
 		fadeOutEvt(entry.x,entry.y,keyframe(2),keyframe(3));
 		unlockEvt(c,keyframe(3));
+		saveGameEvt(keyframe(3));
 	}else{
 		quickSetEvt(c,true,id,1,keyframe(1));
 		fadeOutEvt(entry.x,entry.y,keyframe(1),keyframe(2));
 		unlockEvt(c,keyframe(2));
+		saveGameEvt(keyframe(3));
 	}
 }
 
@@ -136,6 +138,7 @@ function squareToPoly(left,top,order){
 	}
 	beginSurroundEvt(left, top,order,0,order*100);
 	surroundEvt(left, top,order,order*100,order*100+1000);
+	saveGame();
 }
 
 

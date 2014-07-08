@@ -33,15 +33,6 @@ function processActiveEvents(){
 		e.func((tick-e.startTick)/(e.endTick-e.startTick));
 	}
 
-	//////////////////////////////////////////////
-	// XXX Luke
-	// XXX Wasn't sure where to put these calls
-	// XXX put them here because it seemed like a reasonable guess
-	// XXX but not sure about efficiency
-
-	if(!dragging)
-		saveGame();
-
 	//check lose condition
 	checkGameOver();
 
@@ -74,6 +65,10 @@ function quickSetEvt(cell,occupied,id,order,setTick){
 	new_event(setTick,setTick,null,function(){
 		cell.quickSet(occupied,id,order);
 	});
+}
+
+function saveGameEvt(saveTick){
+	new_event(saveTick,saveTick,null,saveGame);
 }
 
 //============================================================================//

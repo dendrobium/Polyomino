@@ -97,7 +97,9 @@ function render(){
 	// render grid cells
 	// I (Ezra) added a shadow
 
-	var shadowSize = 1;
+	var shadowSizeV = 1;
+	var shadowSizeH = 2;
+
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
 		var x0 = i*cellSize+2;
 		var y0 = j*cellSize+2;
@@ -105,12 +107,12 @@ function render(){
 		var y1 = (j+1)*cellSize-2;
 
 		rgb(0.01, 0.01, 0.01);
-		renderRect(x1, y1, x0, y1+shadowSize);
-		renderRect(x1, y1+shadowSize, x1+shadowSize, y0);
+		renderRect(x0, y1, x1+shadowSizeV, y1+shadowSizeH);
+		renderRect(x1, y0, x1+shadowSizeV, y1+shadowSizeH);
 
-		rgb(0.5, 0.5, 0.5);
-		renderRect(x0, y1+shadowSize, x0-shadowSize, y0);
-		renderRect(x1+shadowSize, y0-shadowSize, x0-shadowSize, y0);
+		rgb(0.3, 0.3, 0.3);
+		renderRect(x0, y0, x0-shadowSizeV, y1+shadowSizeV);
+		renderRect(x1+shadowSizeV, y0-shadowSizeV, x0-shadowSizeV, y0);
 
 		rgb(0.15,0.15,0.15);
 		renderRect(x0,y0,x1,y1);
@@ -160,13 +162,7 @@ function render(){
   gfx.fillStyle = "white";
   gfx.fillText("↻",100,canvasHeight);
 
-
-
 	gfx.restore();
-
-
-
-
 }
 
 var firsttime = true;
@@ -174,7 +170,6 @@ window.onresize = function(){
 	//resize text if need be
 
 	document.getElementById('header_div').style.fontSize = (window.innerWidth < 480) ? "30px" : "48px";
-
 
 	//Setup width/height to look good
 	var offset = $('#canvas').offset();

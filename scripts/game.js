@@ -3,7 +3,6 @@ function newGame(){
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
 		board.setCell(i,j,new cell());
 
-	initShapes();
 	blockId = 0;
 	score = 0;
 	dragging = false;
@@ -37,10 +36,10 @@ function loadGame(){
 				return false;
 			board = new grid(gridSize);
 			for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
-				board.setCell(i, j, new cell());
-				board[i][j].occupied = storedboard[i][j].occupied;
-				board[i][j].id = storedboard[i][j].id;
-				board[i][j].order = storedboard[i][j].order;
+				var s = storedboard[i][j];
+				var c = new cell();
+				c.quickSet(s.occupied,s.id,s.order);
+				board.setCell(i,j,c);
 			}
 			blockId = parseInt(localStorage.getItem("blockId"));
 			score = parseInt(localStorage.getItem("score"));
@@ -127,6 +126,7 @@ $(function(){
 		localStorage.setItem("visited", true);
 	}
 
+	initShapes();
 	if(!loadGame())
 		newGame();
 

@@ -171,12 +171,12 @@ window.onresize = function(){
 
 	//Don't want to do this while game is running!!
 	if(firsttime){
-		if( (ww - paneThickness*2)/gridSize < cellSizeThreshold ) gridSize = 8;
+		if( (canvasWidth - paneThickness*2)/gridSize < cellSizeThreshold ) gridSize = 8;
 		else gridSize = 10;
 		firsttime = false;
 		goalOrder = (gridSize == 10) ? 6 : 5;
 	}
 
-	cellSize = Math.floor((ww - paneThickness*2)/gridSize);
+	cellSize = Math.floor((canvasWidth - paneThickness*2)/gridSize);
 	currentlyAnimating = true;
 }

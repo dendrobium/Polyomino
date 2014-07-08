@@ -47,25 +47,50 @@
 	box-shadow: 1px 1px 3px #000;
 }
 
+
+
+.header {
+	width: 100%;
+	margin-top: 4px;
+	letter-spacing:-3px;
+	font-weight:bold;
+	color:#3F3F3F;
+}
+
+.beforeGrid {
+	margin-top: 4px;
+	width: 100%;
+}
+
 .scoreContainer {
 	float: right;
 	text-align: right;
+	background: #3F3F3F;
+	margin-top: 8px;
 }
 
 .score, .highscore {
 	position: relative;
 	display: inline-block;
 	letter-spacing: 0px;
-	background: #3F3F3F;
 	padding: 13px 30px;
 	font-size: 20px;
 	height: 25px;
 	line-height: 47px;
 	font-weight: bold;
-	border-radius: 0ppx;
 	color: #f0f0f0;
-	margin-top: 8px;
+
 	text-align: center;
+}
+
+.score {
+	border-right: 1px solid #f0f0f0;
+	margin-right:-7%;
+}
+
+.highscore {
+	border-left: 1px solid #f0f0f0;
+	margin-right: 3.5%;
 }
 
 .score:after, .highscore:after {
@@ -98,9 +123,9 @@
 	background: rgba(0,0,0,0.4);
 	z-index: 99999;
 	opacity:0;
-	-webkit-transition: top 400ms ease-in, opacity 400ms ease-in;
-	-moz-transition: top 400ms ease-in, opacity 400ms ease-in;
-	transition: top 400ms ease-in, opacity 400ms ease-in;
+	-webkit-transition: top 400ms ease-in-out; /*, opacity 400ms ease-in-out; */
+	-moz-transition: top 400ms ease-in-out; /*, opacity 400ms ease-in-out; */
+	transition: top 400ms ease-in-out; /*, opacity 400ms ease-in-out; */
 	pointer-events: none;
 }
 
@@ -143,6 +168,7 @@
 	border-radius: 0px;
 	width: 150px;
 	text-decoration: none;
+
 }
 
 

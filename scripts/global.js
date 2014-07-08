@@ -10,7 +10,7 @@ dragSpeed          = 0.3;
 hoverOffset        = 4;
 keyframeSpeed      = 150;
 goalOrder          = 6; //for now, trying 6/5 with gridsize = 10/8, respectively
-cellSizeThreshold  = 42; //may need tweaking
+cellSizeThreshold  = 50; //may need tweaking
 
 //==  POLYOMINO COLORS  ======================================================//
 

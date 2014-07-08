@@ -101,7 +101,14 @@ function updateScoreBoxes(){
 }
 
 
-(function main(){
+//Will run on DOM load
+$(function(){
+
+	//Set up controls and canvas element
+	canvas = document.getElementById("canvas");
+	gfx = canvas.getContext("2d");
+	setupControls();
+
 	tick=new Date().getTime();
 
 	//determine grid/cell size
@@ -125,4 +132,4 @@ function updateScoreBoxes(){
 
 	updateScoreBoxes();
 	render();
-})();
+});

@@ -4,7 +4,7 @@ function interpColor(c1,c2,interp){
 	    c1.b+(c2.b-c1.b)*interp);
 }
 
-function renderGridRaw(g,offset,usePrimary, overrideColor){
+function renderGridRaw(g,offset,usePrimary,overrideColor){
 	var cs = cellSize;
 
 	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
@@ -97,6 +97,7 @@ function render(){
 	// render grid cells
 	// I (Ezra) added a shadow
 
+	// XXX: the shadows look like actual pieces, moreso than the actual polyominos in my [Luke] opinion...
 	var shadowSizeV = 1;
 	var shadowSizeH = 2;
 
@@ -158,31 +159,32 @@ function render(){
 		}
 	}
 
-  gfx.font="36px Arial";
-  gfx.fillStyle = "white";
-  gfx.fillText("↻",100,canvasHeight);
+	gfx.font="36px Arial";
+	gfx.fillStyle = "white";
+	gfx.fillText("↻",100,canvasHeight);
 
 	gfx.restore();
 }
 
 var firsttime = true;
 window.onresize = function(){
-	//resize text if need be
+	// resize text if need be
 
 	document.getElementById('header_div').style.fontSize = (window.innerWidth < 480) ? "30px" : "48px";
 
-	//Setup width/height to look good
+	// Setup width/height to look good
 	var offset = $('#canvas').offset();
-  var inGameControlSpace = 40;
+	var inGameControlSpace = 40;
 	$('#game_div').width(Math.min(window.innerHeight - 2 * offset.top, window.innerWidth - 2 * offset.left));
-  $('#game_div').height(Math.min(window.innerHeight - 2 * offset.top, window.innerWidth - 2 * offset.left));
+	$('#game_div').height(Math.min(window.innerHeight - 2 * offset.top, window.innerWidth - 2 * offset.left));
 
+	// force canvas to be square -- offset width is VERY important to preserve scale!!
+	canvasWidth = canvasHeight =canvas.height = canvas.offsetHeight = canvas.width = canvas.offsetWidth;;
 
-	//force canvas to be square -- offset width is VERY important to preserve scale!!
-  canvasWidth = canvasHeight =canvas.height = canvas.offsetHeight = canvas.width = canvas.offsetWidth;;
-
-	//Don't want to do this while game is running!!
+	// Don't want to do this while game is running!!
 	if(firsttime){
+		// XXX: why is grid size a function of how large the window is?
+		// XXX: you can lose save states because of this (play game in small window, resize to large window, refresh)
 		if( (canvasWidth - paneThickness*2)/gridSize < cellSizeThreshold ) gridSize = 8;
 		else gridSize = 10;
 		firsttime = false;

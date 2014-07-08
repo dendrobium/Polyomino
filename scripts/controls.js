@@ -10,40 +10,37 @@ function calcMouseGridVars(){
 	mouseGY = Math.floor(mouse.y/cellSize);
 }
 
-var cancelMove = function(){
+function cancelMove(){
 	placeX = placeY = 0;
 	goalFloatX = goalFloatY = 0;
 	snapping = true;
 };
 
-function touchHandler(event)
-{
-	var touches = event.changedTouches,
-			first = touches[0],
-			type = "";
+function touchHandler(event){
+	var touches = event.changedTouches;
+	var first   = touches[0];
+	var type    = "";
 
-	switch(event.type)
-	{
-			case "touchstart": type = "mousedown"; break;
-			case "touchmove":	type="mousemove"; break;
-			case "touchend":	 type="mouseup"; break;
-			default: return;
+	switch(event.type){
+		case "touchstart" : type = "mousedown"; break;
+		case "touchmove"  : type = "mousemove"; break;
+		case "touchend"   : type = "mouseup";   break;
+		default:return;
 	}
 
 	var simulatedEvent = document.createEvent("MouseEvent");
 	simulatedEvent.initMouseEvent(type, true, true, window, 1,
-															first.screenX, first.screenY,
-															first.clientX, first.clientY, false,
-															false, false, false, 0/*left*/, null);
+	                              first.screenX, first.screenY,
+	                              first.clientX, first.clientY, false,
+	                              false, false, false, 0/*left*/, null);
 	first.target.dispatchEvent(simulatedEvent);
 	event.preventDefault();
 }
 
-
 function setupControls(){
-	canvas.addEventListener("touchstart", touchHandler);
-	canvas.addEventListener("touchmove", touchHandler);
-	canvas.addEventListener("touchend", touchHandler);
+	canvas.addEventListener("touchstart" , touchHandler);
+	canvas.addEventListener("touchmove"  , touchHandler);
+	canvas.addEventListener("touchend"   , touchHandler);
 
 	canvas.addEventListener("mousedown",function(e){
 		mouse = getMousePos(e);
@@ -82,14 +79,6 @@ function setupControls(){
 		goalFloatX = (downGX-mouseGX)*cellSize+hoverOffset;
 		goalFloatY = (downGY-mouseGY)*cellSize+hoverOffset;
 	});
-
-
-	// I found that this was more annoying than helpful, honestly.
-	//
-	// canvas.addEventListener("mouseout",function(e){
-	// 	if(!dragging||snapping)return;
-	// 	cancelMove();
-	// });
 
 	canvas.addEventListener("mouseup",function(e){
 		mouse = getMousePos(e);
@@ -131,5 +120,11 @@ function setupControls(){
 		snapping = true;
 		placeNewPoly();
 	});
-}
 
+
+	// I found that this was more annoying than helpful, honestly.
+	// canvas.addEventListener("mouseout",function(e){
+	// 	if(!dragging||snapping)return;
+	// 	cancelMove();
+	// });
+}

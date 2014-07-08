@@ -5,19 +5,12 @@ function newGame(){
 
 	blockId = 0;
 	score = 0;
+	// TODO: should highScore be considered here? its only ever defined in loadGame
 	dragging = false;
 	snapping = false;
 	currentlyAnimating = true;
 	triggerDetectSquares = true;
 	for(var i=0;i<initPieceCount;++i)placeNewPoly();
-
-	// uncomment to test colors
-	// for(var i=0;i<gridSize;++i){
-	// 	var id = newId();
-	// 	for(var j=0;j<=i;++j)
-	// 		board.getCell(i,j).quickSet(true,id,i+1);
-	// }
-
 	updateScoreBoxes();
 }
 
@@ -25,18 +18,16 @@ function gameOver(){
 	// TODO: spin off animation event, bool for temp control override (click to continue?)
 }
 
-bypassLoad = false;
 function loadGame(){
-	if(bypassLoad)
-		return false;
-	try { //try... catch to protect against corrupted savegames
+	if(bypassLoadGame)return false;
+	try{
 		if(typeof(Storage) !== "undefined") {
-			var storedboard = JSON.parse(localStorage.getItem("board"));
-			if(!storedboard)
+			var storedBoard = JSON.parse(localStorage.getItem("board"));
+			if(!storedBoard)
 				return false;
 			board = new grid(gridSize);
 			for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
-				var s = storedboard[i][j];
+				var s = storedBoard[i][j];
 				var c = new cell();
 				c.quickSet(s.occupied,s.id,s.order);
 				board.setCell(i,j,c);
@@ -54,8 +45,7 @@ function loadGame(){
 			triggerDetectSquares = true;
 			return true;
 		}
-	}
-	catch(e){ return false}
+	}catch(e){return false;}
 	return false;
 }
 
@@ -80,17 +70,16 @@ function clearContainer(container){
 	}
 }
 
-//IMPORTANT: If you update the score function, increment this!
+// IMPORTANT: If you update the score function, increment this!
+// XXX: can't you compute the hash of the score function and use that instead?
 var scoreFuncVersion = 2;
 
 function addToScore(ord){
 	score += (ord*ord) * scoreCombo; //dummy score function. May be updated!
 	scoreTick = tick;
 
-	//TODO show points on-board (particles? some other effect?)
-	if(score > highScore){
-		highScore = score;
-	}
+	// TODO show points on-board (particles? some other effect?)
+	if(score > highScore)highScore = score;
 	updateScoreBoxes();
 }
 
@@ -99,24 +88,16 @@ function updateScoreBoxes(){
 	document.querySelector(".score").textContent = score;
 }
 
-
-//Will run on DOM load
 $(function(){
 
-	//Set up controls and canvas element
+	// setup controls and canvas element
 	canvas = document.getElementById("canvas");
 	gfx = canvas.getContext("2d");
+	window.onresize();  // determine grid/cell size
+	setupInstruction(); // setup instructions based on grid size
 	setupControls();
 
-	tick=new Date().getTime();
-
-	//determine grid/cell size
-	window.onresize();
-
-	//setup instructions based on grid size
-	setupInstruction();
-
-	//see if first-time visitor and needs instructions
+	// see if first-time visitor and needs instructions
 	if(typeof(Storage) !== "undefined"){
 		var visited = localStorage.getItem("visited");
 		if(!visited)
@@ -126,10 +107,12 @@ $(function(){
 		localStorage.setItem("visited", true);
 	}
 
+	// setup game
 	initShapes();
-	if(!loadGame())
-		newGame();
-
+	if(!loadGame())newGame();
 	updateScoreBoxes();
+
+	// begin game
+	tick=new Date().getTime();
 	render();
 });

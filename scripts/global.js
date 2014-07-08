@@ -1,5 +1,6 @@
 //==  RULES  =================================================================//
 
+bypassLoadGame     = false;
 detectHighestOrder = true;
 orderDecay         = true;
 paneThickness      = 2;
@@ -9,7 +10,7 @@ initPieceCount     = 4;
 dragSpeed          = 0.3;
 hoverOffset        = 4;
 keyframeSpeed      = 150;
-goalOrder          = 6; //for now, trying 6/5 with gridsize = 10/8, respectively
+goalOrder          = 6;  //for now, trying 6/5 with gridsize = 10/8, respectively
 cellSizeThreshold  = 50; //may need tweaking
 
 //==  POLYOMINO COLORS  ======================================================//
@@ -27,7 +28,7 @@ var polyColor = [
 	{primary:{r:0.9255,g:0.3451,b:0.0000},secondary:{r:0.64784,g:0.24157,b:0.00000}}, // nonomino
 	{primary:{r:0.8196,g:0.5804,b:0.0471},secondary:{r:0.57372,g:0.40628,b:0.03297}}, // decomino
 	{primary:{r:0.6667,g:0.0000,b:0.0000},secondary:{r:0.46668,g:0.00000,b:0.00000}}, // undecomino
-	{primary:{r:0.7020,g:0.5686,b:0.4118},secondary:{r:0.49139,g:0.39802,b:0.28825}} // dedecomino
+	{primary:{r:0.7020,g:0.5686,b:0.4118},secondary:{r:0.49139,g:0.39802,b:0.28825}}  // dedecomino
 ];
 
 
@@ -41,18 +42,19 @@ var blockId,score;
 var mouse,dragging,snapping,mouseDX,mouseDY,downGX,downGY,mouseGX,mouseGY;
 var goalFloatX,goalFloatY,floatX,floatY,placeX,placeY;
 var currentlyAnimating,triggerDetectSquares;
+
+var gameWon = false; // so that we don't continually trigger the game won screen if they keep building big polyominos
 var highScore = 0;
-var gameWon = false; //so that we don't continually trigger the game won screen if they keep building big polyominos
-var scoreTick = 0;
-var scoreCombo = 0;
+var scoreTick = 0;  // XXX: this is unnecessary, see addScoreEvt definition
+var scoreCombo = 0; // XXX: this is unnecessary, see addScoreEvt definition
 
 //==  CANVAS VARS  ===========================================================//
 
-var canvas = null; //to be set on page load
+var canvas = null;
 var gfx = null;
 var tick,elapsed;
 var canvasWidth, canvasHeight;
 
+//==  DEBUG OPTIONS  =========================================================//
 
-//== DEBUG OPTIONS ===========================================================//
 var DEBUG_LOG_SHAPE_PROBABILITIES = true

@@ -11,13 +11,6 @@ function recurse(visited,x,y,c,f){
 	recurse(visited,x+1,y  ,c,f);
 };
 
-//opens game-over dialog if game is lost; otherwise returns
-function checkGameOver(){
-	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
-		if(!board[i][j].occupied || board[i][j].locked) return;
-	location = '#gameOver'; //CSS/HTML
-}
-
 function recalculateIds(){
 	var saveFlag = false;
 	var visited = new grid(board.size);
@@ -58,6 +51,13 @@ function recalculateOrder(){
 	}
 }
 
+// opens game-over dialog if game is lost
+function checkGameOver(){
+	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
+		if(!board[i][j].occupied || board[i][j].locked) return;
+	location = '#gameOver'; //CSS/HTML
+}
+
 // TODO: detect endgame
 // dont do animations here, they should be delegated by squareToPoly, recalcIds and recalcOrder
 // TODO: combo animation here (multiple squares on placement)
@@ -96,8 +96,8 @@ function detectSquares(){
 		}
 	}
 
-
 	// scan 2, detect largest squares on squares grid
+	var combo = 0;
 	for(var x=0;x<squares.size;++x)
 	outer:for(var y=0;y<squares.size;++y){
 		var c = squares.getCell(x,y);
@@ -107,7 +107,11 @@ function detectSquares(){
 		for(var i=x;i<x+c;++i)for(var j=y;j<y+c;++j)
 			squares.setCell(i,j,0);
 		squareToPoly(x,y,c);
+		++combo;
 	}
+
+	// TODO: handle combos here [combo information doesn't need to be global]
+	if(combo > 1){}
 
 	// placing these here rather than right after squareToPoly allows for comboing
 	recalculateIds();

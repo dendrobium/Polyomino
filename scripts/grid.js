@@ -40,13 +40,14 @@ var grid = function(size){
 }
 
 // ignores locks
-function movePiece(from,to,id,offsetX,offsetY){
+function copyPiece(from,to,id,move){
+	move = move || false;
 	for(var i=0;i<from.size;++i)for(var j=0;j<from.size;++j){
-		var c = from.getCell(i+offsetX,j+offsetY);
-		if(!c || !c.occupied)continue;
+		var c = from.getCell(i,j);
+		if(!c.occupied)continue;
 		if(c.id !== id)continue;
 		to.getCell(i,j).quickSet(true,c.id,c.order);
-		from.getCell(i+offsetX,j+offsetY).occupied = false;
+		if(move)from.getCell(i,j).occupied = false;
 	}
 }
 

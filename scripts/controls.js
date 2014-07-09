@@ -11,9 +11,13 @@ function calcMouseGridVars(){
 }
 
 function cancelMove(){
-	placeX     = placeY     = 0;
+	copyPiece(floating,transfer,transferId);
 	goalFloatX = goalFloatY = 0;
-	snapping = true;
+	switch(goalRot%4){
+		case 1:goalRot -= 1;break;
+		case 2:goalRot += 2;break;
+		case 3:goalRot += 1;break;
+	}snapping = true;
 };
 
 function touchHandler(event){
@@ -60,7 +64,8 @@ function setupControls(){
 				floating = new grid(board.size);
 				for(var i=0;i<floating.size;++i)for(var j=0;j<floating.size;++j)
 					floating.setCell(i,j,new cell());
-				movePiece(board,floating,c.id,0,0);
+				transferId = c.id;
+				copyPiece(board,floating,transferId,true);
 
 				mouseDX = mouse.x;
 				mouseDY = mouse.y;
@@ -69,13 +74,15 @@ function setupControls(){
 				floatY = (downGY-mouseGY)*cellSize;
 				goalFloatX = floatX+hoverOffset;
 				goalFloatY = floatY+hoverOffset;
+				rot = goalRot = 0;
 
 				dragging = true;
 				currentlyAnimating = true;
 				return;
 			case 3:
 				if(!dragging)return;
-				goalRot += Math.PI/2;
+				console.log
+				++goalRot;
 				return;
 		}
 	});
@@ -97,31 +104,88 @@ function setupControls(){
 		placeX = downGX-mouseGX;
 		placeY = downGY-mouseGY;
 
-		// check if floating is dropped on original position
-		if(downGX == mouseGX && downGY == mouseGY){cancelMove();return;}
+		// create transfer grid
+		transfer = new grid(board.size);
+		for(var i=0;i<transfer.size;++i)for(var j=0;j<transfer.size;++j)
+			transfer.setCell(i,j,new cell());
 
-		// make sure pieces in floating arent dropped on existing pieces or locked (and unselected) cells
+		// create rotated grid
+		var fSize = floating.size;
+		rotated = [];
+		for(var i=-fSize;i<fSize*2;++i){
+			rotated[i] = [];
+			for(var j=-fSize;j<fSize*2;++j)rotated[i][j] = new cell();
+		}rotated.setCell = function(x,y,c){
+			x = Math.floor(x);
+			y = Math.floor(y);
+			if(x<-fSize||y<-fSize||x>=fSize*2||y>=fSize*2)return;
+			rotated[x][y] = c;
+		};rotated.getCell = function(x,y){
+			x = Math.floor(x);
+			y = Math.floor(y);
+			if(x<-fSize||y<-fSize||x>=fSize*2||y>=fSize*2)return null;
+			return rotated[x][y];
+		};
+
+		// rotate and place piece into rotated
+
+		/*
+			TODO TODO TODO TODO TODO TODO TODO
+
+			left down is positive
+
+			use downGX downGY as rotation point
+
+			switch(goalRot%1){
+				case 0: 1-1 copy, no translation
+				case 1: x y -> y -x
+				case 2: x y -> -x -y
+				case 3: x y -> -y x
+			}
+
+			TODO TODO TODO TODO TODO TODO TODO
+		*/
+
+		for(var i=0;i<fSize;++i)for(var j=0;j<fSize;++j){
+			var r,f = floating.getCell(i,j);
+			var x = i-downGX;
+			var y = j-downGY;
+			switch(goalRot%4){
+				case 3:r = rotated.getCell( y+downGX,-x+downGY);break;
+				case 2:r = rotated.getCell(-x+downGX,-y+downGY);break;
+				case 1:r = rotated.getCell(-y+downGX, x+downGY);break;
+				default:r = rotated.getCell(i,j);break;
+			}
+			r.quickSet(f.occupied,f.id,f.order);
+		}
+
+		// check if rotated is dropped on original position
+		if(downGX == mouseGX && downGY == mouseGY && (goalRot%4 === 0)){cancelMove();return;}
+
+		// make sure pieces in rotated arent dropped on existing pieces or locked (and unselected) cells
 		for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
 			var b = board.getCell(i,j);
-			var f = floating.getCell(i+placeX,j+placeY);
+			var f = rotated.getCell(i+placeX,j+placeY);
 			if((b.occupied || (b.locked && !b.selected)) && (f && f.occupied)){cancelMove();return;}
 		}
 
-		// make sure pieces in floating aren't out of bounds in board
-		for(var i=0;i<floating.size;++i)for(var j=0;j<floating.size;++j)
-		if(floating.getCell(i,j).occupied){
+		// make sure pieces in rotated aren't out of bounds in board
+		for(var i=-fSize;i<fSize*2;++i)for(var j=-fSize;j<fSize*2;++j)
+		if(rotated.getCell(i,j).occupied){
 			var x = i-placeX,y = j-placeY;
-			if(x<0||y<0||x>=floating.size||y>=floating.size){cancelMove();return;}
+			if(x<0||y<0||x>=board.size||y>=board.size){cancelMove();return;}
 		}
 
 		// successful move, place new poly -----------------------------
 
-		// unlock and deselect original cells, add new locks
+		// move rotated to transfer, unlock old selectoin, add new locks to board
 		deselectGrid(board);
-		for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
+		for(var i=0;i<transfer.size;++i)for(var j=0;j<transfer.size;++j){
+			var c = rotated.getCell(i+placeX,j+placeY);
+			if(!c.occupied)continue;
+			transfer.getCell(i,j).quickSet(true,c.id,c.order);
 			var b = board.getCell(i,j);
-			var f = floating.getCell(i+placeX,j+placeY);
-			if(f && f.occupied)b.locked = b.selected = true;
+			b.locked = b.selected = true;
 		}
 
 		goalFloatX = (downGX-mouseGX)*cellSize;
@@ -129,4 +193,7 @@ function setupControls(){
 		snapping = true;
 		placeNewPoly();
 	});
+
+	// prevents right-click menu
+	canvas.addEventListener("contextmenu",function(e){e.preventDefault();return false;});
 }

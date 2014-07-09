@@ -45,7 +45,7 @@ var polyColor = [
 //==  GLOBAL VARS  ===========================================================//
 
 var blockId,score;
-var board,origFloating,floating;
+var board,floating,transfer,transferId;
 var mouse,dragging,snapping,mouseDX,mouseDY,downGX,downGY,mouseGX,mouseGY;
 var goalFloatX,goalFloatY,floatX,floatY,placeX,placeY;
 var goalRot,rot;

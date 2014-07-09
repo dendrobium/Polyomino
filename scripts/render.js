@@ -4,10 +4,6 @@ function interpColor(c1,c2,interp){
 	    c1.b+(c2.b-c1.b)*interp);
 }
 
-function multColor(c,f){
-	return{r:c.r*f,g:c.g*f,b:c.b*f};
-}
-
 function renderGridRaw(g,offset,usePrimary,overrideColor){
 	var cs = cellSize;
 
@@ -20,13 +16,9 @@ function renderGridRaw(g,offset,usePrimary,overrideColor){
 		}else if(usePrimary){
 			if(Math.floor(c.order)===0)rgb(polyColor[c.order].primary.r,polyColor[c.order].primary.g,polyColor[c.order].primary.b);
 			else interpColor(polyColor[Math.floor(c.order)].primary,polyColor[Math.ceil(c.order)].primary,c.order%1);
-//			if(Math.floor(c.order)===0)rgb(testColor[c.order].r,testColor[c.order].g,testColor[c.order].b);
-//			else interpColor(testColor[Math.floor(c.order)],testColor[Math.ceil(c.order)],c.order%1);
 		}else{
 			if(Math.floor(c.order)===0)rgb(polyColor[c.order].secondary.r,polyColor[c.order].secondary.g,polyColor[c.order].secondary.b);
 			else interpColor(polyColor[Math.floor(c.order)].secondary,polyColor[Math.ceil(c.order)].secondary,c.order%1);
-//			if(Math.floor(c.order)===0)rgb(testColor[c.order].r,testColor[c.order].g,testColor[c.order].b);
-//			else interpColor(testColor[Math.floor(c.order)],testColor[Math.ceil(c.order)],c.order%1);
 		}
 
 		renderRect(i*cs+offset,j*cs+offset,(i+1)*cs-offset,(j+1)*cs-offset);
@@ -83,11 +75,13 @@ function render(){
 	// render floating layer
 	if(dragging){
 		currentlyAnimating = true;
-		floatX += (goalFloatX-floatX)*0.3;
-		floatY += (goalFloatY-floatY)*0.3;
+		floatX += (goalFloatX-floatX)*0.3;       // TODO: scale this by elapsed, clamp
+		floatY += (goalFloatY-floatY)*0.3;       // TODO: scale this by elapsed, clamp
+		rot    += ((goalRot*Math.PI/2)-rot)*0.3; // TODO: scale this by elapsed, clamp
 
+		/*
 		// render a shadow
-		// TODO: chnage this appropriately for rotating
+		// TODO TODO TODO: chnage this appropriately for rotating
 		gfx.save();
 		gfx.translate(-floatX+4, -floatY+4);
 		gfx.fillStyle = "rgba(0,0,0,0.3)";
@@ -95,18 +89,24 @@ function render(){
 		if(floating.getCell(i,j).occupied)
 			renderRect(i*cs,j*cs,(i+1)*cs,(j+1)*cs);
 		gfx.restore();
+		*/
 
 		// render the floating layer itself
+
 		gfx.save();
 		gfx.translate(-floatX,-floatY);
+		gfx.translate((downGX+0.5)*cs,(downGY+0.5)*cs);
+		gfx.rotate(rot);
+		gfx.translate((downGX+0.5)*-cs,(downGY+0.5)*-cs);
 		renderGrid(floating);
 		gfx.restore();
 
 		// break animation if snapping is complete
 		if(snapping &&
 			Math.abs(floatX-goalFloatX)<0.5 &&
-			Math.abs(floatY-goalFloatY)<0.5){
-			movePiece(floating,board,floating.getCell(mouseDX/cs,mouseDY/cs).id,placeX,placeY);
+			Math.abs(floatY-goalFloatY)<0.5 &&
+		        Math.abs(rot-(goalRot*Math.PI/2))<0.01){
+			copyPiece(transfer,board,transferId,true);
 			deselectGrid(board);
 			dragging = snapping = false;
 			triggerDetectSquares = true;
@@ -116,10 +116,9 @@ function render(){
 	gfx.restore();
 }
 
+// XXX: resize text if need be
 var firsttime = true;
 window.onresize = function(){
-	// resize text if need be
-
 	document.getElementById('header_div').style.fontSize = (window.innerWidth < 480) ? "30px" : "48px";
 
 	// Setup width/height to look good

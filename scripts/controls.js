@@ -72,9 +72,9 @@ function setupControls(){
 				calcMouseGridVars();
 				floatX = (downGX-mouseGX)*cellSize;
 				floatY = (downGY-mouseGY)*cellSize;
-				goalFloatX = floatX+hoverOffset;
-				goalFloatY = floatY+hoverOffset;
-				rot = goalRot = 0;
+				goalFloatX = floatX;
+				goalFloatY = floatY;
+				hover = rot = goalRot = 0;
 
 				dragging = true;
 				currentlyAnimating = true;
@@ -91,8 +91,8 @@ function setupControls(){
 		mouse = getMousePos(e);
 		if(!dragging||snapping)return;
 		calcMouseGridVars();
-		goalFloatX = (downGX-mouseGX)*cellSize+hoverOffset;
-		goalFloatY = (downGY-mouseGY)*cellSize+hoverOffset;
+		goalFloatX = (downGX-mouseGX)*cellSize;
+		goalFloatY = (downGY-mouseGY)*cellSize;
 	});
 
 	canvas.addEventListener("mouseup",function(e){

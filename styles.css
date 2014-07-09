@@ -25,17 +25,36 @@
 	width: 100%;
 }
 
+#nav-toggle span, #nav-toggle span:before, #nav-toggle span:after {
+	cursor: pointer;
+	border-radius: 1px;
+	margin-top:-13px;
+	height: 5px;
+	width: 35px;
+	background: white;
+	position: absolute;
+	display: block;
+	content: '';
+}
+#nav-toggle span:before {
+	top: 3px;
+}
+#nav-toggle span:after {
+	bottom: -10px;
+}
+
 .btn {
 	font-family: Arial;
 	color: #f0f0f0;
 	font-size: 20px;
-	width: 48%;
 	border-radius: 0px;
-	border: 0px;
+	border:0px;
 	background: #424242;
-	padding: 1% 2% 1% 2%;
+	height:35px;
+	padding: 5px 30px;
 	letter-spacing: 0px;
 	font-weight:800;
+	margin-bottom: 2px;
 
 }
 
@@ -53,7 +72,12 @@
 	margin-top: 4px;
 	letter-spacing:-3px;
 	font-weight:bold;
-	color:#424242;
+	color: #f0f0f0;
+
+	float: right;
+	text-align: right;
+	background: #424242;
+	margin-top: 8px;
 }
 
 .beforeGrid {
@@ -61,12 +85,6 @@
 	width: 100%;
 }
 
-.scoreContainer {
-	float: right;
-	text-align: right;
-	background: #424242;
-	margin-top: 8px;
-}
 
 .score, .highscore {
 	position: relative;

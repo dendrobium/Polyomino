@@ -79,20 +79,20 @@ function render(){
 		floatY += (goalFloatY-floatY)*0.3;       // TODO: scale this by elapsed, clamp
 		rot    += ((goalRot*Math.PI/2)-rot)*0.3; // TODO: scale this by elapsed, clamp
 
-		/*
-		// render a shadow
-		// TODO TODO TODO: chnage this appropriately for rotating
+		// render shadow
 		gfx.save();
-		gfx.translate(-floatX+4, -floatY+4);
+		gfx.translate(hoverOffset,hoverOffset);
+		gfx.translate(-floatX,-floatY);
+		gfx.translate((downGX+0.5)*cs,(downGY+0.5)*cs);
+		gfx.rotate(rot);
+		gfx.translate((downGX+0.5)*-cs,(downGY+0.5)*-cs);
 		gfx.fillStyle = "rgba(0,0,0,0.3)";
 		for(var i=0;i<floating.size;++i)for(var j=0;j<floating.size;++j)
 		if(floating.getCell(i,j).occupied)
 			renderRect(i*cs,j*cs,(i+1)*cs,(j+1)*cs);
 		gfx.restore();
-		*/
 
 		// render the floating layer itself
-
 		gfx.save();
 		gfx.translate(-floatX,-floatY);
 		gfx.translate((downGX+0.5)*cs,(downGY+0.5)*cs);

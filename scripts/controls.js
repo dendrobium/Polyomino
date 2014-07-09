@@ -15,7 +15,7 @@ function cancelMove(){
 	goalFloatX = goalFloatY = 0;
 	switch(goalRot%4){
 		case 1:goalRot -= 1;break;
-		case 2:goalRot += 2;break;
+		case 2:goalRot -= 2;break;
 		case 3:goalRot += 1;break;
 	}snapping = true;
 };
@@ -128,24 +128,6 @@ function setupControls(){
 		};
 
 		// rotate and place piece into rotated
-
-		/*
-			TODO TODO TODO TODO TODO TODO TODO
-
-			left down is positive
-
-			use downGX downGY as rotation point
-
-			switch(goalRot%1){
-				case 0: 1-1 copy, no translation
-				case 1: x y -> y -x
-				case 2: x y -> -x -y
-				case 3: x y -> -y x
-			}
-
-			TODO TODO TODO TODO TODO TODO TODO
-		*/
-
 		for(var i=0;i<fSize;++i)for(var j=0;j<fSize;++j){
 			var r,f = floating.getCell(i,j);
 			var x = i-downGX;

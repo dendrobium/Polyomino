@@ -4,6 +4,10 @@ function interpColor(c1,c2,interp){
 	    c1.b+(c2.b-c1.b)*interp);
 }
 
+function multColor(c,f){
+	return{r:c.r*f,g:c.g*f,b:c.b*f};
+}
+
 function renderGridRaw(g,offset,usePrimary,overrideColor){
 	var cs = cellSize;
 
@@ -16,9 +20,13 @@ function renderGridRaw(g,offset,usePrimary,overrideColor){
 		}else if(usePrimary){
 			if(Math.floor(c.order)===0)rgb(polyColor[c.order].primary.r,polyColor[c.order].primary.g,polyColor[c.order].primary.b);
 			else interpColor(polyColor[Math.floor(c.order)].primary,polyColor[Math.ceil(c.order)].primary,c.order%1);
+//			if(Math.floor(c.order)===0)rgb(testColor[c.order].r,testColor[c.order].g,testColor[c.order].b);
+//			else interpColor(testColor[Math.floor(c.order)],testColor[Math.ceil(c.order)],c.order%1);
 		}else{
 			if(Math.floor(c.order)===0)rgb(polyColor[c.order].secondary.r,polyColor[c.order].secondary.g,polyColor[c.order].secondary.b);
 			else interpColor(polyColor[Math.floor(c.order)].secondary,polyColor[Math.ceil(c.order)].secondary,c.order%1);
+//			if(Math.floor(c.order)===0)rgb(testColor[c.order].r,testColor[c.order].g,testColor[c.order].b);
+//			else interpColor(testColor[Math.floor(c.order)],testColor[Math.ceil(c.order)],c.order%1);
 		}
 
 		renderRect(i*cs+offset,j*cs+offset,(i+1)*cs-offset,(j+1)*cs-offset);
@@ -60,63 +68,11 @@ function render(){
 	gfx.save();
 	gfx.translate(paneThickness,paneThickness);
 
-	// //Removed to get rid of the optical illusion that Joel noticed; kept as a comment in case we want it back
+	var cs = cellSize;
 
-	// // render internal grid lines
-	// rgb(0.4,0.4,0.4);
-	// var length = 4;
-	// var lw = 1;
-	// for(var i=1;i<board.size;++i)for(var j=1;j<board.size;++j){
-	// 	renderRect(i*cellSize-length,j*cellSize-1,i*cellSize+length,j*cellSize+1);
-	// 	renderRect(i*cellSize-1,j*cellSize-length,i*cellSize+1,j*cellSize+length);
-	// }
-
-	// // render edge grid lines
-	// for(var i=1;i<board.size;++i){
-	// 	renderRect(i*cellSize-length,-1,i*cellSize+length,1);
-	// 	renderRect(i*cellSize-1,-1,i*cellSize+1,length);
-	// 	renderRect(i*cellSize-length,gridSize*cellSize-1,i*cellSize+length,gridSize*cellSize+1);
-	// 	renderRect(i*cellSize-1,gridSize*cellSize-length,i*cellSize+1,gridSize*cellSize+1);
-	// }for(var j=1;j<board.size;++j){
-	// 	renderRect(-1,j*cellSize-1,length,j*cellSize+1);
-	// 	renderRect(-1,j*cellSize-length,1,j*cellSize+length);
-	// 	renderRect(gridSize*cellSize-length,j*cellSize-1,gridSize*cellSize+1,j*cellSize+1);
-	// 	renderRect(gridSize*cellSize-1,j*cellSize-length,gridSize*cellSize+1,j*cellSize+length);
-	// }
-
-	// // render corner grid lines
-	// renderRect(-1,-1,length,1);
-	// renderRect(-1,-1,1,length);
-	// renderRect(gridSize*cellSize-length,-1,gridSize*cellSize+1,1);
-	// renderRect(gridSize*cellSize-1,-1,gridSize*cellSize+1,length);
-	// renderRect(-1,gridSize*cellSize-length,1,gridSize*cellSize+1);
-	// renderRect(-1,gridSize*cellSize-1,length,gridSize*cellSize+1);
-	// renderRect(gridSize*cellSize-length,gridSize*cellSize-1,gridSize*cellSize+1,gridSize*cellSize+1);
-	// renderRect(gridSize*cellSize-1,gridSize*cellSize-length,gridSize*cellSize+1,gridSize*cellSize+1);
-
-	// render grid cells
-	// I (Ezra) added a shadow
-
-	// XXX: the shadows look like actual pieces, moreso than the actual polyominos in my [Luke] opinion...
-	var shadowSizeV = 1;
-	var shadowSizeH = 2;
-
+	rgb(0.28,0.28,0.28);
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
-		var x0 = i*cellSize+2;
-		var y0 = j*cellSize+2;
-		var x1 = (i+1)*cellSize-2;
-		var y1 = (j+1)*cellSize-2;
-
-		rgb(0.01, 0.01, 0.01);
-		renderRect(x0, y1, x1+shadowSizeV, y1+shadowSizeH);
-		renderRect(x1, y0, x1+shadowSizeV, y1+shadowSizeH);
-
-		rgb(0.3, 0.3, 0.3);
-		renderRect(x0, y0, x0-shadowSizeV, y1+shadowSizeV);
-		renderRect(x1+shadowSizeV, y0-shadowSizeV, x0-shadowSizeV, y0);
-
-		rgb(0.15,0.15,0.15);
-		renderRect(x0,y0,x1,y1);
+		renderRect(i*cs+1,j*cs+1,(i+1)*cs-1,(j+1)*cs-1);
 	}
 
 	// render board and process events and animations
@@ -130,23 +86,19 @@ function render(){
 		floatX += (goalFloatX-floatX)*0.3;
 		floatY += (goalFloatY-floatY)*0.3;
 
-		// XXX: this makes it appear as if the background tiles are actual pieces
-		// render a "hole" where the floating one originated
-		// renderGridRaw(floating,1,false, "#404040");
-
-		//render a shadow
+		// render a shadow
+		// TODO: chnage this appropriately for rotating
 		gfx.save();
 		gfx.translate(-floatX+4, -floatY+4);
-		// XXX: transparency doesnt work with renderGridRaw
-		renderGridRaw(floating,1,false,"rgba(0,0,0,0.5)");
+		gfx.fillStyle = "rgba(0,0,0,0.3)";
+		for(var i=0;i<floating.size;++i)for(var j=0;j<floating.size;++j)
+		if(floating.getCell(i,j).occupied)
+			renderRect(i*cs,j*cs,(i+1)*cs,(j+1)*cs);
 		gfx.restore();
 
-		//render the floating layer itself
+		// render the floating layer itself
 		gfx.save();
 		gfx.translate(-floatX,-floatY);
-		// gfx.translate(Math.round(-floatX),Math.round(-floatY)); // no anti-alias version
-		//   if you want some sort of transparency going on in the floating layer, you need to use this or there will be artifacts
-
 		renderGrid(floating);
 		gfx.restore();
 
@@ -154,16 +106,12 @@ function render(){
 		if(snapping &&
 			Math.abs(floatX-goalFloatX)<0.5 &&
 			Math.abs(floatY-goalFloatY)<0.5){
-			movePiece(floating,board,floating.getCell(mouseDX/cellSize,mouseDY/cellSize).id,placeX,placeY);
+			movePiece(floating,board,floating.getCell(mouseDX/cs,mouseDY/cs).id,placeX,placeY);
 			deselectGrid(board);
 			dragging = snapping = false;
 			triggerDetectSquares = true;
 		}
 	}
-
-	gfx.font="36px Arial";
-	gfx.fillStyle = "white";
-	gfx.fillText("↻",100,canvasHeight);
 
 	gfx.restore();
 }
@@ -181,7 +129,7 @@ window.onresize = function(){
 	$('#game_div').height(Math.min(window.innerHeight - 2 * offset.top, window.innerWidth - 2 * offset.left));
 
 	// force canvas to be square -- offset width is VERY important to preserve scale!!
-	canvasWidth = canvasHeight =canvas.height = canvas.offsetHeight = canvas.width = canvas.offsetWidth;;
+	canvasWidth = canvasHeight = canvas.height = canvas.width = $('#canvas_div').width();
 
 	// Don't want to do this while game is running!!
 	if(firsttime){

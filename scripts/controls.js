@@ -11,7 +11,7 @@ function calcMouseGridVars(){
 }
 
 function cancelMove(){
-	placeX = placeY = 0;
+	placeX     = placeY     = 0;
 	goalFloatX = goalFloatY = 0;
 	snapping = true;
 };
@@ -129,11 +129,4 @@ function setupControls(){
 		snapping = true;
 		placeNewPoly();
 	});
-
-
-	// I found that this was more annoying than helpful, honestly.
-	// canvas.addEventListener("mouseout",function(e){
-	// 	if(!dragging||snapping)return;
-	// 	cancelMove();
-	// });
 }

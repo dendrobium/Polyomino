@@ -10,8 +10,16 @@ function newGame(){
 	snapping = false;
 	currentlyAnimating = true;
 	triggerDetectSquares = true;
-	for(var i=0;i<initPieceCount;++i)placeNewPoly();
+//	for(var i=0;i<initPieceCount;++i)placeNewPoly();
 	updateScoreBoxes();
+
+	for(var i=0;i<gridSize;++i){
+		var id = newId();
+		for(var j=0;j<=i;++j)
+			board.getCell(i,j).quickSet(true,id,i+1);
+	}
+
+	saveGame();
 }
 
 function gameOver(){

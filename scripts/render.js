@@ -32,8 +32,8 @@ function renderGridRaw(g,offset,usePrimary,overrideColor){
 }
 
 function renderGrid(g){
-	renderGridRaw(g,1,false);
-	renderGridRaw(g,3,true);
+	renderGridRaw(g,1,true);
+	renderGridRaw(g,3,false);
 }
 
 function render(){
@@ -130,13 +130,15 @@ function render(){
 		floatX += (goalFloatX-floatX)*0.3;
 		floatY += (goalFloatY-floatY)*0.3;
 
-		//render a "hole" where the floating one originated
-		renderGridRaw(floating,1,false, "#404040");
+		// XXX: this makes it appear as if the background tiles are actual pieces
+		// render a "hole" where the floating one originated
+		// renderGridRaw(floating,1,false, "#404040");
 
 		//render a shadow
 		gfx.save();
 		gfx.translate(-floatX+4, -floatY+4);
-		renderGridRaw(floating,1,false, "rgba(0,0,0,0.5)");
+		// XXX: transparency doesnt work with renderGridRaw
+		renderGridRaw(floating,1,false,"rgba(0,0,0,0.5)");
 		gfx.restore();
 
 		//render the floating layer itself

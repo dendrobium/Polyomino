@@ -44,7 +44,7 @@ function testParticles(a, b){
 		new particle(x, y, vx, vy, lifetime, startr, startg, startb, starta, startscale, endr, endg, endb, enda, endscale, border, gravity)}
 }
 
-function squareEffect(x, y, size, time){
+function squareEffect(order, x, y, size, time){
 	this.x = x;
 	this.y = y;
 	this.size = size;
@@ -52,7 +52,14 @@ function squareEffect(x, y, size, time){
 	this.stepsize = 5;
 	this.iter = 0;
 
-	var sparkColors = [{r:255,g:10,b:10},{r:255,g:255,b:60},{r:200,g:100,b:0}];
+  console.log("particle.squareEffect: order="+order +", polyColor[order]="+polyColor[order]);
+	//var sparkColors = [{r:255,g:10,b:10},{r:255,g:255,b:60},{r:200,g:100,b:0}];
+  var sparkColors = [{r:polyColor[order].primary.r*255,
+                      g:polyColor[order].primary.g*255,
+                      b:polyColor[order].primary.b*255},
+                    {r:polyColor[order].secondary.r*255,
+                      g:polyColor[order].secondary.g*255,
+                      b:polyColor[order].secondary.b*255}];
 
 	this.makeParticle = function(){
 		var i = this.iter += this.stepsize;

@@ -55,8 +55,6 @@ var currentlyAnimating,triggerDetectSquares;
 
 var gameWon = false; // so that we don't continually trigger the game won screen if they keep building big polyominos
 var highScore = 0;
-var scoreTick = 0;  // XXX: this is unnecessary, see addScoreEvt definition
-var scoreCombo = 0; // XXX: this is unnecessary, see addScoreEvt definition
 
 //==  CANVAS VARS  ===========================================================//
 

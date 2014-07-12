@@ -141,17 +141,6 @@ function fadeOutEvt(x,y,startTick,endTick){
 
 //============================================================================//
 
-// XXX: score tick is unnecessary, combos can and should be handled in detectSquares [look at TODO's in detectSquares to see where combos should be handled]
-function addScoreEvt(order){
-	new_event(0,10, null, function(){
-		addToScore(order);
-	});
-	if(scoreTick === tick)
-		scoreCombo++;
-	else
-		scoreCombo = 1;
-}
-
 function gameWonEvt(){
 	new_event(0,10,null,function(){
 		location = "#gameWon";

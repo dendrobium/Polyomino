@@ -33,10 +33,10 @@ function touchHandler(event){
 	}
 
 	var simulatedEvent = document.createEvent("MouseEvent");
-	simulatedEvent.initMouseEvent(type, true, true, window, 1,
-	                              first.screenX, first.screenY,
-	                              first.clientX, first.clientY, false,
-	                              false, false, false, 0/*left*/, null);
+	simulatedEvent.initMouseEvent(type,true,true,window,1,
+	                              first.screenX,first.screenY,
+	                              first.clientX,first.clientY,false,
+	                              false,false,false,0,null);
 	first.target.dispatchEvent(simulatedEvent);
 	event.preventDefault();
 }
@@ -82,7 +82,6 @@ function setupControls(){
 			case 3:
 				if(!allowRotations)return;
 				if(!dragging)return;
-				console.log
 				++goalRot;
 				return;
 		}
@@ -171,7 +170,7 @@ function setupControls(){
 
 		// successful move, place new poly -----------------------------
 
-		// move rotated to transfer, unlock old selectoin, add new locks to board
+		// move rotated to transfer, unlock old selection, add new locks to board
 		deselectGrid(board);
 		for(var i=0;i<transfer.size;++i)for(var j=0;j<transfer.size;++j){
 			var c = rotated.getCell(i+placeX,j+placeY);

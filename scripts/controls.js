@@ -80,6 +80,7 @@ function setupControls(){
 				currentlyAnimating = true;
 				return;
 			case 3:
+				if(!allowRotations)return;
 				if(!dragging)return;
 				console.log
 				++goalRot;

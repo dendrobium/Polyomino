@@ -3,6 +3,7 @@
 bypassLoadGame     = false;
 detectHighestOrder = true;
 orderDecay         = true;
+allowRotations     = true;
 paneThickness      = 2;
 gridSize           = 10;
 cellSize           = 32; //may vary during runtime as the application SHOULD size grid cells according to window size.

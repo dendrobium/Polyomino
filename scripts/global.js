@@ -3,12 +3,15 @@
 bypassLoadGame     = false;
 detectHighestOrder = true;
 orderDecay         = true;
+allowRotations     = true;
 paneThickness      = 2;
 gridSize           = 10;
+largeGridSize      = 4;
+smallGridSize      = 4;
 cellSize           = 32; //may vary during runtime as the application SHOULD size grid cells according to window size.
 initPieceCount     = 4;
 dragSpeed          = 0.3;
-hoverOffset        = 4;
+hoverOffset        = 8;
 keyframeSpeed      = 150;
 goalOrder          = 6;  //for now, trying 6/5 with gridsize = 10/8, respectively
 cellSizeThreshold  = 50; //may need tweaking
@@ -46,9 +49,8 @@ var polyColor = [
 
 var blockId,score;
 var board,floating,transfer,transferId;
-var mouse,dragging,snapping,mouseDX,mouseDY,downGX,downGY,mouseGX,mouseGY;
-var goalFloatX,goalFloatY,floatX,floatY,placeX,placeY;
-var goalRot,rot;
+var mouse,dragging,snapping,mouseDX,mouseDY,downGX,downGY,mouseGX,mouseGY,placeX,placeY;
+var goalFloatX,goalFloatY,floatX,floatY,hover,goalRot,rot;
 var currentlyAnimating,triggerDetectSquares;
 
 var gameWon = false; // so that we don't continually trigger the game won screen if they keep building big polyominos

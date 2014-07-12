@@ -75,13 +75,14 @@ function render(){
 	// render floating layer
 	if(dragging){
 		currentlyAnimating = true;
+		var goalHover = snapping?0:hoverOffset;
 		floatX += (goalFloatX-floatX)*0.3;       // TODO: scale this by elapsed, clamp
 		floatY += (goalFloatY-floatY)*0.3;       // TODO: scale this by elapsed, clamp
+		hover  += (goalHover-hover)*0.3;         // TODO: scale this by elapsed, clamp
 		rot    += ((goalRot*Math.PI/2)-rot)*0.3; // TODO: scale this by elapsed, clamp
 
 		// render shadow
 		gfx.save();
-		gfx.translate(hoverOffset,hoverOffset);
 		gfx.translate(-floatX,-floatY);
 		gfx.translate((downGX+0.5)*cs,(downGY+0.5)*cs);
 		gfx.rotate(rot);
@@ -92,8 +93,9 @@ function render(){
 			renderRect(i*cs,j*cs,(i+1)*cs,(j+1)*cs);
 		gfx.restore();
 
-		// render the floating layer itself
+		// render floating grid
 		gfx.save();
+		gfx.translate(-hover,-hover);
 		gfx.translate(-floatX,-floatY);
 		gfx.translate((downGX+0.5)*cs,(downGY+0.5)*cs);
 		gfx.rotate(rot);
@@ -105,6 +107,7 @@ function render(){
 		if(snapping &&
 			Math.abs(floatX-goalFloatX)<0.5 &&
 			Math.abs(floatY-goalFloatY)<0.5 &&
+			Math.abs(hover -goalHover )<0.5 &&
 		        Math.abs(rot-(goalRot*Math.PI/2))<0.01){
 			copyPiece(transfer,board,transferId,true);
 			deselectGrid(board);
@@ -134,10 +137,10 @@ window.onresize = function(){
 	if(firsttime){
 		// XXX: why is grid size a function of how large the window is?
 		// XXX: you can lose save states because of this (play game in small window, resize to large window, refresh)
-		if( (canvasWidth - paneThickness*2)/gridSize < cellSizeThreshold ) gridSize = 8;
-		else gridSize = 10;
+		if( (canvasWidth - paneThickness*2)/gridSize < cellSizeThreshold ) gridSize = smallGridSize;
+		else gridSize = largeGridSize;
 		firsttime = false;
-		goalOrder = (gridSize == 10) ? 6 : 5;
+		goalOrder = (gridSize == largeGridSize) ? 6 : 5;
 	}
 
 	cellSize = Math.floor((canvasWidth - paneThickness*2)/gridSize);

@@ -69,7 +69,9 @@ function saveGameEvt(saveTick){
 
 // TODO: what about adjacent surrounds?
 function beginSurroundEvt(x,y,order,startTick,endTick){
-	addEffect(new squareEffect(x*cellSize, y*cellSize, order*cellSize));
+
+  console.log("event.beginSurroundEvt: order="+order);
+	addEffect(new squareEffect(order, x*cellSize, y*cellSize, order*cellSize));
 	new_event(startTick,endTick,function(interp){
 		var len = interp*interp*interp*order*cellSize+6;
 		rgb(1,1,1);

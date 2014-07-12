@@ -72,14 +72,15 @@ function setupControls(){
 				calcMouseGridVars();
 				floatX = (downGX-mouseGX)*cellSize;
 				floatY = (downGY-mouseGY)*cellSize;
-				goalFloatX = floatX+hoverOffset;
-				goalFloatY = floatY+hoverOffset;
-				rot = goalRot = 0;
+				goalFloatX = floatX;
+				goalFloatY = floatY;
+				hover = rot = goalRot = 0;
 
 				dragging = true;
 				currentlyAnimating = true;
 				return;
 			case 3:
+				if(!allowRotations)return;
 				if(!dragging)return;
 				console.log
 				++goalRot;
@@ -91,8 +92,8 @@ function setupControls(){
 		mouse = getMousePos(e);
 		if(!dragging||snapping)return;
 		calcMouseGridVars();
-		goalFloatX = (downGX-mouseGX)*cellSize+hoverOffset;
-		goalFloatY = (downGY-mouseGY)*cellSize+hoverOffset;
+		goalFloatX = (downGX-mouseGX)*cellSize;
+		goalFloatY = (downGY-mouseGY)*cellSize;
 	});
 
 	canvas.addEventListener("mouseup",function(e){
@@ -143,6 +144,16 @@ function setupControls(){
 
 		// check if rotated is dropped on original position
 		if(downGX == mouseGX && downGY == mouseGY && (goalRot%4 === 0)){cancelMove();return;}
+		var moved = false;
+		for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
+			if(board.getCell(i,j).selected && !rotated.getCell(i+placeX,j+placeY).occupied)moved = true;
+		if(!moved){
+			copyPiece(floating,transfer,transferId);
+			goalFloatX = placeX*cellSize;
+			goalFloatY = placeY*cellSize;
+			snapping = true;
+			return;
+		}
 
 		// make sure pieces in rotated arent dropped on existing pieces or locked (and unselected) cells
 		for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
@@ -170,8 +181,8 @@ function setupControls(){
 			b.locked = b.selected = true;
 		}
 
-		goalFloatX = (downGX-mouseGX)*cellSize;
-		goalFloatY = (downGY-mouseGY)*cellSize;
+		goalFloatX = placeX*cellSize;
+		goalFloatY = placeY*cellSize;
 		snapping = true;
 		placeNewPoly();
 	});

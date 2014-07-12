@@ -82,7 +82,6 @@ function setupControls(){
 			case 3:
 				if(!allowRotations)return;
 				if(!dragging)return;
-				console.log
 				++goalRot;
 				return;
 		}

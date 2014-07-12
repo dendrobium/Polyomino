@@ -32,9 +32,6 @@ function processActiveEvents(){
 		if(!e.func)continue;
 		e.func((tick-e.startTick)/(e.endTick-e.startTick));
 	}
-
-	// check lose condition | TODO: this should not be here, move it to the appropriate function 
-	checkGameOver();
 }
 
 //==  EVENT TYPES  ===========================================================//

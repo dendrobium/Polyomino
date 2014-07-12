@@ -52,12 +52,17 @@ function setupControls(){
 			case 1:
 				if(dragging)return;
 				var c = board.getCell(mouse.x/cellSize,mouse.y/cellSize);
+
+				// verify locks
 				if(!c || !c.occupied || c.locked)return;
+				for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
+					if(board.getCell(i,j).locked)return;
+				}
 
 				// set lock and selected flags for selected cells
 				for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
 					var b = board.getCell(i,j);
-					if(b.id === c.id)b.locked = b.selected = true;
+					if(b.occupied && b.id === c.id)b.locked = b.selected = true;
 				}
 
 				// move selected piece onto floating layer,remove from board
@@ -144,9 +149,10 @@ function setupControls(){
 		// check if rotated is dropped on original position
 		if(downGX == mouseGX && downGY == mouseGY && (goalRot%4 === 0)){cancelMove();return;}
 		var moved = false;
-		for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
-			if(board.getCell(i,j).selected && !rotated.getCell(i+placeX,j+placeY).occupied)moved = true;
-		if(!moved){
+		for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
+			if(board.getCell(i,j).selected && !(rotated.getCell(i+placeX,j+placeY).occupied))
+				moved = true;
+		}if(!moved){
 			copyPiece(floating,transfer,transferId);
 			goalFloatX = placeX*cellSize;
 			goalFloatY = placeY*cellSize;

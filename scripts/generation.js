@@ -19,6 +19,15 @@ function placeStartingPolys() {
     spawnPoly(3);
   }
 
+//  spawnPoly(1);
+//  spawnPoly(2);
+//  spawnPoly(3);
+//  spawnPoly(4);
+//  spawnPoly(5);
+//  spawnPoly(6);
+//  spawnPoly(7);
+//  spawnPoly(8);
+
   currentlyAnimating = true;
 }
 

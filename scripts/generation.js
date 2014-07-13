@@ -46,7 +46,12 @@ function spawnPoly(order){
 
     listx[0] = x;
     listy[0] = y;
-    spawnGrid[x][y] = true;
+    var maxX = x;
+    var minX = x;
+    var maxY = y;
+    var minY = y;
+
+      spawnGrid[x][y] = true;
     var addedCell = false;
 
     while (spawnedCellCount < order) {
@@ -57,8 +62,6 @@ function spawnPoly(order){
       {
         x = listx[idx];
         y = listy[idx];
-
-
 
 
         var dir = rInt(4);
@@ -88,6 +91,12 @@ function spawnPoly(order){
               spawnGrid[xx][yy] = true;
               spawnedCellCount++;
               addedCell = true;
+
+              if (x > maxX) maxX = x;
+              if (x < minX) minX = x;
+              if (y > maxY) maxY = y;
+              if (y < minY) minY = y;
+
               break;
             }
           }
@@ -101,7 +110,14 @@ function spawnPoly(order){
       if (!addedCell) break;
     }
 
-    if (spawnedCellCount >= order) done = true;
+    if (spawnedCellCount >= order) {
+      done = true;
+      if  (order >= 4) {
+        //if bar in level 4 or 5, then retry
+        if ((maxX == minX) || (maxY == minY)) done = false;
+      }
+
+    }
   }
 
   copyMatrixToBoard(spawnGrid, order);

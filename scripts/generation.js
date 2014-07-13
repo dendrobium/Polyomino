@@ -34,7 +34,7 @@ function spawnPoly(order){
     //Generate starting block
     var x = rInt(gridSize);
     var y = rInt(gridSize);
-    console.log("Trying  x="+x+", y="+y);
+    //console.log("Trying  x="+x+", y="+y);
 
     if (curGrid[x][y]) continue;
 
@@ -82,7 +82,7 @@ function spawnPoly(order){
           if ((xx>=0) && (yy>=0) && (xx<gridSize) && (yy<gridSize)) {
             if (!curGrid[xx][yy] && !spawnGrid[xx][yy]) {
 
-              console.log("    Added cell xx=" + xx + ", yy=" + yy + ", spawnedCellCount=" + spawnedCellCount);
+              //console.log("    Added cell xx=" + xx + ", yy=" + yy + ", spawnedCellCount=" + spawnedCellCount);
               listx[spawnedCellCount] = xx;
               listy[spawnedCellCount] = yy;
               spawnGrid[xx][yy] = true;
@@ -106,7 +106,7 @@ function spawnPoly(order){
 
   copyMatrixToBoard(spawnGrid, order);
 
-  console.log("done");
+  //console.log("done");
 }
 
 
@@ -295,11 +295,11 @@ function spawnBiasedRandomPoly(filled, order, left, top) {
 
 
 
-  copyMatrixToFilled(spawnGrid, order, left, top);
+  copyMatrixToFilled(spawnGrid, filled, order, left, top);
 
 }
 
-function copyMatrixToFilled(myMatrix, order, left, top) {
+function copyMatrixToFilled(myMatrix, filled, order, left, top) {
   var id = newId();
   for (var x = 0; x < order; x++) {
     for (var y = 0; y < order; y++) {
@@ -316,14 +316,14 @@ function copyMatrixToFilled(myMatrix, order, left, top) {
 
 
 function copyMatrixToBoard(myMatrix, order) {
-  console.log("copyMatrixToBoard("+order+") goof");
+  //console.log("copyMatrixToBoard("+order+") goof");
   var id = newId();
   for (var x = 0; x < gridSize; x++) {
     for (var y = 0; y < gridSize; y++) {
 
       if (myMatrix[x][y]) {
 
-        console.log("  x="+x+", y="+ y);
+        //console.log("  x="+x+", y="+ y);
         var cell = board.getCell(x, y);
         cell.quickSet(true, id, order);
       }

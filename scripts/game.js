@@ -61,10 +61,10 @@ function saveGame(){
 	}
 }
 
-function setupInstruction(){
-	var txt = "Can you reach the " + ((gridSize === 10) ? "<i>hexomino</i>" : "<i>pentomino</i>") + "? (contains " + ((gridSize === 10) ? '6' : '5') +  " squares)";
-	document.getElementById("inst_inner").innerHTML = txt;
-}
+//function setupInstruction(){
+	//var txt = "Can you reach the " + ((gridSize === 10) ? "<i>hexomino</i>" : "<i>pentomino</i>") + "? (contains " + ((gridSize === 10) ? '6' : '5') +  " squares)";
+	//document.getElementById("inst_inner").innerHTML = txt;
+//}
 
 function clearContainer(container){
 	while(container.firstChild){
@@ -96,7 +96,7 @@ $(function(){
 	canvas = document.getElementById("canvas");
 	gfx = canvas.getContext("2d");
 	window.onresize();  // determine grid/cell size
-	setupInstruction(); // setup instructions based on grid size
+	//setupInstruction(); // setup instructions based on grid size
 	setupControls();
 
 	// see if first-time visitor and needs instructions

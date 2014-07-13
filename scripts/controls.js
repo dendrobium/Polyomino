@@ -173,7 +173,7 @@ function setupControls(){
 		goalFloatX = (downGX-mouseGX)*cellSize;
 		goalFloatY = (downGY-mouseGY)*cellSize;
 		snapping = true;
-		placeNewPoly();
+    spawnMonoOrDomino();
 	});
 
 	// prevents right-click menu

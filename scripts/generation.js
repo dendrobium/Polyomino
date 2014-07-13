@@ -1,5 +1,117 @@
-// Used to generate a monomino or domino only
-function placeNewPoly(){
+function placeStartingPolys() {
+
+  spawnPoly(1); spawnPoly(1);
+  spawnPoly(2); spawnPoly(2); spawnPoly(2);
+  spawnPoly(3);
+  spawnPoly(4);
+  spawnPoly(5);
+  r = Math.random();
+  if (r < 0.3) {
+    spawnPoly(1);
+    spawnPoly(5);
+  }
+  else if (r < 0.66) {
+    spawnPoly(2);
+    spawnPoly(4);
+  }
+  else{
+    spawnPoly(3);
+    spawnPoly(3);
+  }
+
+  currentlyAnimating = true;
+}
+
+
+function spawnPoly(order){
+
+  var curGrid = matrix(gridSize, gridSize, false);
+  copyBoardToMatrix(curGrid);
+
+  var done = false;
+  while (!done) {
+
+    //Generate starting block
+    var x = rInt(gridSize);
+    var y = rInt(gridSize);
+    console.log("Trying  x="+x+", y="+y);
+
+    if (curGrid[x][y]) continue;
+
+
+    var spawnedCellCount = 1;
+    var spawnGrid = matrix(gridSize, gridSize, false);
+    var listx = new Array(order);
+    var listy = new Array(order);
+
+    listx[0] = x;
+    listy[0] = y;
+    spawnGrid[x][y] = true;
+    var addedCell = false;
+
+    while (spawnedCellCount < order) {
+
+      var idx = 0;
+      if (spawnedCellCount > 1) idx = rInt(spawnedCellCount);
+      for (var n=0; n<spawnedCellCount; n++)
+      {
+        x = listx[idx];
+        y = listy[idx];
+
+
+
+
+        var dir = rInt(4);
+        for (var i = 0; i < 4; i++) {
+          var xx = x;
+          var yy = y;
+          switch (dir) {
+            case 0:
+              yy = y - 1;
+              break;
+            case 1:
+              xx = x + 1;
+              break;
+            case 2:
+              yy = y + 1;
+              break;
+            case 3:
+              xx = x - 1;
+              break;
+          }
+          if ((xx>=0) && (yy>=0) && (xx<gridSize) && (yy<gridSize)) {
+            if (!curGrid[xx][yy] && !spawnGrid[xx][yy]) {
+
+              console.log("    Added cell xx=" + xx + ", yy=" + yy + ", spawnedCellCount=" + spawnedCellCount);
+              listx[spawnedCellCount] = xx;
+              listy[spawnedCellCount] = yy;
+              spawnGrid[xx][yy] = true;
+              spawnedCellCount++;
+              addedCell = true;
+              break;
+            }
+          }
+
+          dir = (dir + 1) % 4;
+        }
+        if (addedCell) break;
+        idx = (idx + 1) % spawnedCellCount;
+      }
+
+      if (!addedCell) break;
+    }
+
+    if (spawnedCellCount >= order) done = true;
+  }
+
+  copyMatrixToBoard(spawnGrid, order);
+
+  console.log("done");
+}
+
+
+
+function spawnMonoOrDomino(){
 
 	// generate list of empty cells, verify a cell can be placed
 	var emptyLs = [];
@@ -188,20 +300,55 @@ function spawnBiasedRandomPoly(filled, order, left, top) {
 	spawnGrid = gridTranslateRandom(spawnGrid, order);
 
 
-	//Copy tmpGrid into Luke's game grids
-	var id = newId();
-	for (var x = 0; x < order; x++) {
-		for (var y = 0; y < order; y++) {
-			if (spawnGrid[x][y]) {
-				var i = x + left;
-				var j = y + top;
-				var cell = board.getCell(i, j);
-				cell.quickSet(true, id, order);
-				filled.setCell(i, j, true);
-			}
-		}
-	}
+
+  copyMatrixToFilled(spawnGrid, order, left, top);
+
 }
+
+function copyMatrixToFilled(myMatrix, order, left, top) {
+  var id = newId();
+  for (var x = 0; x < order; x++) {
+    for (var y = 0; y < order; y++) {
+      if (myMatrix[x][y]) {
+        var i = x + left;
+        var j = y + top;
+        var cell = board.getCell(i, j);
+        cell.quickSet(true, id, order);
+        filled.setCell(i, j, true);
+      }
+    }
+  }
+}
+
+
+function copyMatrixToBoard(myMatrix, order) {
+  console.log("copyMatrixToBoard("+order+") goof");
+  var id = newId();
+  for (var x = 0; x < gridSize; x++) {
+    for (var y = 0; y < gridSize; y++) {
+
+      if (myMatrix[x][y]) {
+
+        console.log("  x="+x+", y="+ y);
+        var cell = board.getCell(x, y);
+        cell.quickSet(true, id, order);
+      }
+    }
+  }
+}
+
+
+function copyBoardToMatrix(myMatrix) {
+  for (var x = 0; x < gridSize; x++) {
+    for (var y = 0; y < gridSize; y++) {
+      if (board.getCell(x, y).occupied) {
+        myMatrix[x][y] = true;
+      }
+      else  myMatrix[x][y] = false;
+    }
+  }
+}
+
 
 function setBaseShape(spawnGrid, order, shape)
 {

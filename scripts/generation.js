@@ -1,141 +1,144 @@
 function placeStartingPolys() {
 
-  spawnPoly(1); spawnPoly(1);
-  spawnPoly(2); spawnPoly(2); spawnPoly(2);
-  spawnPoly(3);
-  spawnPoly(4);
-  spawnPoly(5);
+  var orderList = [5, 4, 3, 2, 2, 1, 1];
   r = Math.random();
-  if (r < 0.3) {
-    spawnPoly(1);
-    spawnPoly(5);
-  }
-  else if (r < 0.66) {
-    spawnPoly(2);
-    spawnPoly(4);
-  }
-  else{
-    spawnPoly(3);
-    spawnPoly(3);
-  }
+  if (r < 0.2) orderList = orderList.concat(5, 2, 1, 1, 1);
+  else if (r < 0.4) orderList = orderList.concat(4, 2, 2);
+  else if (r < 0.6) orderList = orderList.concat(3, 3, 2);
+  else if (r < 0.8) orderList = orderList.concat(5, 1, 1, 1, 1);
+  else orderList = orderList.concat(4, 2, 1, 1);
 
-//  spawnPoly(1);
-//  spawnPoly(2);
-//  spawnPoly(3);
-//  spawnPoly(4);
-//  spawnPoly(5);
-//  spawnPoly(6);
-//  spawnPoly(7);
-//  spawnPoly(8);
+
+  for (var i=0; i<orderList.length; i++) {
+    spawnPoly(orderList[i]);
+  }
 
   currentlyAnimating = true;
 }
 
 
-function spawnPoly(order){
+
+
+function spawnPoly(order) {
+
+  //Normally, on a 10x10 board, this loop will only execute once.
+  //  A few times it will execute twice.
+  //However, if the board is made very small, say for debugging, it may become
+  //  impossible to spawn the number of pices the requested block.
+  for (var n=0; n<1000; n++) {
+    var done = tryToSpawnBlockInRandomOpenLocation(order);
+    if (done) return;
+  }
+  console.log("ERROR: CANNOT SPAWN spawnPoly("+order+")");
+}
+
+//function spawnMonoOrDomino()
+//{
+//  if (Math.random() < 0.2) tryToSpawnBlockInRandomOpenLocation(1);
+//  else {
+//    var done = tryToSpawnBlockInRandomOpenLocation(2);
+//    if (!done) tryToSpawnBlockInRandomOpenLocation(1);
+//  }
+//}
+
+
+
+function tryToSpawnBlockInRandomOpenLocation(order) {
 
   var curGrid = matrix(gridSize, gridSize, false);
   copyBoardToMatrix(curGrid);
 
-  var done = false;
-  while (!done) {
+  var x = rInt(gridSize);
+  var y = rInt(gridSize);
 
-    //Generate starting block
-    var x = rInt(gridSize);
-    var y = rInt(gridSize);
-    //console.log("Trying  x="+x+", y="+y);
+  //Note: this loop could take a long time if the board is full.
+  while (curGrid[x][y]) {
 
-    if (curGrid[x][y]) continue;
-
-
-    var spawnedCellCount = 1;
-    var spawnGrid = matrix(gridSize, gridSize, false);
-    var listx = new Array(order);
-    var listy = new Array(order);
-
-    listx[0] = x;
-    listy[0] = y;
-    var maxX = x;
-    var minX = x;
-    var maxY = y;
-    var minY = y;
-
-      spawnGrid[x][y] = true;
-    var addedCell = false;
-
-    while (spawnedCellCount < order) {
-
-      var idx = 0;
-      if (spawnedCellCount > 1) idx = rInt(spawnedCellCount);
-      for (var n=0; n<spawnedCellCount; n++)
-      {
-        x = listx[idx];
-        y = listy[idx];
+    x = rInt(gridSize);
+    y = rInt(gridSize);
+  }
 
 
-        var dir = rInt(4);
-        for (var i = 0; i < 4; i++) {
-          var xx = x;
-          var yy = y;
-          switch (dir) {
-            case 0:
-              yy = y - 1;
-              break;
-            case 1:
-              xx = x + 1;
-              break;
-            case 2:
-              yy = y + 1;
-              break;
-            case 3:
-              xx = x - 1;
-              break;
+  var spawnedCellCount = 1;
+  var spawnGrid = matrix(gridSize, gridSize, false);
+  var listx = new Array(order);
+  var listy = new Array(order);
+
+  listx[0] = x;
+  listy[0] = y;
+  var maxX = x;
+  var minX = x;
+  var maxY = y;
+  var minY = y;
+
+  spawnGrid[x][y] = true;
+  var addedCell = false;
+
+  while (spawnedCellCount < order) {
+
+    var idx = 0;
+    if (spawnedCellCount > 1) idx = rInt(spawnedCellCount);
+    for (var n = 0; n < spawnedCellCount; n++) {
+      x = listx[idx];
+      y = listy[idx];
+
+      var dir = rInt(4);
+      for (var i = 0; i < 4; i++) {
+        var xx = x;
+        var yy = y;
+        if (dir === 0) yy = y - 1;
+        else if (dir === 1) xx = x + 1;
+        else if (dir === 2) yy = y + 1;
+        else xx = x - 1;
+
+        if ((xx >= 0) && (yy >= 0) && (xx < gridSize) && (yy < gridSize)) {
+          if (!curGrid[xx][yy] && !spawnGrid[xx][yy]) {
+
+            //console.log("    Added cell xx=" + xx + ", yy=" + yy + ", spawnedCellCount=" + spawnedCellCount);
+            listx[spawnedCellCount] = xx;
+            listy[spawnedCellCount] = yy;
+            spawnGrid[xx][yy] = true;
+            spawnedCellCount++;
+            addedCell = true;
+
+            if (xx > maxX) maxX = xx;
+            if (xx < minX) minX = xx;
+            if (yy > maxY) maxY = yy;
+            if (yy < minY) minY = yy;
+
+            break;
           }
-          if ((xx>=0) && (yy>=0) && (xx<gridSize) && (yy<gridSize)) {
-            if (!curGrid[xx][yy] && !spawnGrid[xx][yy]) {
-
-              //console.log("    Added cell xx=" + xx + ", yy=" + yy + ", spawnedCellCount=" + spawnedCellCount);
-              listx[spawnedCellCount] = xx;
-              listy[spawnedCellCount] = yy;
-              spawnGrid[xx][yy] = true;
-              spawnedCellCount++;
-              addedCell = true;
-
-              if (x > maxX) maxX = x;
-              if (x < minX) minX = x;
-              if (y > maxY) maxY = y;
-              if (y < minY) minY = y;
-
-              break;
-            }
-          }
-
-          dir = (dir + 1) % 4;
         }
-        if (addedCell) break;
-        idx = (idx + 1) % spawnedCellCount;
-      }
 
-      if (!addedCell) break;
+        dir = (dir + 1) % 4;
+      }
+      if (addedCell) break;
+      idx = (idx + 1) % spawnedCellCount;
     }
 
-    if (spawnedCellCount >= order) {
-      done = true;
-      if  (order >= 4) {
-        //if bar in level 4 or 5, then retry
-        if ((maxX == minX) || (maxY == minY)) done = false;
-      }
+    if (!addedCell) return false;
+  }
 
+  if (spawnedCellCount >= order) {
+    if (order >= 4) {
+      //if bar in level 4 or 5, then retry
+      if ((maxX == minX) || (maxY == minY)) return false;
     }
   }
 
   copyMatrixToBoard(spawnGrid, order);
-
-  //console.log("done");
+  return true;
 }
 
 
 
+
+
+
+
+
+
+//TODO: Move the animation in this to the above commented spawnMonoOrDomino() then replace this with the above version.
 function spawnMonoOrDomino(){
 
 	// generate list of empty cells, verify a cell can be placed

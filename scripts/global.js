@@ -52,4 +52,4 @@ var canvasWidth, canvasHeight;
 
 //==  DEBUG OPTIONS  =========================================================//
 
-var DEBUG_LOG_SHAPE_PROBABILITIES = true
+var DEBUG_LOG_SHAPE_PROBABILITIES = false

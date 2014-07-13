@@ -10,7 +10,8 @@ function newGame(){
 	snapping = false;
 	currentlyAnimating = true;
 	triggerDetectSquares = true;
-  placeStartingPolys();
+	spawnNewPoly = false; // TODO: LOADGAME
+	placeStartingPolys();
 	updateScoreBoxes();
 	saveGame();
 }

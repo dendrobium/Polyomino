@@ -4,6 +4,7 @@ bypassLoadGame     = false;
 detectHighestOrder = true;
 orderDecay         = true;
 allowRotations     = true;
+newPolyOnMerge     = false;
 paneThickness      = 2;
 gridSize           = 10;
 largeGridSize      = gridSize;
@@ -51,7 +52,7 @@ var blockId,score;
 var board,floating,transfer,transferId;
 var mouse,dragging,snapping,mouseDX,mouseDY,downGX,downGY,mouseGX,mouseGY,placeX,placeY;
 var goalFloatX,goalFloatY,floatX,floatY,hover,goalRot,rot;
-var currentlyAnimating,triggerDetectSquares;
+var currentlyAnimating,triggerDetectSquares,spawnNewPoly,polyMoved;
 
 var gameWon = false; // so that we don't continually trigger the game won screen if they keep building big polyominos
 var highScore = 0;

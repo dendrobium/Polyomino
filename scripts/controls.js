@@ -101,6 +101,7 @@ function setupControls(){
 	});
 
 	canvas.addEventListener("mouseup",function(e){
+		polyMoved = false;
 		mouse = getMousePos(e);
 		if(!(e.which === 1))return;
 		if(!dragging || snapping)return;
@@ -189,7 +190,7 @@ function setupControls(){
 		goalFloatX = placeX*cellSize;
 		goalFloatY = placeY*cellSize;
 		snapping = true;
-    spawnMonoOrDomino();
+		polyMoved = true;
 	});
 
 	// prevents right-click menu

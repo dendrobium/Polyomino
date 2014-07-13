@@ -51,6 +51,12 @@ function render(){
 		currentlyAnimating = true;
 	}triggerDetectSquares = false;
 
+	// place new poly
+	if(spawnNewPoly){
+		spawnMonoOrDomino();
+		currentlyAnimating = true;
+	}spawnNewPoly = false;
+
 
 	// render everything if flagged
 	if(!currentlyAnimating)return;
@@ -113,6 +119,8 @@ function render(){
 			deselectGrid(board);
 			dragging = snapping = false;
 			triggerDetectSquares = true;
+			if(polyMoved)spawnNewPoly = true;
+			polyMoved = false;
 		}
 	}
 

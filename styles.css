@@ -98,15 +98,11 @@
 	color: #f0f0f0;
 
 	text-align: center;
-}
 
-.score {
-	border-right: 1px solid #f0f0f0;
-	margin-right:-6%;
-}
 
+}
 .highscore {
-	margin-right: 3%;
+	border-left: 1px solid #f0f0f0;
 }
 
 .score:after, .highscore:after {

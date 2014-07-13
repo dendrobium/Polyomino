@@ -137,10 +137,10 @@ window.onresize = function(){
 	if(firsttime){
 		// XXX: why is grid size a function of how large the window is?
 		// XXX: you can lose save states because of this (play game in small window, resize to large window, refresh)
-		if( (canvasWidth - paneThickness*2)/gridSize < cellSizeThreshold ) gridSize = 8;
-		else gridSize = 10;
+		if( (canvasWidth - paneThickness*2)/gridSize < cellSizeThreshold ) gridSize = smallGridSize;
+		else gridSize = largeGridSize;
 		firsttime = false;
-		goalOrder = (gridSize == 10) ? 6 : 5;
+		goalOrder = (gridSize == largeGridSize) ? 6 : 5;
 	}
 
 	cellSize = Math.floor((canvasWidth - paneThickness*2)/gridSize);

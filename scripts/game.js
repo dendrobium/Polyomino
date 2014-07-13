@@ -76,7 +76,7 @@ function clearContainer(container){
 var scoreFuncVersion = 2;
 
 function addToScore(ord){
-	score += (ord*ord) * scoreCombo; //dummy score function. May be updated!
+	score += (ord*ord)/* * scoreCombo*/; //dummy score function. May be updated!
 	scoreTick = tick;
 
 	// TODO show points on-board (particles? some other effect?)

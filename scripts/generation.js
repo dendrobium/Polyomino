@@ -171,7 +171,7 @@ function squareToPoly(left,top,order){
 
 	// XXX: Luke, this isn't maybe the best way to do scores but I wanted to have something to work with
 	// XXX: this doesn't need to be an event, as adding a number to score doesn't need to happen at a later time... [also, seed notes in addScoreEvt definition]
-	addScoreEvt(order);
+	addToScore(order);
 	if(order > goalOrder && !gameWon){
 		gameWon = true;
 		gameWonEvt();
@@ -238,22 +238,16 @@ function squareToPoly(left,top,order){
 		if (recurseFlag)return;
 	}
 
-	// XXX [ezra]: for(var i=x;i<x+order;++i)for(var j=y;j<y+order;++j)
-	// XXX [ezra]: if(!board.getCell(i,j).occupied){
-	// XXX [ezra]:	 /* do stuff here (cells are at i*cellSize, j*cellSize) */
-	// XXX [ezra]:	 slideInEvt[0](i,j,0,1000); // example
-	// XXX [ezra]: }
 	for(var i=left;i<left+order;++i)for(var j=top;j<top+order;++j) {
 		if (!board.getCell(i, j).occupied) {
 			/* do stuff here (cells are at i*cellSize, j*cellSize) */
 			var color = polyColor[board.getCell(i, j).order].primary;
 			new particle(i * cellSize + cellSize / 2, j * cellSize + cellSize / 2, 0, 0, 750, color.r * 255, color.g * 255, color.b * 255, 1, cellSize, 255, 255, 255, 0, cellSize / 10, 1, 0);
-
 		}
 	}
 
 	beginSurroundEvt(left, top,order,0,order*100);
-	surroundEvt(left, top,order,order*100,order*100+1000);
+	surroundEvt(left, top,order,order*100,order*100+1000);addToScore
 	saveGame();
 }
 

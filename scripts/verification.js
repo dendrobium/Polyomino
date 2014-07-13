@@ -112,6 +112,7 @@ function detectSquares(){
 
 	// TODO: handle combos here [combo information doesn't need to be global]
 	if(combo > 1){}
+	else if(combo === 0)checkGameOver(); // XXX: is this the final place to check end game?
 
 	// placing these here rather than right after squareToPoly allows for comboing
 	recalculateIds();

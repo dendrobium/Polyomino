@@ -33,10 +33,10 @@ function touchHandler(event){
 	}
 
 	var simulatedEvent = document.createEvent("MouseEvent");
-	simulatedEvent.initMouseEvent(type, true, true, window, 1,
-	                              first.screenX, first.screenY,
-	                              first.clientX, first.clientY, false,
-	                              false, false, false, 0/*left*/, null);
+	simulatedEvent.initMouseEvent(type,true,true,window,1,
+	                              first.screenX,first.screenY,
+	                              first.clientX,first.clientY,false,
+	                              false,false,false,0,null);
 	first.target.dispatchEvent(simulatedEvent);
 	event.preventDefault();
 }
@@ -52,12 +52,17 @@ function setupControls(){
 			case 1:
 				if(dragging)return;
 				var c = board.getCell(mouse.x/cellSize,mouse.y/cellSize);
+
+				// verify locks
 				if(!c || !c.occupied || c.locked)return;
+				for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
+					if(board.getCell(i,j).locked)return;
+				}
 
 				// set lock and selected flags for selected cells
 				for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
 					var b = board.getCell(i,j);
-					if(b.id === c.id)b.locked = b.selected = true;
+					if(b.occupied && b.id === c.id)b.locked = b.selected = true;
 				}
 
 				// move selected piece onto floating layer,remove from board
@@ -80,8 +85,8 @@ function setupControls(){
 				currentlyAnimating = true;
 				return;
 			case 3:
+				if(!allowRotations)return;
 				if(!dragging)return;
-				console.log
 				++goalRot;
 				return;
 		}
@@ -143,6 +148,17 @@ function setupControls(){
 
 		// check if rotated is dropped on original position
 		if(downGX == mouseGX && downGY == mouseGY && (goalRot%4 === 0)){cancelMove();return;}
+		var moved = false;
+		for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
+			if(board.getCell(i,j).selected && !(rotated.getCell(i+placeX,j+placeY).occupied))
+				moved = true;
+		}if(!moved){
+			copyPiece(floating,transfer,transferId);
+			goalFloatX = placeX*cellSize;
+			goalFloatY = placeY*cellSize;
+			snapping = true;
+			return;
+		}
 
 		// make sure pieces in rotated arent dropped on existing pieces or locked (and unselected) cells
 		for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
@@ -160,7 +176,7 @@ function setupControls(){
 
 		// successful move, place new poly -----------------------------
 
-		// move rotated to transfer, unlock old selectoin, add new locks to board
+		// move rotated to transfer, unlock old selection, add new locks to board
 		deselectGrid(board);
 		for(var i=0;i<transfer.size;++i)for(var j=0;j<transfer.size;++j){
 			var c = rotated.getCell(i+placeX,j+placeY);
@@ -170,8 +186,8 @@ function setupControls(){
 			b.locked = b.selected = true;
 		}
 
-		goalFloatX = (downGX-mouseGX)*cellSize;
-		goalFloatY = (downGY-mouseGY)*cellSize;
+		goalFloatX = placeX*cellSize;
+		goalFloatY = placeY*cellSize;
 		snapping = true;
     spawnMonoOrDomino();
 	});

@@ -10,7 +10,7 @@ function placeStartingPolys() {
 
 
   for (var i=0; i<orderList.length; i++) {
-    spawnPoly(orderList[i]);
+    spawnStartingPolys(orderList[i]);
   }
 
   currentlyAnimating = true;
@@ -19,31 +19,35 @@ function placeStartingPolys() {
 
 
 
-function spawnPoly(order) {
+function spawnStartingPolys(order) {
 
   //Normally, on a 10x10 board, this loop will only execute once.
   //  A few times it will execute twice.
   //However, if the board is made very small, say for debugging, it may become
   //  impossible to spawn the number of pices the requested block.
-  for (var n=0; n<1000; n++) {
-    var done = tryToSpawnBlockInRandomOpenLocation(order);
-    if (done) return;
+  var done = false;
+  while (!done) {
+    for (var n = 0; n < 3; n++) {
+      done = tryToSpawnBlockInRandomOpenLocation(order, false);
+      if (done) return;
+    }
+    order = order - 1;
+    if (order < 1) return;
   }
-  console.log("ERROR: CANNOT SPAWN spawnPoly("+order+")");
 }
-
+//
 //function spawnMonoOrDomino()
 //{
-//  if (Math.random() < 0.2) tryToSpawnBlockInRandomOpenLocation(1);
+//  if (Math.random() < 0.25) tryToSpawnBlockInRandomOpenLocation(1, true);
 //  else {
-//    var done = tryToSpawnBlockInRandomOpenLocation(2);
-//    if (!done) tryToSpawnBlockInRandomOpenLocation(1);
+//    var done = tryToSpawnBlockInRandomOpenLocation(2, true);
+//    if (!done) tryToSpawnBlockInRandomOpenLocation(1, true);
 //  }
 //}
 
 
 
-function tryToSpawnBlockInRandomOpenLocation(order) {
+function tryToSpawnBlockInRandomOpenLocation(order, scheduleAnimation) {
 
   var curGrid = matrix(gridSize, gridSize, false);
   copyBoardToMatrix(curGrid);
@@ -126,7 +130,7 @@ function tryToSpawnBlockInRandomOpenLocation(order) {
     }
   }
 
-  copyMatrixToBoard(spawnGrid, order);
+  copyMatrixToBoard(spawnGrid, order, scheduleAnimation);
   return true;
 }
 
@@ -343,22 +347,52 @@ function copyMatrixToFilled(myMatrix, filled, order, left, top) {
 }
 
 
-function copyMatrixToBoard(myMatrix, order) {
+function copyMatrixToBoard(myMatrix, order, scheduleAnimation) {
   //console.log("copyMatrixToBoard("+order+") goof");
+  var blockCount = 0;
   var id = newId();
+  var entryX = 0;
+  var entryY = 0;
   for (var x = 0; x < gridSize; x++) {
     for (var y = 0; y < gridSize; y++) {
 
       if (myMatrix[x][y]) {
 
         //console.log("  x="+x+", y="+ y);
-        var cell = board.getCell(x, y);
-        cell.quickSet(true, id, order);
+        var myCell = board.getCell(x, y);
+        myCell.quickSet(true, id, order);
+
+
+        if (scheduleAnimation) {
+          blockCount++;
+          if (blockCount === 1) {
+            quickSetEvt(myCell, true, id, order, keyframe(1));
+		        fadeOutEvt(entryX,entryY,keyframe(1),keyframe(2));
+		        unlockEvt(c,keyframe(2));
+		        saveGameEvt(keyframe(3));
+            entryX = myCell.x;
+            entryY = myCell.y;
+          }
+          else {
+            quickSetEvt(c, true, id, order, keyframe(1));
+            highlightEvt(entryX, entryY, keyframe(1), keyframe(2));
+            fadeOutEvt(entryX, entryY, keyframe(2), keyframe(3));
+            unlockEvt(myCell, keyframe(3));
+            saveGameEvt(keyframe(3));
+          }
+        }
       }
     }
   }
 }
 
+//	if(dominoGenerated){
+;
+//	}else{
+//		quickSetEvt(c,true,id,1,keyframe(1));
+//		fadeOutEvt(entry.x,entry.y,keyframe(1),keyframe(2));
+//		unlockEvt(c,keyframe(2));
+//		saveGameEvt(keyframe(3));
 
 function copyBoardToMatrix(myMatrix) {
   for (var x = 0; x < gridSize; x++) {

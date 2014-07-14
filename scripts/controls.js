@@ -26,17 +26,19 @@ function touchHandler(event){
 	var type    = "";
 
 	switch(event.type){
-		case "touchstart" : type = "mousedown"; break;
+		case "touchstart" : type = "mousedown";  console.log(event); break;
 		case "touchmove"  : type = "mousemove"; break;
 		case "touchend"   : type = "mouseup";   break;
 		default:return;
 	}
-
+	var button = 0;
+	if(first.identifier >= 1)
+		button = 2;
 	var simulatedEvent = document.createEvent("MouseEvent");
 	simulatedEvent.initMouseEvent(type,true,true,window,1,
 	                              first.screenX,first.screenY,
 	                              first.clientX,first.clientY,false,
-	                              false,false,false,0,null);
+	                              false,false,false,button,null);
 	first.target.dispatchEvent(simulatedEvent);
 	event.preventDefault();
 }

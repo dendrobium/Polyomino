@@ -76,11 +76,9 @@ function clearContainer(container){
 // XXX: can't you compute the hash of the score function and use that instead?
 var scoreFuncVersion = 2;
 
-function addToScore(ord){
-	score += (ord*ord)/* * scoreCombo*/; //dummy score function. May be updated!
-	scoreTick = tick;
-
-	// TODO show points on-board (particles? some other effect?)
+// TODO: combos
+function addToScore(squareOrder,pieceOrder){
+	score += (squareOrder*squareOrder*pieceOrder);
 	if(score > highScore)highScore = score;
 	updateScoreBoxes();
 }

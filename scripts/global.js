@@ -20,16 +20,15 @@ cellSizeThreshold  = 50; //may need tweaking
 //==  POLYOMINO COLORS  ======================================================//
 
 var polyColor = [
-  {primary:{r:0.00000,g:0.00000,b:0.00000},secondary:{r:0.0000,g:0.0000,b:0.0000}}, // never used
-  {primary:{r:0.38157,g:0.38430,b:0.33487},secondary:{r:0.5451,g:0.5490,b:0.4784}}, // monomino
-  {primary:{r:0.23884,g:0.40075,b:0.18669}, secondary:{r:0.4235,g:0.7020,b:0.3294}}, // domino
-  {primary:{r:0.48859,g:0.52157,b:0.16197},secondary:{r:0.6980,g:0.7451,b:0.2314}}, // tromino
-  {primary:{r:0.2941,g:0.4118,b:0.5137}, secondary:{r:0.4549,g:0.6392,b:0.8000}}, // tetromino
-  {primary:{r:0.46668,g:0.00000,b:0.00000},secondary:{r:0.6667,g:0.0000,b:0.0000}}, // pentomino
-  {primary:{r:0.4235,g:0.3294,b:0.5490},secondary:{r:0.7115,g:0.5434,b:0.9188}}, // hexomino
-  {primary:{r:0.64784,g:0.24157,b:0.00000},secondary:{r:0.9255,g:0.3451,b:0.0000}}, // heptomino
-  {primary:{r:0.57372,g:0.40628,b:0.03297},secondary:{r:0.8196,g:0.5804,b:0.0471}} // octomino
-
+	{primary:{r:0.00000,g:0.00000,b:0.00000},secondary:{r:0.0000,g:0.0000,b:0.0000}}, // never used
+	{primary:{r:0.38157,g:0.38430,b:0.33487},secondary:{r:0.5451,g:0.5490,b:0.4784}}, // monomino
+	{primary:{r:0.23884,g:0.40075,b:0.18669},secondary:{r:0.4235,g:0.7020,b:0.3294}}, // domino
+	{primary:{r:0.48859,g:0.52157,b:0.16197},secondary:{r:0.6980,g:0.7451,b:0.2314}}, // tromino
+	{primary:{r:0.29410,g:0.41180,b:0.51370},secondary:{r:0.4549,g:0.6392,b:0.8000}}, // tetromino
+	{primary:{r:0.46668,g:0.00000,b:0.00000},secondary:{r:0.6667,g:0.0000,b:0.0000}}, // pentomino
+	{primary:{r:0.42350,g:0.32940,b:0.54900},secondary:{r:0.7115,g:0.5434,b:0.9188}}, // hexomino
+	{primary:{r:0.64784,g:0.24157,b:0.00000},secondary:{r:0.9255,g:0.3451,b:0.0000}}, // heptomino
+	{primary:{r:0.57372,g:0.40628,b:0.03297},secondary:{r:0.8196,g:0.5804,b:0.0471}}, // octomino
 ];
 
 //==  GLOBAL VARS  ===========================================================//

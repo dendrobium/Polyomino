@@ -204,10 +204,10 @@ function squareToPoly(left,top,order){
 
 	// XXX: Luke, this isn't maybe the best way to do scores but I wanted to have something to work with
 	// XXX: this doesn't need to be an event, as adding a number to score doesn't need to happen at a later time... [also, seed notes in addScoreEvt definition]
-	addToScore(order);
+	addToScore(order,board.getCell(left,top).order);
 	if(order > goalOrder && !gameWon){
 		gameWon = true;
-		gameWonEvt();
+		gameWonEvt(); // TODO: this needs to be scheduled with animations
 	}
 
 	var filled = new grid(order);
@@ -280,7 +280,7 @@ function squareToPoly(left,top,order){
 	}
 
 	beginSurroundEvt(left, top,order,0,order*100);
-	surroundEvt(left, top,order,order*100,order*100+1000);addToScore
+	surroundEvt(left, top,order,order*100,order*100+1000);
 	saveGame();
 }
 

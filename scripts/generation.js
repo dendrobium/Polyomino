@@ -1,5 +1,6 @@
 function placeStartingPolys() {
 
+  //var orderList = [8, 7, 6, 5, 4, 3, 2, 1];
   var orderList = [5, 4, 3, 2, 2, 1, 1];
   r = Math.random();
   if (r < 0.2) orderList = orderList.concat(5, 2, 1, 1, 1);

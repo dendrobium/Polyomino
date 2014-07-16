@@ -32,8 +32,8 @@ function renderGridRaw(g,offset,usePrimary,overrideColor){
 }
 
 function renderGrid(g){
-	renderGridRaw(g,1,true);
-	renderGridRaw(g,3,false);
+	renderGridRaw(g,1,false);
+	renderGridRaw(g,3,true);
 }
 
 function render(){

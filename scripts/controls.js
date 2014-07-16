@@ -58,7 +58,8 @@ function setupControls(){
 				// verify locks
 				if(!c || !c.occupied || c.locked)return;
 				for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
-					if(board.getCell(i,j).locked)return;
+					var b = board.getCell(i,j);
+					if(b.id === c.id && b.locked)return;
 				}
 
 				// set lock and selected flags for selected cells

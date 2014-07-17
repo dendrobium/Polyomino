@@ -1,7 +1,7 @@
 function placeStartingPolys() {
 
   //var orderList = [8, 7, 6, 5, 4, 3, 2, 1];
-  var orderList = [5, 4, 3, 2, 2, 1, 1];
+  var orderList = [5, 4, 4, 3, 3, 2, 2, 2, 2, 1, 1];
   r = Math.random();
   if (r < 0.2) orderList = orderList.concat(5, 2, 1, 1, 1);
   else if (r < 0.4) orderList = orderList.concat(4, 2, 2);
@@ -9,14 +9,13 @@ function placeStartingPolys() {
   else if (r < 0.8) orderList = orderList.concat(5, 1, 1, 1, 1);
   else orderList = orderList.concat(4, 2, 1, 1);
 
+  console.log("placeStartingPolys(): "+orderList[i]);
 
   for (var i=0; i<orderList.length; i++) {
     spawnStartingPolys(orderList[i]);
   }
-
   currentlyAnimating = true;
 }
-
 
 
 

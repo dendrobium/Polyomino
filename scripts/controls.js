@@ -48,9 +48,26 @@ function setupControls(){
 	canvas.addEventListener("touchmove"  , touchHandler);
 	canvas.addEventListener("touchend"   , touchHandler);
 
+	document.addEventListener('keydown',function(e){
+		if(e.keyCode === 9){
+			e.preventDefault();
+			if(debugMode){
+				debugMouseDown = false;
+				currentlyAnimating = true;
+				triggerDetectSquares = true;
+				recalculateOrder();
+				saveGame();
+			}else{
+				if(dragging && !snapping)cancelMove();
+			}debugMode = !debugMode;
+			currentlyAnimating = true;
+		}
+	},false);
+
 	canvas.addEventListener("mousedown",function(e){
 		mouse = getMousePos(e);
 
+		if(e.which === 2)debugMouseDown = !debugMouseDown;
 		if(debugMode){
 			calcMouseGridVars();
 			switch(e.which){
@@ -138,6 +155,7 @@ function setupControls(){
 			if(!debugMouseDown)return;
 			debugMouseDown = false;
 			currentlyAnimating = true;
+			triggerDetectSquares = true;
 			recalculateOrder();
 			saveGame();
 			return;

@@ -73,6 +73,12 @@ function render(){
 		renderRect(i*cs+1,j*cs+1,(i+1)*cs-1,(j+1)*cs-1);
 	}
 
+	if(debugMode){
+		rgb(0.3,0.3,0.3);
+		for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
+			renderRect(i*cs+4,j*cs+4,(i+1)*cs-4,(j+1)*cs-4);
+	}
+
 	// render board and process events and animations
 	renderGrid(board);
 	tickParticles();

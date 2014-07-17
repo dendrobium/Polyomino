@@ -1,6 +1,6 @@
 //==  RULES  =================================================================//
 
-bypassLoadGame     = false;
+bypassLoadGame     = true;
 detectHighestOrder = true;
 orderDecay         = true;
 allowRotations     = true;
@@ -41,6 +41,8 @@ var currentlyAnimating,triggerDetectSquares,spawnNewPoly,polyMoved;
 
 var gameWon = false; // so that we don't continually trigger the game won screen if they keep building big polyominos
 var highScore = 0;
+
+var blockIdOfLastBlockPlaced;
 
 //==  CANVAS VARS  ===========================================================//
 

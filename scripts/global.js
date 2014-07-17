@@ -38,7 +38,9 @@ var board,floating,transfer,transferId;
 var mouse,dragging,snapping,mouseDX,mouseDY,downGX,downGY,mouseGX,mouseGY,placeX,placeY;
 var goalFloatX,goalFloatY,floatX,floatY,hover,goalRot,rot;
 var currentlyAnimating,triggerDetectSquares,spawnNewPoly,polyMoved;
+var comboActiveCtr = 0,comboCtr; // TODO: init this in new/load game
 
+// TODO: init these in new/load game
 var gameWon = false; // so that we don't continually trigger the game won screen if they keep building big polyominos
 var highScore = 0;
 
@@ -46,6 +48,7 @@ var highScore = 0;
 
 	/*+- DELETE on deployment version ------------------ DELETE -+*/
 
+var DEBUG_LOG_SHAPE_PROBABILITIES = false
 var debugMode = false;
 var debugMouseDown = false;
 var debugNewId;
@@ -57,7 +60,3 @@ var canvas = null;
 var gfx = null;
 var tick,elapsed;
 var canvasWidth, canvasHeight;
-
-//==  DEBUG OPTIONS  =========================================================//
-
-var DEBUG_LOG_SHAPE_PROBABILITIES = false

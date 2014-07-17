@@ -62,6 +62,12 @@ function saveGameEvt(saveTick){
 	new_event(saveTick,saveTick,null,saveGame);
 }
 
+function decComboActiveCtr(decTick){
+	new_event(decTick,decTick,null,function(){
+		--comboActiveCtr;
+	});
+}
+
 //============================================================================//
 
 // TODO: what about adjacent surrounds?

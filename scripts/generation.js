@@ -201,9 +201,14 @@ function spawnMonoOrDomino(){
 // this function assumes no cell locks are set to true
 function squareToPoly(left,top,order){
 
-	// XXX: Luke, this isn't maybe the best way to do scores but I wanted to have something to work with
-	// XXX: this doesn't need to be an event, as adding a number to score doesn't need to happen at a later time... [also, seed notes in addScoreEvt definition]
-	addToScore(order,board.getCell(left,top).order);
+	// calculate score, handle combos
+	if(comboActiveCtr === 0)comboCtr = 1;
+	else ++comboCtr;
+	++comboActiveCtr;
+	addToScore(order,board.getCell(left,top).order,comboCtr);
+	decComboActiveCtr(order*100+1000); // TODO: CHANGE TIMING WITH NEW ANIMATION
+
+	// check win condition
 	if(order > goalOrder && !gameWon){
 		gameWon = true;
 		gameWonEvt(); // TODO: this needs to be scheduled with animations

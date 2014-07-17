@@ -50,6 +50,26 @@ function setupControls(){
 
 	canvas.addEventListener("mousedown",function(e){
 		mouse = getMousePos(e);
+
+		if(debugMode){
+			calcMouseGridVars();
+			switch(e.which){
+				case 1:
+					debugMouseDown = true;
+					debugNewId = newId();
+					debugPlace = true;
+					board.getCell(mouseGX,mouseGY).quickSet(true,debugNewId,1);
+					currentlyAnimating = true;
+					break;
+				case 3:
+					debugMouseDown = true;
+					debugPlace = false;
+					board.getCell(mouseGX,mouseGY).quickSet(false);
+					currentlyAnimating = true;
+					break;
+			}return;
+		}
+
 		switch(e.which){
 			case 1:
 				if(dragging)return;
@@ -97,6 +117,16 @@ function setupControls(){
 
 	canvas.addEventListener("mousemove",function(e){
 		mouse = getMousePos(e);
+
+		if(debugMode){
+			if(!debugMouseDown)return;
+			calcMouseGridVars();
+			if(debugPlace)board.getCell(mouseGX,mouseGY).quickSet(true,debugNewId,1);
+			else board.getCell(mouseGX,mouseGY).quickSet(false);
+			currentlyAnimating = true;
+			return;
+		}
+
 		if(!dragging||snapping)return;
 		calcMouseGridVars();
 		goalFloatX = (downGX-mouseGX)*cellSize;
@@ -104,6 +134,15 @@ function setupControls(){
 	});
 
 	canvas.addEventListener("mouseup",function(e){
+		if(debugMode){
+			if(!debugMouseDown)return;
+			debugMouseDown = false;
+			currentlyAnimating = true;
+			recalculateOrder();
+			saveGame();
+			return;
+		}
+
 		polyMoved = false;
 		mouse = getMousePos(e);
 		if(!(e.which === 1))return;
@@ -194,6 +233,13 @@ function setupControls(){
 		goalFloatY = placeY*cellSize;
 		snapping = true;
 		polyMoved = true;
+	});
+
+	canvas.addEventListener("mouseout",function(){
+		debugMouseDown = false;
+		currentlyAnimating = true;
+		recalculateOrder();
+		saveGame();
 	});
 
 	// prevents right-click menu

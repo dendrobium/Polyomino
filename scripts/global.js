@@ -42,6 +42,15 @@ var currentlyAnimating,triggerDetectSquares,spawnNewPoly,polyMoved;
 var gameWon = false; // so that we don't continually trigger the game won screen if they keep building big polyominos
 var highScore = 0;
 
+//==  DEBUG VARS  ============================================================//
+
+	/*+- DELETE on deployment version ------------------ DELETE -+*/
+
+var debugMode = false;
+var debugMouseDown = false;
+var debugNewId;
+var debugPlace;
+
 //==  CANVAS VARS  ===========================================================//
 
 var canvas = null;

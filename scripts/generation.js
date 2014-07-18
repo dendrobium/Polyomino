@@ -201,18 +201,19 @@ function spawnMonoOrDomino(){
 // this function assumes no cell locks are set to true
 function squareToPoly(left,top,order){
 
+	// TODO: move these to the bottom of squareToPoly() vvvvvvvvvvvv
 	// calculate score, handle combos
-	if(comboActiveCtr === 0)comboCtr = 1;
+	comboActiveEvt(order*100+1000); // TODO: CHANGE TIMING WITH NEW ANIMATION
+	if(comboActiveCtr === 1)comboCtr = 1;
 	else ++comboCtr;
-	++comboActiveCtr;
 	addToScore(order,board.getCell(left,top).order,comboCtr);
-	decComboActiveCtr(order*100+1000); // TODO: CHANGE TIMING WITH NEW ANIMATION
 
 	// check win condition
 	if(order > goalOrder && !gameWon){
 		gameWon = true;
 		gameWonEvt(); // TODO: this needs to be scheduled with animations
 	}
+	// TODO ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 	var filled = new grid(order);
 	for(var i=0;i<filled.size;++i)for(var j=0;j<filled.size;++j)filled.setCell(i,j,false);
@@ -266,6 +267,7 @@ function squareToPoly(left,top,order){
 		};
 		recurse(0, 0);
 
+		// XXX: is this logically sound?
 		var recurseFlag = false;
 		for (var i = 0; i < holes.size; ++i)for (var j = 0; j < holes.size; ++j)
 			if (!holes.getCell(i, j)) {

@@ -62,7 +62,8 @@ function saveGameEvt(saveTick){
 	new_event(saveTick,saveTick,null,saveGame);
 }
 
-function decComboActiveCtr(decTick){
+function comboActiveEvt(decTick){
+	++comboActiveCtr;
 	new_event(decTick,decTick,null,function(){
 		--comboActiveCtr;
 	});
@@ -72,8 +73,6 @@ function decComboActiveCtr(decTick){
 
 // TODO: what about adjacent surrounds?
 function beginSurroundEvt(x,y,order,startTick,endTick){
-
-  console.log("event.beginSurroundEvt: order="+order);
 	addEffect(new squareEffect(order, x*cellSize, y*cellSize, order*cellSize));
 	new_event(startTick,endTick,function(interp){
 		var len = interp*interp*interp*order*cellSize+6;

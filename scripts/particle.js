@@ -106,14 +106,13 @@ function testParticleSquare(){
 }
 
 function particle(x, y, vx, vy, lifetime, startr, startg, startb, starta, startscale, endr, endg, endb, enda, endscale, border, gravity){
-//function particle(x, y, vx, vy, lifetime, startr, startg, startb, starta, startscale, endr, endg, endb, enda, endscale, border, gravity){
-	//I (Joel) replaced some of the constants passed as parameters with constents set here.
-  //  Of course, if you ever want to create particles in different places with different
-  //  parameters, then they would be better as arguments.
-  //There were 17 parameters when I started which is very hard to not make an error on in a strongly typed
-  //   language. In javascript, that is just asking for a bug.
-  //Where you call this, you split color up into r, g and b. Better to pass it color and have 2 less paremeters.
+  //(by Joel) This call has too many arguments (17).
+  // Even if we were using a strongly typed language, it would be very hard use this without making a bug.
+  // In javascript, this is just asking for a bug.
+  //Where you call this, you split color up into r, g and b. Better to pass it color and have 2 less
+  // paremeters.
 
+  // Also, replace some of the constants passed as parameters with constents set in this constructor.
     this.x = x;
     this.y = y;
     this.vx = vx;
@@ -163,10 +162,16 @@ function particle(x, y, vx, vy, lifetime, startr, startg, startb, starta, starts
       this.b = this.startb + (this.endb-this.startb)*interp;
       this.a = this.starta + (this.enda-this.starta)*interp;
 
-      gfx.fillStyle = 'rgba(255, 255, 255,' + this.a + ')';
-      gfx.fillRect(this.x-this.scale/2, this.y-this.scale/2, this.scale, this.scale);
+      //gfx.fillStyle = 'rgba(255, 255, 255,' + this.a + ')';
+      //gfx.fillRect(this.x-this.scale/2, this.y-this.scale/2, this.scale, this.scale);
+      //gfx.fillStyle = 'rgba(' + Math.floor(this.r) + ',' + Math.floor(this.g) + ',' + Math.floor(this.b) + ',' + this.a + ')';
+      //gfx.fillRect(this.x-this.scale/2+this.border, this.y-this.scale/2+this.border, this.scale-(this.border*2), this.scale-(this.border*2));
+
+      //(by Joel): removing the white border around each partical - just to see if we like this.
       gfx.fillStyle = 'rgba(' + Math.floor(this.r) + ',' + Math.floor(this.g) + ',' + Math.floor(this.b) + ',' + this.a + ')';
-      gfx.fillRect(this.x-this.scale/2+this.border, this.y-this.scale/2+this.border, this.scale-(this.border*2), this.scale-(this.border*2));
+      gfx.fillRect(this.x-this.scale/2, this.y-this.scale/2, this.scale, this.scale);
+
+
 
       currentlyAnimating = true;
       if(tick >= this.endTick){

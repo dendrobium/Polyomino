@@ -27,7 +27,7 @@ function placeStartingPolys() {
   //console.log("placeStartingPolys(): "+orderList);
 
   for (var i=0; i<orderList.length; i++) {
-    spawnStartingPolys(orderList[i]);
+    //spawnStartingPolys(orderList[i]);
   }
   currentlyAnimating = true;
 }
@@ -73,6 +73,8 @@ function spawnMonoOrDomino() {
     var done = tryToSpawnBlockInRandomOpenLocation(2, true);
     if (!done) tryToSpawnBlockInRandomOpenLocation(1, true);
   }
+  currentlyAnimating = true;
+  triggerDetectSquares = true;
 }
 
 
@@ -133,7 +135,7 @@ function tryToSpawnBlockInRandomOpenLocation(order, scheduleAnimation) {
 
 
 
-
+  //LUKE: Animation here.
   var id = newId();
   //console.log("copyMatrixToBoard(order="+order+", id="+id);
   var animationEntryX = listX[0];
@@ -145,26 +147,31 @@ function tryToSpawnBlockInRandomOpenLocation(order, scheduleAnimation) {
 
         //console.log("  x="+x+", y="+ y);
         var myCell = board.getCell(x, y);
-        myCell.quickSet(true, id, order);
 
         //TODO: get working this animation for monos and domos that spawn wiht each move.
-//        if (scheduleAnimation) {
-//          if (order === 2) {
-//            myCell.locked = true;
-//            quickSetEvt(myCell, true, id, order, keyframe(1));
-//            highlightEvt(animationEntryX, animationEntryX, keyframe(1), keyframe(2));
-//            fadeOutEvt(animationEntryX, animationEntryX, keyframe(2), keyframe(3));
-//            unlockEvt(myCell, keyframe(3));
-//            saveGameEvt(keyframe(3));
-//          }
-//          else {
-//            myCell.locked = true;
-//            quickSetEvt(myCell, true, id, order, keyframe(1));
-//            fadeOutEvt(animationEntryX, animationEntryX, keyframe(1), keyframe(2));
-//            unlockEvt(myCell, keyframe(2));
-//            saveGameEvt(keyframe(3));
-//          }
-        //}
+        if (scheduleAnimation) {
+          var dir = rInt(4);
+          slideInEvt[dir](animationEntryX, animationEntryY,keyframe(0),keyframe(1));
+
+          if (order === 2) {
+            myCell.locked = true;
+            quickSetEvt(myCell, true, id, order, keyframe(1));
+            highlightEvt(animationEntryX, animationEntryY, keyframe(1), keyframe(2));
+            fadeOutEvt(animationEntryX, animationEntryY, keyframe(2), keyframe(3));
+            unlockEvt(myCell, keyframe(3));
+            saveGameEvt(keyframe(3));
+          }
+          else {
+            quickSetEvt(myCell, true, id, order, keyframe(1));
+            fadeOutEvt(animationEntryX, animationEntryY, keyframe(1), keyframe(2));
+            unlockEvt(myCell, keyframe(2));
+            saveGameEvt(keyframe(3));
+          }
+        }
+        else {
+          //for parts without animation.
+          myCell.quickSet(true, id, order);
+        }
       }
     }
   }
@@ -256,11 +263,11 @@ function squareToPoly(left,top,order) {
   var originalGrid = matrix(order, order, false);
   var spawnGrid = matrix(order, order, false);
 
-  var orderOfLastBlockPlaced = copyBoardToMatrix(originalGrid, left, top, order, blockIdOfLastBlockPlaced);
+  var orderOfMergeBlock = copyBoardToMatrix(originalGrid, left, top, order, blockIdOfLastBlockPlaced);
 
   // XXX: Luke, this isn't maybe the best way to do scores but I wanted to have something to work with
   // XXX: this doesn't need to be an event, as adding a number to score doesn't need to happen at a later time... [also, seed notes in addScoreEvt definition]
-  addToScore(order, orderOfLastBlockPlaced);
+  addToScore(order, orderOfMergeBlock);
   if (order > goalOrder && !gameWon) {
     gameWon = true;
     gameWonEvt();
@@ -346,6 +353,7 @@ function squareToPoly(left,top,order) {
 //=======================================================================================
 function doesPolyHaveHoles(spawnGrid, order) {
 //=======================================================================================
+  //Only works for holes of size 1x1
   if (order < 7) return false;
   for (var x = 0; x < order; x++) {
     for (var y = 0; y < order; y++) {

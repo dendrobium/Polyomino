@@ -105,68 +105,75 @@ function testParticleSquare(){
 
 }
 
-
 function particle(x, y, vx, vy, lifetime, startr, startg, startb, starta, startscale, endr, endg, endb, enda, endscale, border, gravity){
-	this.x = x;
-	this.y = y;
-	this.vx = vx;
-	this.vy = vy;
-	var velamt = 0.01;
-	if(vx === undefined && vy === undefined){
-		this.vx = rFloat(velamt)-(velamt/2);
-		this.vy = rFloat(velamt)-(velamt/2);
-		var invmag = (rFloat(velamt)-(velamt/2))/(this.vx * this.vx + this.vy * this.vy);
-		this.vx *= invmag;
-		this.vy *= invmag;
-	}
-	this.lifetime = lifetime || 1000;
-	this.endTick = tick+this.lifetime;
-	this.startTick = tick;
-	this.gravity = gravity || 0;
-	this.startr = startr;
-	this.startg = startg;
-	this.startb = startb;
-	this.starta = starta;
-	this.endr = endr;
-	this.endg = endg;
-	this.endb = endb;
-	this.enda = enda;
-	this.r = this.startr;
-	this.g = this.startg;
-	this.b = this.startb;
-	this.a = this.starta;
+//function particle(x, y, vx, vy, lifetime, startr, startg, startb, starta, startscale, endr, endg, endb, enda, endscale, border, gravity){
+	//I (Joel) replaced some of the constants passed as parameters with constents set here.
+  //  Of course, if you ever want to create particles in different places with different
+  //  parameters, then they would be better as arguments.
+  //There were 17 parameters when I started which is very hard to not make an error on in a strongly typed
+  //   language. In javascript, that is just asking for a bug.
+  //Where you call this, you split color up into r, g and b. Better to pass it color and have 2 less paremeters.
 
-	this.startscale = startscale || 10;
-	this.endscale = endscale || this.startscale;
+    this.x = x;
+    this.y = y;
+    this.vx = vx;
+    this.vy = vy;
+    var velamt = 0.01;
+    if(vx === undefined && vy === undefined){
+      this.vx = rFloat(velamt)-(velamt/2);
+      this.vy = rFloat(velamt)-(velamt/2);
+      var invmag = (rFloat(velamt)-(velamt/2))/(this.vx * this.vx + this.vy * this.vy);
+      this.vx *= invmag;
+      this.vy *= invmag;
+    }
+    this.lifetime = lifetime || 1000;
+    this.endTick = tick+this.lifetime;
+    this.startTick = tick;
+    this.gravity = gravity || 0;
+    this.startr = startr;
+    this.startg = startg;
+    this.startb = startb;
+    this.starta = starta;
+    this.endr = endr;
+    this.endg = endg;
+    this.endb = endb;
+    this.enda = enda;
+    this.r = this.startr;
+    this.g = this.startg;
+    this.b = this.startb;
+    this.a = this.starta;
 
-	this.scale = this.startscale;
-	this.border = border || 2;
-	this.id = particles.length;
-	particles[this.id] = this;
-	currentlyAnimating = true;
+    this.startscale = startscale || 10;
+    this.endscale = endscale || this.startscale;
 
-	this.tick = function(){
-		var interp = (tick - this.startTick)/this.lifetime;
-		this.x += this.vx;
-		this.y += this.vy;
-		this.vy += gravity * elapsed;
-		this.scale = this.startscale + (this.endscale-this.startscale)*interp;
-		this.r = this.startr + (this.endr-this.startr)*interp;
-		this.g = this.startg + (this.endg-this.startg)*interp;
-		this.b = this.startb + (this.endb-this.startb)*interp;
-		this.a = this.starta + (this.enda-this.starta)*interp;
+    this.scale = this.startscale;
+    this.border = border || 2;
+    this.id = particles.length;
+    particles[this.id] = this;
+    currentlyAnimating = true;
 
-		gfx.fillStyle = 'rgba(255, 255, 255,' + this.a + ')';
-		gfx.fillRect(this.x-this.scale/2, this.y-this.scale/2, this.scale, this.scale);
-		gfx.fillStyle = 'rgba(' + Math.floor(this.r) + ',' + Math.floor(this.g) + ',' + Math.floor(this.b) + ',' + this.a + ')';
-		gfx.fillRect(this.x-this.scale/2+this.border, this.y-this.scale/2+this.border, this.scale-(this.border*2), this.scale-(this.border*2));
+    this.tick = function(){
+      var interp = (tick - this.startTick)/this.lifetime;
+      this.x += this.vx;
+      this.y += this.vy;
+      this.vy += gravity * elapsed;
+      this.scale = this.startscale + (this.endscale-this.startscale)*interp;
+      this.r = this.startr + (this.endr-this.startr)*interp;
+      this.g = this.startg + (this.endg-this.startg)*interp;
+      this.b = this.startb + (this.endb-this.startb)*interp;
+      this.a = this.starta + (this.enda-this.starta)*interp;
 
-		currentlyAnimating = true;
-		if(tick >= this.endTick){
-			return true;
-		}
+      gfx.fillStyle = 'rgba(255, 255, 255,' + this.a + ')';
+      gfx.fillRect(this.x-this.scale/2, this.y-this.scale/2, this.scale, this.scale);
+      gfx.fillStyle = 'rgba(' + Math.floor(this.r) + ',' + Math.floor(this.g) + ',' + Math.floor(this.b) + ',' + this.a + ')';
+      gfx.fillRect(this.x-this.scale/2+this.border, this.y-this.scale/2+this.border, this.scale-(this.border*2), this.scale-(this.border*2));
 
-		return false;
-	}
+      currentlyAnimating = true;
+      if(tick >= this.endTick){
+        return true;
+      }
 
-}
+      return false;
+    }
+
+  }

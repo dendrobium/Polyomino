@@ -41,3 +41,11 @@ function matrix(rows, columns, defaultValue){
 	}
 	return arr;
 }
+
+function matrixSet(myMatrix, value) {
+  for (var i = 0; i < myMatrix.length; i++) {
+    for (var j = 0; j < myMatrix[i].length; j++) {
+      myMatrix[i][j] = value;
+    }
+  }
+}

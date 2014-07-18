@@ -1,6 +1,6 @@
 //==  RULES  =================================================================//
 
-bypassLoadGame     = true;
+bypassLoadGame     = false;
 detectHighestOrder = true;
 orderDecay         = true;
 allowRotations     = true;
@@ -28,7 +28,7 @@ var polyColor = [
 	{primary:{r:0.46668,g:0.00000,b:0.00000},secondary:{r:0.6667,g:0.0000,b:0.0000}}, // pentomino
 	{primary:{r:0.42350,g:0.32940,b:0.54900},secondary:{r:0.7115,g:0.5434,b:0.9188}}, // hexomino
 	{primary:{r:0.64784,g:0.24157,b:0.00000},secondary:{r:0.9255,g:0.3451,b:0.0000}}, // heptomino
-	{primary:{r:0.57372,g:0.40628,b:0.03297},secondary:{r:0.8196,g:0.5804,b:0.0471}}, // octomino
+	{primary:{r:0.57372,g:0.40628,b:0.03297},secondary:{r:0.8196,g:0.5804,b:0.0471}}  // octomino
 ];
 
 //==  GLOBAL VARS  ===========================================================//
@@ -42,7 +42,15 @@ var currentlyAnimating,triggerDetectSquares,spawnNewPoly,polyMoved;
 var gameWon = false; // so that we don't continually trigger the game won screen if they keep building big polyominos
 var highScore = 0;
 
+
 var blockIdOfLastBlockPlaced;
+
+/*+- DELETE on deployment version ------------------ DELETE -+*/
+
+var debugMode = false;
+var debugMouseDown = false;
+var debugNewId;
+var debugPlace;
 
 //==  CANVAS VARS  ===========================================================//
 

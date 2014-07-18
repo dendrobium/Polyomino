@@ -1,17 +1,15 @@
 function placeStartingPolys() {
 
   //var orderList = [8, 7, 6, 5, 4, 3, 2, 1];
-//  var orderList = [5, 4, 4, 3, 3, 2, 2, 2, 2, 1, 1];
-//  r = Math.random();
-//  if (r < 0.2) orderList = orderList.concat(5, 2, 1, 1, 1);
-//  else if (r < 0.4) orderList = orderList.concat(4, 2, 2);
-//  else if (r < 0.6) orderList = orderList.concat(3, 3, 2);
-//  else if (r < 0.8) orderList = orderList.concat(5, 1, 1, 1, 1);
-//  else orderList = orderList.concat(4, 2, 1, 1);
+  var orderList = [5, 4, 4, 3, 3, 2, 2, 2, 2, 1, 1];
+  r = Math.random();
+  if (r < 0.2) orderList = orderList.concat(5, 2, 1, 1, 1);
+  else if (r < 0.4) orderList = orderList.concat(4, 2, 2);
+  else if (r < 0.6) orderList = orderList.concat(3, 3, 2);
+  else if (r < 0.8) orderList = orderList.concat(5, 1, 1, 1, 1);
+  else orderList = orderList.concat(4, 2, 1, 1);
 
-  orderList = [4, 3];
-
-  console.log("placeStartingPolys(): "+orderList);
+  //console.log("placeStartingPolys(): "+orderList);
 
   for (var i=0; i<orderList.length; i++) {
     spawnStartingPolys(orderList[i]);
@@ -21,7 +19,7 @@ function placeStartingPolys() {
 
 
 function spawnStartingPolys(order) {
-  console.log("spawnStartingPolys("+order+")");
+  //console.log("spawnStartingPolys("+order+")");
 
   //Normally, on a 10x10 board, this loop will only execute once.
   //  A few times it will execute twice.
@@ -51,7 +49,7 @@ function spawnMonoOrDomino()
 
 function tryToSpawnBlockInRandomOpenLocation(order, scheduleAnimation) {
 
-  console.log("tryToSpawnBlockInRandomOpenLocation("+order+"),  scheduleAnimation="+scheduleAnimation);
+  //console.log("tryToSpawnBlockInRandomOpenLocation("+order+"),  scheduleAnimation="+scheduleAnimation);
   var spawnGrid = matrix(gridSize, gridSize, false);
   copyBoardToMatrix(spawnGrid, 0, 0, gridSize, false);
 
@@ -59,8 +57,6 @@ function tryToSpawnBlockInRandomOpenLocation(order, scheduleAnimation) {
   var listX = new Array(order);
   var listY = new Array(order);
 
-
-  var filledCellCount = 0;
   var maxX = 0;
   var minX = gridSize;
   var maxY = 0;
@@ -70,13 +66,11 @@ function tryToSpawnBlockInRandomOpenLocation(order, scheduleAnimation) {
 
     var addedCell = appendRandomCellToPoly(listX, listY, i, spawnGrid, gridSize);
     if (!addedCell) return false;
-    var idx = filledCellCount;
-    filledCellCount++;
-    console.log("   Added Cell #"+filledCellCount+" ("+listX[idx]+", "+listY[idx]+")");
-    if (listX[idx] > maxX) maxX = listX[idx];
-    if (listX[idx] < minX) minX = listX[idx];
-    if (listY[idx] > maxY) maxY = listY[idx];
-    if (listY[idx] < minY) minY = listY[idx];
+    //console.log("   Added Cell ["+i+"] ("+listX[i]+", "+listY[i]+")");
+    if (listX[i] > maxX) maxX = listX[i];
+    if (listX[i] < minX) minX = listX[i];
+    if (listY[i] > maxY) maxY = listY[i];
+    if (listY[i] < minY) minY = listY[i];
   }
 
 
@@ -85,7 +79,54 @@ function tryToSpawnBlockInRandomOpenLocation(order, scheduleAnimation) {
     if ((maxX == minX) || (maxY == minY)) return false;
   }
 
-  copyMatrixToBoard(spawnGrid, order, scheduleAnimation);
+
+  matrixSet(spawnGrid, false);
+  for (var i = 0; i <order; i++) {
+    spawnGrid[listX[i]][listY[i]] = true;
+    //console.log("   Spawn Cell ("+listX[i]+", "+listY[i]+")");
+  }
+
+
+
+  var id = newId();
+  //console.log("copyMatrixToBoard(order="+order+", id="+id);
+  var animationEntryX = listX[0];
+  var animationEntryY = listY[0];
+  for (var x = 0; x < gridSize; x++) {
+    for (var y = 0; y < gridSize; y++) {
+
+      if (spawnGrid[x][y]) {
+
+        //console.log("  x="+x+", y="+ y);
+        var myCell = board.getCell(x, y);
+        myCell.quickSet(true, id, order);
+
+//        if (scheduleAnimation) {
+//          if (order === 2) {
+//            myCell.locked = true;
+//            quickSetEvt(myCell, true, id, order, keyframe(1));
+//            highlightEvt(animationEntryX, animationEntryX, keyframe(1), keyframe(2));
+//            fadeOutEvt(animationEntryX, animationEntryX, keyframe(2), keyframe(3));
+//            unlockEvt(myCell, keyframe(3));
+//            saveGameEvt(keyframe(3));
+//          }
+//          else {
+//            myCell.locked = true;
+//            quickSetEvt(myCell, true, id, order, keyframe(1));
+//            fadeOutEvt(animationEntryX, animationEntryX, keyframe(1), keyframe(2));
+//            unlockEvt(myCell, keyframe(2));
+//            saveGameEvt(keyframe(3));
+//          }
+        //}
+      }
+    }
+  }
+
+
+
+
+
+
   return true;
 }
 
@@ -94,7 +135,7 @@ function tryToSpawnBlockInRandomOpenLocation(order, scheduleAnimation) {
 function appendRandomCellToPoly(listX, listY, spawnedCellCount, spawnGrid, size)
 {
 
-  console.log("   appendRandomCellToPoly(spawnedCellCount="+spawnedCellCount+", size="+size);
+  //console.log("   appendRandomCellToPoly(spawnedCellCount="+spawnedCellCount+", size="+size);
 
   if (spawnedCellCount == 0) {
       //pick a random location within the grid.
@@ -169,19 +210,20 @@ function appendRandomCellToPoly(listX, listY, spawnedCellCount, spawnGrid, size)
 // Used to generate domino through polyomino.
 // this function assumes no cell locks are set to true
 function squareToPoly(left,top,order) {
-  console.log("squareToPoly("+left+","+top+","+order+") blockIdOfLastBlockPlaced="+blockIdOfLastBlockPlaced);
-  // XXX: Luke, this isn't maybe the best way to do scores but I wanted to have something to work with
-  // XXX: this doesn't need to be an event, as adding a number to score doesn't need to happen at a later time... [also, seed notes in addScoreEvt definition]
-  addToScore(order);
-  if (order > goalOrder && !gameWon) {
-    gameWon = true;
-    gameWonEvt();
-  }
+  //console.log("squareToPoly("+left+","+top+","+order+") blockIdOfLastBlockPlaced="+blockIdOfLastBlockPlaced);
 
   var originalGrid = matrix(order, order, false);
   var spawnGrid = matrix(order, order, false);
 
-  copyBoardToMatrix(originalGrid, left, top, order, blockIdOfLastBlockPlaced);
+  var orderOfLastBlockPlaced = copyBoardToMatrix(originalGrid, left, top, order, blockIdOfLastBlockPlaced);
+
+  // XXX: Luke, this isn't maybe the best way to do scores but I wanted to have something to work with
+  // XXX: this doesn't need to be an event, as adding a number to score doesn't need to happen at a later time... [also, seed notes in addScoreEvt definition]
+  addToScore(order, orderOfLastBlockPlaced);
+  if (order > goalOrder && !gameWon) {
+    gameWon = true;
+    gameWonEvt();
+  }
 
   var listX = new Array(order);
   var listY = new Array(order);
@@ -198,25 +240,24 @@ function squareToPoly(left,top,order) {
         listX[filledCellCount] = x;
         listY[filledCellCount] = y;
         filledCellCount++;
-        console.log("   Starting Cell: ("+x+", "+y+")");
+        //console.log("   Starting Cell: ("+x+", "+y+")");
       }
     }
     var cellsNeeded = order - filledCellCount;
-    console.log("   Finished Copying Starting Cells: cellsNeeded="+cellsNeeded);
+    //console.log("   Finished Copying Starting Cells: cellsNeeded="+cellsNeeded);
+
 
     for (var i = 0; i < cellsNeeded; i++) {
 
       appendRandomCellToPoly(listX, listY, filledCellCount, spawnGrid, order);
       filledCellCount++;
-      console.log("   Added Cell #"+filledCellCount+" ("+listX[filledCellCount-1]+", "+listY[filledCellCount-1]+")");
+      //console.log("   Added Cell #"+filledCellCount+" ("+listX[filledCellCount-1]+", "+listY[filledCellCount-1]+")");
     }
 
     hasHoles = doesPolyHaveHoles(spawnGrid, order);
   }
 
-  var filled = new grid(order);
-
-  blockIdOfLastBlockPlaced = newId();
+  var id = newId();
   for (var x = 0; x < order; x++) {
     for (var y = 0; y < order; y++) {
 
@@ -226,16 +267,13 @@ function squareToPoly(left,top,order) {
       var cell = board.getCell(i, j);
 
       if (spawnGrid[x][y]) {
-        var i = x + left;
-        var j = y + top;
-        console.log("    copy matrix: (" + x + ", " + y + ") ==> board: (" + i + ", " + j+")");
-        var cell = board.getCell(i, j);
-        cell.quickSet(true, blockIdOfLastBlockPlaced, order);
-        filled.setCell(x, y, true);
+        //console.log("    copy matrix: (" + x + ", " + y + ") ==> board: (" + i + ", " + j+")");
+        cell.quickSet(true, id, order);
       }
       else {
-        board.getCell(x, y).occupied = false;
-        filled.setCell(x, y, false);
+        cell.occupied = false;
+        cell.locked = true;
+        unlockEvt(cell,keyframe(3));
       }
     }
   }
@@ -244,12 +282,21 @@ function squareToPoly(left,top,order) {
   for (var i = left; i < left + order; ++i)for (var j = top; j < top + order; ++j) {
     if (!board.getCell(i, j).occupied) {
       /* do stuff here (cells are at i*cellSize, j*cellSize) */
-      var color = polyColor[board.getCell(i, j).order].primary;
-      new particle(i * cellSize + cellSize / 2, j * cellSize + cellSize / 2, 0, 0, 750, color.r * 255, color.g * 255, color.b * 255, 1, cellSize, 255, 255, 255, 0, cellSize / 10, 1, 0);
+      var color = polyColor[order].primary;
+      //x, y, startr, startg, startb, starta, startscale, endr, endg, endb, enda, endscale, border, gravity
+      var x = i * cellSize + cellSize / 2;
+      var y = j * cellSize + cellSize / 2;
+
+      //    particle(x, y, vx, vy, lifetime, startr,        startg,        startb,        starta, startscale,  endr, endg, endb, enda,   endscale,      border,  gravity){
+      //new particle(x, y, 0,  0,  750,      color.r * 255, color.g * 255, color.b * 255, 1,      cellSize,    255,   255, 255,   0,     cellSize / 10, 1,       0);
+      new particle(x, y, 0,  0,  750,      color.r * 255, color.g * 255, color.b * 255, 1,      cellSize,    255,   255, 255,   0,     cellSize / 10, 1,       0);
+
     }
   }
+  beginSurroundEvt(left, top, order,0, order*100);
+  surroundEvt(left, top,order,order*100,order*100+1000);
 
-
+  saveGame();
 }
 
 
@@ -286,178 +333,11 @@ function doesPolyHaveHoles(spawnGrid, order) {
   return false;
 }
 
-//beginSurroundEvt(left, top,order,0,order*100);
-//surroundEvt(left, top,order,order*100,order*100+1000);addToScore
-//saveGame();
-//}
 
 
-/*
-
-
- if (spawnedCellCount >= order) {
- if (order >= 4) {
- //if bar in level 4 or 5, then retry
- if ((maxX == minX) || (maxY == minY)) return false;
- }
- }
- var maxX = x;
- var minX = x;
- var maxY = y;
- var minY = y;
-
- spawnGrid[x][y] = true;
- var addedCell = false;
-
- while (spawnedCellCount < order) {
- var idx = 0;
- if (spawnedCellCount > 1) idx = rInt(spawnedCellCount);
- for (var n = 0; n < spawnedCellCount; n++) {
- x = listx[idx];
- y = listy[idx];
-
- appendRandomCell(listX, listY, spawnedCellCount, spawnGrid, size)
-
- if (xx > maxX) maxX = xx;
- if (xx < minX) minX = xx;
- if (yy > maxY) maxY = yy;
- if (yy < minY) minY = yy;
-
- if (spawnedCellCount >= order) {
- if (order >= 4) {
- //if bar in level 4 or 5, then retry
- if ((maxX == minX) || (maxY == minY)) return false;
- }
- }
- */
-// generate random polyomino
-//if (order <= MAX_PREDEFINED_ORDER) spawnBiasedRandomPoly(filled, order, left, top);
-//else {
-//		var i = left + rInt(order);
-//		var j = top + rInt(order);
-//		var c = board.getCell(i, j);
-//		c.quickSet(true, newId(), order);
-//		filled.setCell(i - left, j - top, true);
-//		for (var count = 1; count < order; ++count) {
-//			while (true) {
-//				i = left + rInt(order);
-//				j = top + rInt(order);
-//				var b = board.getCell(i, j);
-//				if (b.occupied)continue;
-//
-//				var u = filled.getCell(i - left, j - top - 1);
-//				var d = filled.getCell(i - left, j - top + 1);
-//				var l = filled.getCell(i - left - 1, j - top);
-//				var r = filled.getCell(i - left + 1, j - top);
-//				if (!(u || d || l || r))continue;
-//				b.quickSet(true, c.id, order);
-//				filled.setCell(i - left, j - top, true);
-//				break;
-//			}
-//		}
-
-
-
-//function spawnBiasedRandomPoly(filled, order, left, top) {
-//	var spawnGrid = matrix(order, order, false);
-//
-//	var shapeIdx = 0;
-//	var r = Math.random();
-//
-//  if (DEBUG_LOG_SHAPE_PROBABILITIES) {
-//    console.log("\ngeneration.spawnBiasedRandomPoly(order="+order+", left="+left+", top="+top+")");
-//    console.log("	==> random number[0->1)=" + r);
-//  }
-//
-//	var sumSquare = 0;
-//	for(var i=0; i<SHAPE[order].length; i++) {
-//		//console.log("gamePolyominoTotal["+order+"]="+gamePolyominoTotal[order] +
-//		//"gameFreeShapeCount["+order+"]["+i+"]="+gameFreeShapeCount[order][i]);
-//		var diff = 1 + (gamePolyominoTotal[order] - gameFreeShapeCount[order][i]);
-//		sumSquare += diff*diff;
-//	}
-//
-//
-//	var cumulativeSum = 0;
-//	for(var i=0; i<SHAPE[order].length; i++) {
-//		var diff = 1 + (gamePolyominoTotal[order] - gameFreeShapeCount[order][i]);
-//
-//		cumulativeSum += (diff * diff)/sumSquare;
-//    if (DEBUG_LOG_SHAPE_PROBABILITIES) {
-//      console.log("	==> sumSquare=" + sumSquare + ", diff=" + diff + ", cumulativeSum=" + cumulativeSum);
-//    }
-//		if (r < cumulativeSum) {
-//			shapeIdx = i;
-//			break;
-//		}
-//	}
-//
-//	gameFreeShapeCount[order][shapeIdx]++;
-//	gamePolyominoTotal[order]++;
-//
-//	setBaseShape(spawnGrid, order, SHAPE[order][shapeIdx]);
-//	spawnGrid = gridRotateRandom(spawnGrid, order);
-//	spawnGrid = gridFlipRandom(spawnGrid, order);
-//	spawnGrid = gridTranslateRandom(spawnGrid, order);
-//
-//
-//
-//  copyMatrixToFilled(spawnGrid, filled, order, left, top);
-//
-//}
-
-
-
-function copyMatrixToBoard(myMatrix, order, scheduleAnimation) {
-
-  var blockCount = 0;
-  var id = newId();
-  console.log("copyMatrixToBoard(order="+order+", id="+id);
-  var entryX = 0;
-  var entryY = 0;
-  for (var x = 0; x < gridSize; x++) {
-    for (var y = 0; y < gridSize; y++) {
-
-      if (myMatrix[x][y]) {
-
-        //console.log("  x="+x+", y="+ y);
-        var myCell = board.getCell(x, y);
-        myCell.quickSet(true, id, order);
-
-
-        if (scheduleAnimation) {
-          blockCount++;
-          if (blockCount === 1) {
-//            quickSetEvt(myCell, true, id, order, keyframe(1));
-//		        fadeOutEvt(entryX,entryY,keyframe(1),keyframe(2));
-//		        unlockEvt(myCell,keyframe(2));
-//		        saveGameEvt(keyframe(3));
-//            entryX = myCell.x;
-//            entryY = myCell.y;
-          }
-          else {
-//            quickSetEvt(myCell, true, id, order, keyframe(1));
-//            highlightEvt(entryX, entryY, keyframe(1), keyframe(2));
-//            fadeOutEvt(entryX, entryY, keyframe(2), keyframe(3));
-//            unlockEvt(myCell, keyframe(3));
-//            saveGameEvt(keyframe(3));
-          }
-        }
-      }
-    }
-  }
-}
-
-//	if(dominoGenerated){
-
-//	}else{
-//		quickSetEvt(c,true,id,1,keyframe(1));
-//		fadeOutEvt(entry.x,entry.y,keyframe(1),keyframe(2));
-//		unlockEvt(c,keyframe(2));
-//		saveGameEvt(keyframe(3));
 
 function copyBoardToMatrix(myMatrix, left, top, size, onlyBlockId) {
-
+  var orderOfLastBlockPlaced;
   //console.log("    copyBoardToMatrix: left="+left+", top="+top+", size="+size+", onlyBlockId="+onlyBlockId);
   for (var x = left; x < left+size; x++) {
     for (var y = top; y < top+size; y++) {
@@ -473,9 +353,12 @@ function copyBoardToMatrix(myMatrix, left, top, size, onlyBlockId) {
         }
         else if (myCell.id === onlyBlockId) {
           myMatrix[xx][yy] = true;
+          orderOfLastBlockPlaced = myCell.order;
         }
       }
     }
   }
+  //It is intended that orderOfLastBlockPlaced will be undefined when onlyBlockId is not given
+  return orderOfLastBlockPlaced;
 }
 

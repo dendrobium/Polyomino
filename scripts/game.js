@@ -74,11 +74,11 @@ function clearContainer(container){
 
 // IMPORTANT: If you update the score function, increment this!
 // XXX: can't you compute the hash of the score function and use that instead?
-var scoreFuncVersion = 2;
+var scoreFuncVersion = 3;
 
-// TODO: combos
-function addToScore(squareOrder,pieceOrder){
-	score += (squareOrder*squareOrder*pieceOrder);
+function addToScore(squareOrder,pieceOrder,multiplier){
+	//score += (squareOrder*squareOrder*pieceOrder)*multiplier;
+  score += Math.floor(Math.pow(squareOrder*squareOrder*pieceOrder, multiplier*0.5+0.5));
 	if(score > highScore)highScore = score;
 	updateScoreBoxes();
 }

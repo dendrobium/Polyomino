@@ -4,16 +4,14 @@ function interpColor(c1,c2,interp){
 	    c1.b+(c2.b-c1.b)*interp);
 }
 
-function renderGridRaw(g,offset,usePrimary,overrideColor){
+function renderGridRaw(g,offset,usePrimary){
 	var cs = cellSize;
 
 	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
 		var c = g.getCell(i,j);
 		if(!c.occupied)continue;
 
-		if(overrideColor){
-			gfx.fillStyle = overrideColor;
-		}else if(usePrimary){
+		if(usePrimary){
 			if(Math.floor(c.order)===0)rgb(polyColor[c.order].primary.r,polyColor[c.order].primary.g,polyColor[c.order].primary.b);
 			else interpColor(polyColor[Math.floor(c.order)].primary,polyColor[Math.ceil(c.order)].primary,c.order%1);
 		}else{
@@ -57,7 +55,6 @@ function render(){
 		currentlyAnimating = true;
 	}spawnNewPoly = false;
 
-
 	// render everything if flagged
 	if(!currentlyAnimating)return;
 	currentlyAnimating = false;
@@ -88,10 +85,19 @@ function render(){
 	if(dragging){
 		currentlyAnimating = true;
 		var goalHover = snapping?0:hoverOffset;
-		floatX += (goalFloatX-floatX)*0.3;       // TODO: scale this by elapsed, clamp
-		floatY += (goalFloatY-floatY)*0.3;       // TODO: scale this by elapsed, clamp
-		hover  += (goalHover-hover)*0.3;         // TODO: scale this by elapsed, clamp
-		rot    += ((goalRot*Math.PI/2)-rot)*0.3; // TODO: scale this by elapsed, clamp
+
+		var interpolate = function(val,goal,mult){
+			var origVal = val;
+			val += (goal-val)*mult*elapsed;
+			if(origVal < goal && val > goal)val = goal;
+			if(origVal > goal && val < goal)val = goal;
+			return val;
+		};
+
+		floatX = interpolate(floatX,goalFloatX       ,0.016);
+		floatY = interpolate(floatY,goalFloatY       ,0.016);
+		hover  = interpolate(hover ,goalHover        ,0.014);
+		rot    = interpolate(rot   ,goalRot*Math.PI/2,0.014);
 
 		// render shadow
 		gfx.save();

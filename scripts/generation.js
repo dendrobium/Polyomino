@@ -27,7 +27,7 @@ function placeStartingPolys() {
   //console.log("placeStartingPolys(): "+orderList);
 
   for (var i=0; i<orderList.length; i++) {
-    //spawnStartingPolys(orderList[i]);
+    spawnStartingPolys(orderList[i]);
   }
   currentlyAnimating = true;
 }
@@ -265,13 +265,21 @@ function squareToPoly(left,top,order) {
 
   var orderOfMergeBlock = copyBoardToMatrix(originalGrid, left, top, order, blockIdOfLastBlockPlaced);
 
-  // XXX: Luke, this isn't maybe the best way to do scores but I wanted to have something to work with
-  // XXX: this doesn't need to be an event, as adding a number to score doesn't need to happen at a later time... [also, seed notes in addScoreEvt definition]
-  addToScore(order, orderOfMergeBlock);
-  if (order > goalOrder && !gameWon) {
-    gameWon = true;
-    gameWonEvt();
-  }
+
+	// TODO: move these to the bottom of squareToPoly() vvvvvvvvvvvv
+	// calculate score, handle combos
+	comboActiveEvt(order*100+1000); // TODO: CHANGE TIMING WITH NEW ANIMATION
+	if(comboActiveCtr === 1)comboCtr = 1;
+	else ++comboCtr;
+	addToScore(order,board.getCell(left,top).order,comboCtr);
+
+	// check win condition
+	if(order > goalOrder && !gameWon){
+		gameWon = true;
+		gameWonEvt(); // TODO: this needs to be scheduled with animations
+	}
+	// TODO ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 
   var listX = new Array(order);
   var listY = new Array(order);
@@ -320,9 +328,9 @@ function squareToPoly(left,top,order) {
       }
       else {
         cell.occupied = false;
-        cell.locked = true;
-        unlockEvt(cell,keyframe(3));
       }
+      cell.locked = true;
+      unlockEvt(cell,keyframe(3));
     }
   }
 

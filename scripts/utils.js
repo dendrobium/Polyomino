@@ -30,7 +30,6 @@ function renderRect(x0,y0,x1,y1){
 	gfx.fill();
 }
 
-
 function matrix(rows, columns, defaultValue){
 	var arr = new Array(rows);
 	for (var i=0; i<rows; i++) {

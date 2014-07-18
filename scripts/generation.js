@@ -337,11 +337,12 @@ function doesPolyHaveHoles(spawnGrid, order) {
 
 
 function copyBoardToMatrix(myMatrix, left, top, size, onlyBlockId) {
-  var orderOfLastBlockPlaced;
+  var orderOfOneBlockInCopy;
   //console.log("    copyBoardToMatrix: left="+left+", top="+top+", size="+size+", onlyBlockId="+onlyBlockId);
   for (var x = left; x < left+size; x++) {
     for (var y = top; y < top+size; y++) {
       var myCell = board.getCell(x, y);
+      orderOfOneBlockInCopy = myCell.order;
       //console.log("    copyBoardToMatrix: boardCell ("+x+", "+y+")");
       var xx = x-left;
       var yy = y-top;
@@ -353,12 +354,10 @@ function copyBoardToMatrix(myMatrix, left, top, size, onlyBlockId) {
         }
         else if (myCell.id === onlyBlockId) {
           myMatrix[xx][yy] = true;
-          orderOfLastBlockPlaced = myCell.order;
         }
       }
     }
   }
-  //It is intended that orderOfLastBlockPlaced will be undefined when onlyBlockId is not given
-  return orderOfLastBlockPlaced;
+  return orderOfOneBlockInCopy;
 }
 

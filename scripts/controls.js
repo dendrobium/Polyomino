@@ -91,8 +91,10 @@ function setupControls(){
 			case 1:
 				if(dragging)return;
 				var c = board.getCell(mouse.x/cellSize,mouse.y/cellSize);
+        blockIdOfLastBlockPlaced = c.id;
 
-				// verify locks
+
+        // verify locks
 				if(!c || !c.occupied || c.locked)return;
 				for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
 					var b = board.getCell(i,j);

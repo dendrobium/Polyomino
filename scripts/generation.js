@@ -1,6 +1,21 @@
-function placeStartingPolys() {
+/***********************************************************************************************
+   _______  _______  _        _______  _______  _______ __________________ _______  _
+  (  ____ \(  ____ \( (    /|(  ____ \(  ____ )(  ___  )\__   __/\__   __/(  ___  )( (    /|
+  | (    \/| (    \/|  \  ( || (    \/| (    )|| (   ) |   ) (      ) (   | (   ) ||  \  ( |
+  | |      | (__    |   \ | || (__    | (____)|| (___) |   | |      | |   | |   | ||   \ | |
+  | | ____ |  __)   | (\ \) ||  __)   |     __)|  ___  |   | |      | |   | |   | || (\ \) |
+  | | \_  )| (      | | \   || (      | (\ (   | (   ) |   | |      | |   | |   | || | \   |
+  | (___) || (____/\| )  \  || (____/\| ) \ \__| )   ( |   | |   ___) (___| (___) || )  \  |
+  (_______)(_______/|/    )_)(_______/|/   \__/|/     \|   )_(   \_______/(_______)|/    )_)
+**************************************************************************************************/
 
+
+
+//=======================================================================================
+function placeStartingPolys() {
+//=======================================================================================
   //var orderList = [8, 7, 6, 5, 4, 3, 2, 1];
+  //The poly orders in orderList make up the starting set.
   var orderList = [5, 4, 4, 3, 3, 2, 2, 2, 2, 1, 1];
   r = Math.random();
   if (r < 0.2) orderList = orderList.concat(5, 2, 1, 1, 1);
@@ -18,14 +33,20 @@ function placeStartingPolys() {
 }
 
 
+
+
+//=======================================================================================
 function spawnStartingPolys(order) {
+//=======================================================================================
   //console.log("spawnStartingPolys("+order+")");
 
   //Normally, on a 10x10 board, this loop will only execute once.
   //  A few times it will execute twice.
   //However, if the board is made very small, say for debugging, it may become
-  //  impossible.
-
+  //  impossible to place the starting polys asked for in placeStartingPolys().
+  //Therefore, to avoid infinite loop in such cases, after 3 trys, the
+  //  requested order is reduced by 1.
+  // If order reaches 0, then the function returns without haveing spawned anything.
   while (order >= 1) {
     for (var n = 0; n < 3; n++) {
       var done = tryToSpawnBlockInRandomOpenLocation(order, false);
@@ -36,10 +57,19 @@ function spawnStartingPolys(order) {
   }
 }
 
-function spawnMonoOrDomino()
-{
+
+
+
+
+//=======================================================================================
+function spawnMonoOrDomino() {
+//=======================================================================================
   if (Math.random() < 0.25) tryToSpawnBlockInRandomOpenLocation(1, true);
   else {
+
+    //This will pick, with equal probability one empty space.
+    //Then, starting in a random direction, it will look in each
+    //   of the 4 directions until it can create a domino - or return false if it cannot.
     var done = tryToSpawnBlockInRandomOpenLocation(2, true);
     if (!done) tryToSpawnBlockInRandomOpenLocation(1, true);
   }
@@ -47,16 +77,26 @@ function spawnMonoOrDomino()
 
 
 
+
+
+
+//=======================================================================================
 function tryToSpawnBlockInRandomOpenLocation(order, scheduleAnimation) {
+//=======================================================================================
+  //This function is called when:
+  //  1) spawning starting polys.
+  //  2) spawning mono or dominos when a block is moved.
 
   //console.log("tryToSpawnBlockInRandomOpenLocation("+order+"),  scheduleAnimation="+scheduleAnimation);
   var spawnGrid = matrix(gridSize, gridSize, false);
   copyBoardToMatrix(spawnGrid, 0, 0, gridSize, false);
 
 
+  //listX and listY will be a list of coordinates of all cells in the newly spawned block.
   var listX = new Array(order);
   var listY = new Array(order);
 
+  //used to prevent 1xn bars (where n>3) from spawning at start of game.
   var maxX = 0;
   var minX = gridSize;
   var maxY = 0;
@@ -80,11 +120,17 @@ function tryToSpawnBlockInRandomOpenLocation(order, scheduleAnimation) {
   }
 
 
+  //At this point, the location of the new ployomino is fully specified.
+  //Variable spawnGrid is true for each occupied cell in the grid.
+  //We need to add only the new cells to the board, so first set all cells to
+  //  false, then loop through listX[i], listY[i] to add each cell in the new poly.
   matrixSet(spawnGrid, false);
   for (var i = 0; i <order; i++) {
     spawnGrid[listX[i]][listY[i]] = true;
     //console.log("   Spawn Cell ("+listX[i]+", "+listY[i]+")");
   }
+
+
 
 
 
@@ -101,6 +147,7 @@ function tryToSpawnBlockInRandomOpenLocation(order, scheduleAnimation) {
         var myCell = board.getCell(x, y);
         myCell.quickSet(true, id, order);
 
+        //TODO: get working this animation for monos and domos that spawn wiht each move.
 //        if (scheduleAnimation) {
 //          if (order === 2) {
 //            myCell.locked = true;
@@ -121,20 +168,15 @@ function tryToSpawnBlockInRandomOpenLocation(order, scheduleAnimation) {
       }
     }
   }
-
-
-
-
-
-
   return true;
 }
 
 
 
-function appendRandomCellToPoly(listX, listY, spawnedCellCount, spawnGrid, size)
-{
 
+//=======================================================================================
+function appendRandomCellToPoly(listX, listY, spawnedCellCount, spawnGrid, size) {
+//=======================================================================================
   //console.log("   appendRandomCellToPoly(spawnedCellCount="+spawnedCellCount+", size="+size);
 
   if (spawnedCellCount == 0) {
@@ -206,10 +248,9 @@ function appendRandomCellToPoly(listX, listY, spawnedCellCount, spawnGrid, size)
 
 
 
-// TODO: consider animations
-// Used to generate domino through polyomino.
-// this function assumes no cell locks are set to true
+//=======================================================================================
 function squareToPoly(left,top,order) {
+//=======================================================================================
   //console.log("squareToPoly("+left+","+top+","+order+") blockIdOfLastBlockPlaced="+blockIdOfLastBlockPlaced);
 
   var originalGrid = matrix(order, order, false);
@@ -301,10 +342,11 @@ function squareToPoly(left,top,order) {
 
 
 
+
+//=======================================================================================
 function doesPolyHaveHoles(spawnGrid, order) {
+//=======================================================================================
   if (order < 7) return false;
-
-
   for (var x = 0; x < order; x++) {
     for (var y = 0; y < order; y++) {
       if (!spawnGrid[x][y]) {
@@ -336,7 +378,10 @@ function doesPolyHaveHoles(spawnGrid, order) {
 
 
 
+
+//=======================================================================================
 function copyBoardToMatrix(myMatrix, left, top, size, onlyBlockId) {
+//=======================================================================================
   var orderOfOneBlockInCopy;
   //console.log("    copyBoardToMatrix: left="+left+", top="+top+", size="+size+", onlyBlockId="+onlyBlockId);
   for (var x = left; x < left+size; x++) {

@@ -15,7 +15,7 @@
 function placeStartingPolys() {
 //=======================================================================================
   //var orderList = [8, 7, 6, 5, 4, 3, 2, 1];
-  //The poly orders in orderList make up the starting set.
+  //Each number in orderList spawns, at the start of the game, a poly of that order.
   var orderList = [5, 4, 4, 3, 3, 2, 2, 2, 2, 1, 1];
   r = Math.random();
   if (r < 0.2) orderList = orderList.concat(5, 2, 1, 1, 1);
@@ -126,7 +126,7 @@ function tryToSpawnBlockInRandomOpenLocation(order, scheduleAnimation) {
 
 
   //At this point, the location of the new ployomino is fully specified.
-  //Variable spawnGrid is true for each occupied cell in the grid.
+  //Each element of spawnGrid is true for each occupied cell in the grid.
   //We need to add only the new cells to the board, so first set all cells to
   //  false, then loop through listX[i], listY[i] to add each cell in the new poly.
   matrixSet(spawnGrid, false);
@@ -272,10 +272,7 @@ function appendRandomCellToPoly(listX, listY, spawnedCellCount, spawnGrid, size)
   var idx = 0;
   if (spawnedCellCount > 1) idx = rInt(spawnedCellCount);
   for (var n = 0; n < spawnedCellCount; n++) {
-    //x = listX[idx];
-    //y = listY[idx];
 
-    //Starting wiht a random direction, try all 4 directions.
     var coordinate = getCoordinateOfCellInRandomDirectionWithGivenState(listX[idx], listY[idx], spawnGrid, false);
 
     if (coordinate != null) {
@@ -285,7 +282,9 @@ function appendRandomCellToPoly(listX, listY, spawnedCellCount, spawnGrid, size)
       return true;
     }
 
-    idx = (idx + 1) % spawnedCellCount;
+    //Luke says Javascript is very slow at modulus, so do (idx + 1) % spawnedCellCount; the dumb way:
+    idx++;
+    if (idx >= spawnedCellCount) idx = 0;
   }
 
   return false;
@@ -302,15 +301,15 @@ function squareToPoly(left,top,order) {
   var originalGrid = matrix(order, order, false);
   var spawnGrid = matrix(order, order, false);
 
-  var orderOfMergeBlock = copyBoardToMatrix(originalGrid, left, top, order, blockIdOfLastBlockPlaced);
+  copyBoardToMatrix(originalGrid, left, top, order, blockIdOfLastBlockPlaced);
 
 
 	// TODO: move these to the bottom of squareToPoly() vvvvvvvvvvvv
 	// calculate score, handle combos
 	comboActiveEvt(order*100+1000); // TODO: CHANGE TIMING WITH NEW ANIMATION
 	if(comboActiveCtr === 1)comboCtr = 1;
-	else ++comboCtr;
-	addToScore(order,board.getCell(left,top).order,comboCtr);
+	else comboCtr++;
+	addToScore(order, board.getCell(left,top).order, comboCtr);
 
 	// check win condition
 	if(order > goalOrder && !gameWon){
@@ -382,8 +381,6 @@ function squareToPoly(left,top,order) {
       var x = i * cellSize + cellSize / 2;
       var y = j * cellSize + cellSize / 2;
 
-      //    particle(x, y, vx, vy, lifetime, startr,        startg,        startb,        starta, startscale,  endr, endg, endb, enda,   endscale,      border,  gravity){
-      //new particle(x, y, 0,  0,  750,      color.r * 255, color.g * 255, color.b * 255, 1,      cellSize,    255,   255, 255,   0,     cellSize / 10, 1,       0);
       new particle(x, y, 0,  0,  750,      color.r * 255, color.g * 255, color.b * 255, 1,      cellSize,    255,   255, 255,   0,     cellSize / 10, 1,       0);
 
     }
@@ -407,13 +404,10 @@ function doesPolyHaveHoles(spawnGrid, order) {
     for (var y = 0; y < order; y++) {
       if (!spawnGrid[x][y]) {
         var foundOpening = false;
-        for (var i = 0; i < 4; i++) {
-          var xx = x;
-          var yy = y;
-          if (dir === 0) yy = y - 1;
-          else if (dir === 1) xx = x + 1;
-          else if (dir === 2) yy = y + 1;
-          else xx = x - 1;
+        for (var dir = 0; dir < DIRECTION.length; dir++) {
+
+          var xx = x + DIRECTION[dir].deltaX;
+          var yy = y + DIRECTION[dir].deltaY;
 
           if ((xx >= 0) || (yy >= 0) || (xx < order) || (yy < order)) {
             foundOpening = true;
@@ -438,18 +432,14 @@ function doesPolyHaveHoles(spawnGrid, order) {
 //=======================================================================================
 function copyBoardToMatrix(myMatrix, left, top, size, onlyBlockId) {
 //=======================================================================================
-  var orderOfOneBlockInCopy;
   //console.log("    copyBoardToMatrix: left="+left+", top="+top+", size="+size+", onlyBlockId="+onlyBlockId);
   for (var x = left; x < left+size; x++) {
     for (var y = top; y < top+size; y++) {
       var myCell = board.getCell(x, y);
-      orderOfOneBlockInCopy = myCell.order;
-      //console.log("    copyBoardToMatrix: boardCell ("+x+", "+y+")");
       var xx = x-left;
       var yy = y-top;
       myMatrix[xx][yy] = false;
       if (myCell.occupied || myCell.locked) {
-        //console.log("    copyBoardToMatrix: boardCell ("+x+", "+y+") ==> matrix ("+xx+", "+yy+") id="+myCell.id);
         if (onlyBlockId === false) {
           myMatrix[xx][yy] = true;
         }
@@ -459,6 +449,5 @@ function copyBoardToMatrix(myMatrix, left, top, size, onlyBlockId) {
       }
     }
   }
-  return orderOfOneBlockInCopy;
 }
 

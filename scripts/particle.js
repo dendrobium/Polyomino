@@ -52,7 +52,7 @@ function squareEffect(order, x, y, size, time){
 	this.stepsize = 5;
 	this.iter = 0;
 
-  console.log("particle.squareEffect: order="+order +", polyColor[order]="+polyColor[order]);
+  //console.log("particle.squareEffect: order="+order +", polyColor[order]="+polyColor[order]);
 	//var sparkColors = [{r:255,g:10,b:10},{r:255,g:255,b:60},{r:200,g:100,b:0}];
   var sparkColors = [{r:polyColor[order].primary.r*255,
                       g:polyColor[order].primary.g*255,

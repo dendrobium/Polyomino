@@ -272,32 +272,19 @@ function appendRandomCellToPoly(listX, listY, spawnedCellCount, spawnGrid, size)
   var idx = 0;
   if (spawnedCellCount > 1) idx = rInt(spawnedCellCount);
   for (var n = 0; n < spawnedCellCount; n++) {
-    x = listX[idx];
-    y = listY[idx];
+    //x = listX[idx];
+    //y = listY[idx];
 
     //Starting wiht a random direction, try all 4 directions.
-    var dir = rInt(4);
-    for (var i = 0; i < 4; i++) {
-      var xx = x;
-      var yy = y;
-      if (dir === 0) yy = y - 1;
-      else if (dir === 1) xx = x + 1;
-      else if (dir === 2) yy = y + 1;
-      else xx = x - 1;
+    var coordinate = getCoordinateOfCellInRandomDirectionWithGivenState(listX[idx], listY[idx], spawnGrid, false);
 
-      if ((xx >= 0) && (yy >= 0) && (xx < size) && (yy < size)) {
-        if (!spawnGrid[xx][yy]) {
-
-          //console.log("    Added cell xx=" + xx + ", yy=" + yy + ", spawnedCellCount=" + spawnedCellCount);
-          listX[spawnedCellCount] = xx;
-          listY[spawnedCellCount] = yy;
-          spawnGrid[xx][yy] = true;
-          return true;
-        }
-      }
-
-      dir = (dir + 1) % 4;
+    if (coordinate != null) {
+      listX[spawnedCellCount] = coordinate.x;
+      listY[spawnedCellCount] = coordinate.y;
+      spawnGrid[coordinate.x][coordinate.y] = true;
+      return true;
     }
+
     idx = (idx + 1) % spawnedCellCount;
   }
 

@@ -5,6 +5,7 @@ detectHighestOrder = true;
 orderDecay         = true;
 allowRotations     = true;
 newPolyOnMerge     = true;
+preventStartingPolysAboveOrder3FromBeingBars = false;
 paneThickness      = 2;
 gridSize           = 10;
 largeGridSize      = gridSize;
@@ -16,6 +17,7 @@ hoverOffset        = 8;
 keyframeSpeed      = 150;
 goalOrder          = 6;  //for now, trying 6/5 with gridsize = 10/8, respectively
 cellSizeThreshold  = 50; //may need tweaking
+
 
 //==  POLYOMINO COLORS  ======================================================//
 
@@ -47,6 +49,21 @@ var highScore = 0;
 
 var blockIdOfLastBlockPlaced;
 
+
+
+//== GRID DIRECTION (NORTH, EAST, SOUTH, WEST) coordinate deltas =============//
+var NORTH = 0;
+var EAST = 1;
+var SOUTH = 2;
+var WEST = 3;
+var DIRECTION = new Array(4);
+DIRECTION[NORTH] = {deltaX: 0, deltaY:-1};
+DIRECTION[EAST]  = {deltaX: 1, deltaY: 0};
+DIRECTION[SOUTH] = {deltaX: 0, deltaY: 1};
+DIRECTION[WEST]  = {deltaX:-1, deltaY: 0}
+
+
+
 /*+- DELETE on deployment version ------------------ DELETE -+*/
 
 var DEBUG_LOG_SHAPE_PROBABILITIES = false
@@ -54,6 +71,7 @@ var debugMode = false;
 var debugMouseDown = false;
 var debugNewId;
 var debugPlace;
+
 
 //==  CANVAS VARS  ===========================================================//
 

@@ -104,21 +104,24 @@ function tryToSpawnBlockInRandomOpenLocation(order, scheduleAnimation) {
   var maxY = 0;
   var minY = gridSize;
 
-  for (var i = 0; i <order; i++) {
+  for (var i = 0; i < order; i++) {
 
     var addedCell = appendRandomCellToPoly(listX, listY, i, spawnGrid, gridSize);
     if (!addedCell) return false;
     //console.log("   Added Cell ["+i+"] ("+listX[i]+", "+listY[i]+")");
-    if (listX[i] > maxX) maxX = listX[i];
-    if (listX[i] < minX) minX = listX[i];
-    if (listY[i] > maxY) maxY = listY[i];
-    if (listY[i] < minY) minY = listY[i];
+    if (preventStartingPolysAboveOrder3FromBeingBars) {
+      if (listX[i] > maxX) maxX = listX[i];
+      if (listX[i] < minX) minX = listX[i];
+      if (listY[i] > maxY) maxY = listY[i];
+      if (listY[i] < minY) minY = listY[i];
+    }
   }
 
-
-  if (order >= 4) {
-    //if bar in level 4 or 5, then retry
-    if ((maxX == minX) || (maxY == minY)) return false;
+  if (preventStartingPolysAboveOrder3FromBeingBars) {
+    if (order >= 4) {
+      //if bar in level 4 or 5, then retry
+      if ((maxX == minX) || (maxY == minY)) return false;
+    }
   }
 
 
@@ -127,59 +130,107 @@ function tryToSpawnBlockInRandomOpenLocation(order, scheduleAnimation) {
   //We need to add only the new cells to the board, so first set all cells to
   //  false, then loop through listX[i], listY[i] to add each cell in the new poly.
   matrixSet(spawnGrid, false);
-  for (var i = 0; i <order; i++) {
+  for (var i = 0; i < order; i++) {
     spawnGrid[listX[i]][listY[i]] = true;
     //console.log("   Spawn Cell ("+listX[i]+", "+listY[i]+")");
   }
 
-
-
-
-  //LUKE: Animation here.
   var id = newId();
-  //console.log("copyMatrixToBoard(order="+order+", id="+id);
-  var animationEntryX = listX[0];
-  var animationEntryY = listY[0];
-  for (var x = 0; x < gridSize; x++) {
-    for (var y = 0; y < gridSize; y++) {
 
-      if (spawnGrid[x][y]) {
+  //Animate random first block in direction of a block attached to it block.
+  var idx = rInt(order);
+  var dir = rInt(DIRECTION.length);
+  var coordinate = getCoordinateOfCellInRandomDirectionWithGivenState(listX[idx], listY[idx], spawnGrid, true);
+  if (coordinate != null) dir =  coordinate.entryDirection;
+  amimateBlockAggregationInBreathFirstOrder(listX[idx], listY[idx], dir, spawnGrid, order, 0, id);
 
-        //console.log("  x="+x+", y="+ y);
-        var myCell = board.getCell(x, y);
-
-        //TODO: get working this animation for monos and domos that spawn wiht each move.
-        if (scheduleAnimation) {
-          var dir = rInt(4);
-          slideInEvt[dir](animationEntryX, animationEntryY,keyframe(0),keyframe(1));
-
-          if (order === 2) {
-            myCell.locked = true;
-            quickSetEvt(myCell, true, id, order, keyframe(1));
-            highlightEvt(animationEntryX, animationEntryY, keyframe(1), keyframe(2));
-            fadeOutEvt(animationEntryX, animationEntryY, keyframe(2), keyframe(3));
-            unlockEvt(myCell, keyframe(3));
-            saveGameEvt(keyframe(3));
-          }
-          else {
-            quickSetEvt(myCell, true, id, order, keyframe(1));
-            fadeOutEvt(animationEntryX, animationEntryY, keyframe(1), keyframe(2));
-            unlockEvt(myCell, keyframe(2));
-            saveGameEvt(keyframe(3));
-          }
-        }
-        else {
-          //for parts without animation.
-          myCell.quickSet(true, id, order);
-        }
-      }
-    }
-  }
   return true;
 }
 
 
+//LUKE: Update starting polys and mono/domino animation here.
+//=======================================================================================
+function amimateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGrid, order, depth, id) {
+//=======================================================================================
+  //Breath first Recersive walk through each cell of block to set animation timings at
+  //  recersion level. Recersivaly walk each cell.
 
+  //Note: since each recersive call needs its own x, y and entryDirection, these values cannot be
+  //   passed in as a structure (which is passed by reference).
+
+  //console.log("amimateBlockAggregationInBreathFirstOrder(x="+x +
+  //  ", y=" + y + ", dir="+ entryDirection + ", order=" + order + ", depth=" + depth + ", id=" + id);
+
+
+  //mark this cell as no longer needing to be visited.
+  spawnGrid[x][y] = false;
+
+  var myCell = board.getCell(x, y);
+
+  myCell.locked = true;
+  var slowDown = 1; //For debugging, increase to 5;
+  quickSetEvt(myCell, true, id, order, keyframe((depth+1)*slowDown));
+
+  slideInEvt[entryDirection](x, y,keyframe(depth*slowDown),keyframe((depth+1)*slowDown));
+  fadeOutEvt(x, y, keyframe((depth+1)*slowDown), keyframe((depth+2)*slowDown));
+  unlockEvt(myCell, keyframe((order+2)*slowDown));
+
+
+  while(true) {
+    var coordinate = getCoordinateOfCellInRandomDirectionWithGivenState(x, y, spawnGrid, true);
+
+    //If there is no place left to go, then back out of recursion.
+    if (coordinate === null) return;
+
+    amimateBlockAggregationInBreathFirstOrder(
+      coordinate.x, coordinate.y, coordinate.entryDirection, spawnGrid, order, depth + 1, id);
+
+  }
+}
+
+
+//=======================================================================================
+function getCoordinateOfCellInRandomDirectionWithGivenState(x, y, booleanGrid, state) {
+//=======================================================================================
+  //Return the coordinates of a cell in a random direction from (x,y) of booleanGrid that
+  //   has a grid value equal to the given state (either true or false).
+  //
+  //Also return the direction (0=NORTH, 1=EAST, ...) of movement.
+  //
+  //Return null if no direction as a cell with value === state.
+  //
+  //Starting with a random direction, try all 4 directions in clockwise order.
+  //Note: since only one direction is returned per call and since each call starts
+  //      with a random direction, the clockwise order adds no bias.
+  //
+  //This function assumes:
+  //   1) booleanGrid is a square, 2D matrix of defined boolean values.
+
+
+  var dir = rInt(DIRECTION.length);
+  for (var i = 0; i < DIRECTION.length; i++) {
+
+    //Luke says Javascript is very slow at modulus, so do (dir + 1) % 4 the dumb way:
+    dir++;
+    if (dir >= DIRECTION.length) dir = 0;
+
+
+    var xx = x + DIRECTION[dir].deltaX;
+    var yy = y + DIRECTION[dir].deltaY;
+
+    //console.log("      from ("+x+", "+y+")  looking at: ("+xx + ", " + yy+") in dir="+dir);
+
+    if ((xx < 0) || (yy < 0)) continue;
+    if ((xx >= booleanGrid.length) || (yy >= booleanGrid.length)) continue;
+
+
+    var coordinate = {x: xx, y: yy, entryDirection: dir};
+//    console.log("getCoordinateOfCellInRandomDirectionWithGivenState(xx="+xx +
+//      ", yy=" + yy + ", dir="+ dir + ", coor="+coordinate);
+    if (booleanGrid[xx][yy] === state) return coordinate;
+  }
+  return null;
+}
 
 //=======================================================================================
 function appendRandomCellToPoly(listX, listY, spawnedCellCount, spawnGrid, size) {
@@ -224,6 +275,7 @@ function appendRandomCellToPoly(listX, listY, spawnedCellCount, spawnGrid, size)
     x = listX[idx];
     y = listY[idx];
 
+    //Starting wiht a random direction, try all 4 directions.
     var dir = rInt(4);
     for (var i = 0; i < 4; i++) {
       var xx = x;
@@ -361,7 +413,8 @@ function squareToPoly(left,top,order) {
 //=======================================================================================
 function doesPolyHaveHoles(spawnGrid, order) {
 //=======================================================================================
-  //Only works for holes of size 1x1
+  //Only works for holes of size 1x1 - which is sufficient up through all octominoes
+  // (there is one nonominoe with a 1x2 hole).
   if (order < 7) return false;
   for (var x = 0; x < order; x++) {
     for (var y = 0; y < order; y++) {

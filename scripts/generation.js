@@ -381,7 +381,8 @@ function squareToPoly(left,top,order) {
       var x = i * cellSize + cellSize / 2;
       var y = j * cellSize + cellSize / 2;
 
-      new particle(x, y, 0,  0,  750,      color.r * 255, color.g * 255, color.b * 255, 1,      cellSize,    255,   255, 255,   0,     cellSize / 10, 1,       0);
+      //new particle(x, y, 0,  0,  750,      color.r * 255, color.g * 255, color.b * 255, 1,      cellSize,    255,   255, 255,   0,     cellSize / 10, 1,       0);
+      new particle(x, y, 0,  0,  750,      polyColor[order].primary, 1,      cellSize,    polyColor[order].secondary,   0,     cellSize / 10, 1,       0);
 
     }
   }

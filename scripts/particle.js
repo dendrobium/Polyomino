@@ -54,12 +54,7 @@ function squareEffect(order, x, y, size, time){
 
   //console.log("particle.squareEffect: order="+order +", polyColor[order]="+polyColor[order]);
 	//var sparkColors = [{r:255,g:10,b:10},{r:255,g:255,b:60},{r:200,g:100,b:0}];
-  var sparkColors = [{r:polyColor[order].primary.r*255,
-                      g:polyColor[order].primary.g*255,
-                      b:polyColor[order].primary.b*255},
-                    {r:polyColor[order].secondary.r*255,
-                      g:polyColor[order].secondary.g*255,
-                      b:polyColor[order].secondary.b*255}];
+  var sparkColors = [polyColor[order].primary,  polyColor[order].secondary];
 
 	this.makeParticle = function(){
 		var i = this.iter += this.stepsize;
@@ -87,8 +82,8 @@ function squareEffect(order, x, y, size, time){
 		for(var n = 0; n < num; n++){
 			var c = sparkColors[rInt(sparkColors.length)];
 			new particle(this.x, this.y, undefined, undefined, rInt(200)+100,
-				c.r, c.g, c.b, 1, rInt(10),
-				c.r, c.g, c.b, 1, rInt(10),
+				c, 1, rInt(10),
+				c, 1, rInt(10),
 				1, rFloat(0.0025)+0.0025);
 		}
 		return false;
@@ -105,14 +100,8 @@ function testParticleSquare(){
 
 }
 
-function particle(x, y, vx, vy, lifetime, startr, startg, startb, starta, startscale, endr, endg, endb, enda, endscale, border, gravity){
-  //(by Joel) This call has too many arguments (17).
-  // Even if we were using a strongly typed language, it would be very hard use this without making a bug.
-  // In javascript, this is just asking for a bug.
-  //Where you call this, you split color up into r, g and b. Better to pass it color and have 2 less
-  // paremeters.
-
-  // Also, replace some of the constants passed as parameters with constents set in this constructor.
+//function particle(x, y, vx, vy, lifetime, startr, startg, startb, starta, startscale, endr, endg, endb, enda, endscale, border, gravity){
+function particle(x, y, vx, vy, lifetime, startColor, starta, startscale, endColor, enda, endscale, border, gravity){
     this.x = x;
     this.y = y;
     this.vx = vx;
@@ -129,13 +118,13 @@ function particle(x, y, vx, vy, lifetime, startr, startg, startb, starta, starts
     this.endTick = tick+this.lifetime;
     this.startTick = tick;
     this.gravity = gravity || 0;
-    this.startr = startr;
-    this.startg = startg;
-    this.startb = startb;
+    this.startr = startColor.r * 255;
+    this.startg = startColor.g * 255;
+    this.startb = startColor.b * 255;
     this.starta = starta;
-    this.endr = endr;
-    this.endg = endg;
-    this.endb = endb;
+    this.endr = endColor.r * 255;
+    this.endg = endColor.g * 255;
+    this.endb = endColor.b * 255;
     this.enda = enda;
     this.r = this.startr;
     this.g = this.startg;

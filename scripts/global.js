@@ -5,7 +5,6 @@ detectHighestOrder = true;
 orderDecay         = true;
 allowRotations     = true;
 newPolyOnMerge     = true;
-preventStartingPolysAboveOrder3FromBeingBars = false;
 paneThickness      = 2;
 gridSize           = 10;
 largeGridSize      = gridSize;
@@ -48,7 +47,6 @@ var highScore = 0;
 
 
 var blockIdOfLastBlockPlaced;
-
 
 
 //== GRID DIRECTION (NORTH, EAST, SOUTH, WEST) coordinate deltas =============//

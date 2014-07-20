@@ -48,3 +48,35 @@ function matrixSet(myMatrix, value) {
     }
   }
 }
+
+
+function matrixGetRandomCoordinateWithGivenValue(myMatrix, value) {
+  var x = rInt(myMatrix.length);
+  var y = rInt(myMatrix[0].length);
+
+  for (var i = 0; i < myMatrix.length; i++) {
+    for (var j = 0; j < myMatrix[i].length; j++) {
+      if (myMatrix[x][y] === value) return new Point(x,y);
+      x++;
+      //Luke says Javascript is very slow at modulus, so do (x + 1) % length the dumb way:
+      if (x >= myMatrix.length) {
+        x = 0;
+        y++;
+        if (y >= myMatrix[i].length) y = 0;
+      }
+    }
+  }
+  return undefined;
+}
+
+
+var Point = function(x, y) {
+  this.x = x;
+  this.y = y;
+}
+
+var PointAndDirection = function(x,y,dir) {
+  this.x = x;
+  this.y = y;
+  this.dir = dir;
+}

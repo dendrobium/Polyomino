@@ -1,4 +1,8 @@
-function newId(){return ++blockId;}
+function newId()
+{
+  //console.log("           grid.newId()="+blockId);
+  return ++blockId;
+}
 
 var cell = function(){
 	this.locked   = false;

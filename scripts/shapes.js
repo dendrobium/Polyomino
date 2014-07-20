@@ -12,6 +12,22 @@ var NONOMINO = 9;
 var DECOMINO = 10;
 var DEDECOMINO = 11;
 
+//Useful for displaying player achievements
+var POLYONIMO_NAME = new Array(DEDECOMINO + 1);
+POLYONIMO_NAME[MONOMINO] = "Monomino";
+POLYONIMO_NAME[DOMINO] = "Domino";
+POLYONIMO_NAME[TROMINO] = "Tromino";
+POLYONIMO_NAME[TETROMINO] = "Tetrominp";
+POLYONIMO_NAME[PENTOMINO] = "Pentomino";
+POLYONIMO_NAME[HEXOMINO] = "Hexomino";
+POLYONIMO_NAME[HEPTOMINO] = "Heptomino";
+POLYONIMO_NAME[OCTOMINO] = "Octomino";
+POLYONIMO_NAME[NONOMINO] = "Nonomino";
+POLYONIMO_NAME[DECOMINO] = "Decomino";
+POLYONIMO_NAME[DEDECOMINO] = "Dedecomino";
+
+
+
 var MAX_PREDEFINED_ORDER = HEXOMINO;
 var SHAPE = new Array(MAX_PREDEFINED_ORDER + 1);
 var gamePolyominoTotal = new Array(MAX_PREDEFINED_ORDER + 1);

@@ -24,7 +24,7 @@ function placeStartingPolys() {
   else if (r < 0.6) orderList = orderList.concat(3, 3, 2);
   else if (r < 0.8) orderList = orderList.concat(5, 1, 1, 1, 1);
   else orderList = orderList.concat(4, 2, 1, 1);
-  //var orderList = [1, 1, 1, 1];
+
 
   //console.log("placeStartingPolys(): "+orderList);
 
@@ -105,11 +105,14 @@ function spawnBlockInRandomLocation(order) {
     if (cellAdded === undefined) return false;
   }
 
+  if (doesPolyHaveHoles(spawnGrid, order, id)) return false;
+
 
   //Animate random first block in direction of a block attached to it.
   var dir = rInt(DIRECTION.length);
   var start = matrixGetRandomCoordinateWithGivenValue(spawnGrid, id);
   var next = getCoordinateOfCellInRandomDirectionWithGivenValue(spawnGrid, start.x,start.y, id);
+
 
   //console.log("    start= ("+start.x+", "+start.y+"),  next=("+next.x+", "+next.y+"), next.dir="+next.dir);
 
@@ -373,35 +376,61 @@ function hasNeighborWithID(spawnGrid, x, y, id) {
 //=======================================================================================
 function doesPolyHaveHoles(spawnGrid, order, id) {
 //=======================================================================================
-  //Only works for holes of size 1x1 - which is sufficient up through all octominoes
-  // (there is one nonominoe with a 1x2 hole).
   if (order < 7) return false;
-  for (var x = 0; x < order; x++) {
-    for (var y = 0; y < order; y++) {
-      if (spawnGrid[x][y] === id) {
-        var foundOpening = false;
-        for (var dir = 0; dir < DIRECTION.length; dir++) {
 
-          var xx = x + DIRECTION[dir].deltaX;
-          var yy = y + DIRECTION[dir].deltaY;
+  var tmpGrid = matrixCopy(spawnGrid);
+  var polyCells = 0;
+  var emptyCells = 0;
 
-          if ((xx < 0) || (yy < 0) || (xx >= order) || (yy >= order)) {
-            foundOpening = true;
-            break;
-          }
-          if (!spawnGrid[xx][yy] === id) {
-            foundOpening = true;
-            break;
-          }
-        }
-        if (!foundOpening) return true;
+  for (var x = 0; x < tmpGrid.length; x++) {
+    for (var y = 0; y < tmpGrid[x].length; y++) {
+      if (tmpGrid[x][y] === id) {
+        polyCells++;
+      }
+      else {
+        tmpGrid[x][y] = CELL_EMPTY;
+        emptyCells++
       }
     }
   }
+
+  if (polyCells != order) {
+    throw new Error(
+        "generation.js::doesPolyHaveHoles(order=" + order + "id=" + id + ") there are only " +
+        "polyCells in grid with matching ID");
+  }
+
+
+  //Since shapes that touch the edge can seperate the grid into disconnected parts,
+  //  start the recursion on all places along the edge.
+  for (var x = 0; x < tmpGrid.length; x++) {
+    if (tmpGrid[x][0] === CELL_EMPTY) {
+      matrixRecursiveFillOfConnectedCells(tmpGrid, x, 0, CELL_EMPTY, CELL_VISITED);
+    }
+    var y = tmpGrid[x].length - 1;
+    if (tmpGrid[x][y] === CELL_EMPTY) {
+      matrixRecursiveFillOfConnectedCells(tmpGrid, x, y, CELL_EMPTY, CELL_VISITED);
+    }
+  }
+  for (var y = 0; y < tmpGrid.length; y++) {
+    if (tmpGrid[0][y] === CELL_EMPTY) {
+      matrixRecursiveFillOfConnectedCells(tmpGrid, 0, y, CELL_EMPTY, CELL_VISITED);
+    }
+    var x = tmpGrid.length - 1;
+    if (tmpGrid[x][y] === CELL_EMPTY) {
+      matrixRecursiveFillOfConnectedCells(tmpGrid, x, y, CELL_EMPTY, CELL_VISITED);
+    }
+  }
+
+
+  var holeCount = matrixReplace(tmpGrid, CELL_EMPTY, CELL_VISITED);
+
+  if (holeCount > 0) {
+    console.log("Found " + POLYONIMO_NAME[order] + " with " + holeCount +" holes");
+    return true;
+  }
   return false;
 }
-
-
 
 
 

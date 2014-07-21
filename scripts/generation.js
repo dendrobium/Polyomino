@@ -15,15 +15,17 @@ var CELL_VISITED = -2;
 //=======================================================================================
 function placeStartingPolys() {
 //=======================================================================================
-  //var orderList = [8, 7, 6, 5, 4, 3, 2, 1];
+  //var orderList = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+  //var orderList = [9, 9, 9, 9, 9, 9, 9, 9, 9];
   //Each number in orderList spawns, at the start of the game, a poly of that order.
-  var orderList = [5, 4, 4, 3, 3, 2, 2, 2, 2, 1, 1];
+  var orderList = [5, 4, 4, 3, 3, 2, 2, 2, 1];
   r = Math.random();
-  if (r < 0.2) orderList = orderList.concat(5, 2, 1, 1, 1);
-  else if (r < 0.4) orderList = orderList.concat(4, 2, 2);
-  else if (r < 0.6) orderList = orderList.concat(3, 3, 2);
-  else if (r < 0.8) orderList = orderList.concat(5, 1, 1, 1, 1);
-  else orderList = orderList.concat(4, 2, 1, 1);
+  if (r < 0.2) orderList = orderList.concat(5, 2, 2, 1, 1, 1, 1);
+  else if (r < 0.4) orderList = orderList.concat(4, 2, 2, 2, 1);
+  else if (r < 0.6) orderList = orderList.concat(3, 3, 2, 2, 1);
+  else if (r < 0.8) orderList = orderList.concat(5, 2, 1, 1, 1, 1, 1);
+  else if (r < 0.9) orderList = orderList.concat(4, 2, 2, 1, 1, 1);
+  else              orderList = orderList.concat(5, 3, 3, 3);
 
 
   //console.log("placeStartingPolys(): "+orderList);

@@ -29,8 +29,20 @@ var polyColor = [
 	{primary:{r:0.46668,g:0.00000,b:0.00000},secondary:{r:0.6667,g:0.0000,b:0.0000}}, // pentomino
 	{primary:{r:0.42350,g:0.32940,b:0.54900},secondary:{r:0.7115,g:0.5434,b:0.9188}}, // hexomino
 	{primary:{r:0.64784,g:0.24157,b:0.00000},secondary:{r:0.9255,g:0.3451,b:0.0000}}, // heptomino
-	{primary:{r:0.57372,g:0.40628,b:0.03297},secondary:{r:0.8196,g:0.5804,b:0.0471}}  // octomino
+	{primary:{r:0.57372,g:0.40628,b:0.03297},secondary:{r:0.8196,g:0.5804,b:0.0471}},  // octomino
+  {primary:{r:0.50980,g:0.21180,b:0.20000},secondary:{r:0.8706,g:0.3608,b:0.3412}},  // nonomino
+  {primary:{r:0.05490,g:0.61570,b:0.65100},secondary:{r:0.0706,g:0.8157,b:0.8627}}  // decominoo
 ];
+
+
+
+
+
+
+
+
+
+
 
 //==  GLOBAL VARS  ===========================================================//
 

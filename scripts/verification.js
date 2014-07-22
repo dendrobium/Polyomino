@@ -96,6 +96,7 @@ function detectSquares(){
 	}
 
 	// scan 2, detect largest squares on squares grid
+	var squaresDetected = 0;
 	for(var x=0;x<squares.size;++x)
 	outer:for(var y=0;y<squares.size;++y){
 		var c = squares.getCell(x,y);
@@ -105,11 +106,11 @@ function detectSquares(){
 		for(var i=x;i<x+c;++i)for(var j=y;j<y+c;++j)
 			squares.setCell(i,j,0);
 		squareToPoly(x,y,c);
+		++squaresDetected;
 	}
 
 	checkGameOver(); // XXX: is this the final place to check end game?
-
-	if(!newPolyOnMerge)spawnNewPoly = false;
+	if(!newPolyOnMerge && squaresDetected > 0)spawnNewPoly = false;
 
 	// placing these here rather than right after squareToPoly allows for comboing
 	recalculateIds();

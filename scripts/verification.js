@@ -60,7 +60,6 @@ function checkGameOver(){
 
 // TODO: detect endgame
 // dont do animations here, they should be delegated by squareToPoly, recalcIds and recalcOrder
-// TODO: combo animation here (multiple squares on placement)
 function detectSquares(){
 
 	// initialize squares grid
@@ -97,7 +96,6 @@ function detectSquares(){
 	}
 
 	// scan 2, detect largest squares on squares grid
-	var combo = 0;
 	for(var x=0;x<squares.size;++x)
 	outer:for(var y=0;y<squares.size;++y){
 		var c = squares.getCell(x,y);
@@ -107,14 +105,11 @@ function detectSquares(){
 		for(var i=x;i<x+c;++i)for(var j=y;j<y+c;++j)
 			squares.setCell(i,j,0);
 		squareToPoly(x,y,c);
-		++combo;
 	}
 
-	// TODO: handle combos here [combo information doesn't need to be global]
-	if(combo > 1){}
-	else if(combo === 0)checkGameOver(); // XXX: is this the final place to check end game?
+	checkGameOver(); // XXX: is this the final place to check end game?
 
-	if(!newPolyOnMerge && combo > 0)spawnNewPoly = false;
+	if(!newPolyOnMerge)spawnNewPoly = false;
 
 	// placing these here rather than right after squareToPoly allows for comboing
 	recalculateIds();

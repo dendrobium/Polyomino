@@ -1,23 +1,29 @@
+//==  GAME UTILS  ============================================================//
+
+var resetStorage = false;
+
+function initGame(){
+	dragging             = false;
+	snapping             = false;
+	currentlyAnimating   = true;
+	triggerDetectSquares = true;
+	spawnNewPoly         = false;
+	gameWon              = false
+	comboActiveCtr       = 0;
+}
+
 function newGame(){
 	board = new grid(gridSize);
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
 		board.setCell(i,j,new cell());
 
 	blockId = 0;
-	score = 0;
-	// TODO: should highScore be considered here? its only ever defined in loadGame
-	dragging = false;
-	snapping = false;
-	currentlyAnimating = true;
-	triggerDetectSquares = true;
-	spawnNewPoly = false; // TODO: LOADGAME
+	score   = 0;
+
+	initGame();
 	placeStartingPolys();
 	updateScoreBoxes();
 	saveGame();
-}
-
-function gameOver(){
-	// TODO: spin off animation event, bool for temp control override (click to continue?)
 }
 
 function loadGame(){
@@ -35,16 +41,13 @@ function loadGame(){
 				board.setCell(i,j,c);
 			}
 			blockId = parseInt(localStorage.getItem("blockId"));
-			score = parseInt(localStorage.getItem("score"));
+			score   = parseInt(localStorage.getItem("score"));
 			var testscoreFuncVersion = parseInt(localStorage.getItem("scoreFuncVersion"));
 			if(scoreFuncVersion === testscoreFuncVersion)
 				highScore = parseInt(localStorage.getItem("highScore"));
 			else
 				highScore = 0;
-			dragging = false;
-			snapping = false;
-			currentlyAnimating = true;
-			triggerDetectSquares = true;
+			initGame();
 			return true;
 		}
 	}catch(e){return false;}
@@ -53,40 +56,34 @@ function loadGame(){
 
 function saveGame(){
 	if(typeof(Storage) !== "undefined") {
-		localStorage.setItem("board", JSON.stringify(board));
-		localStorage.setItem("blockId", blockId);
-		localStorage.setItem("score", score);
+		localStorage.setItem("board",            JSON.stringify(board));
+		localStorage.setItem("blockId",          blockId);
+		localStorage.setItem("score",            score);
 		localStorage.setItem("scoreFuncVersion", scoreFuncVersion);
-		localStorage.setItem("highScore", highScore);
+		localStorage.setItem("highScore",        highScore);
 	}
 }
 
-//function setupInstruction(){
-	//var txt = "Can you reach the " + ((gridSize === 10) ? "<i>hexomino</i>" : "<i>pentomino</i>") + "? (contains " + ((gridSize === 10) ? '6' : '5') +  " squares)";
-	//document.getElementById("inst_inner").innerHTML = txt;
-//}
-
-function clearContainer(container){
-	while(container.firstChild){
-		container.removeChild(container.firstChild);
-	}
+function gameOver(){
+	// TODO: spin off animation event, bool for temp control override (click to continue?)
 }
 
-// IMPORTANT: If you update the score function, increment this!
-// XXX: can't you compute the hash of the score function and use that instead?
-var scoreFuncVersion = 3;
+//==  SCORE RELATED  =========================================================//
 
 function addToScore(squareOrder,pieceOrder,multiplier){
-	//score += (squareOrder*squareOrder*pieceOrder)*multiplier;
-  score += Math.floor(Math.pow(squareOrder*squareOrder*pieceOrder, multiplier*0.5+0.5));
+	score += Math.floor(Math.pow(squareOrder*squareOrder*pieceOrder, multiplier*0.5+0.5));
 	if(score > highScore)highScore = score;
 	updateScoreBoxes();
 }
+
+var scoreFuncVersion = btoa(addToScore.toString());
 
 function updateScoreBoxes(){
 	document.querySelector(".highscore").textContent = highScore;
 	document.querySelector(".score").textContent = score;
 }
+
+//==  ENTRY FUNCTION  ========================================================//
 
 $(function(){
 
@@ -99,12 +96,27 @@ $(function(){
 
 	// see if first-time visitor and needs instructions
 	if(typeof(Storage) !== "undefined"){
+		if(resetStorage){
+			localStorage.setItem("visited",          undefined);
+			localStorage.setItem("board",            undefined);
+			localStorage.setItem("blockId",          undefined);
+			localStorage.setItem("score",            undefined);
+			localStorage.setItem("scoreFuncVersion", undefined);
+			localStorage.setItem("highScore",        undefined);
+		}
+
 		var visited = localStorage.getItem("visited");
-		if(!visited)
+		if(!visited){
+			localStorage.setItem("visited",          true);
+			localStorage.setItem("scoreFuncVersion", scoreFuncVersion);
+			localStorage.setItem("highScore",        0);
+
+			// XXX: direct user to instructions
 			location = "#instructions";
-		else
+		}else{
+			// XXX: direct user to game
 			location = "#close";
-		localStorage.setItem("visited", true);
+		}
 	}
 
 	// setup game

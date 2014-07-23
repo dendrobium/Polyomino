@@ -147,7 +147,8 @@ function highlightEvt(x,y,startTick,endTick){
 
 function fadeOutEvt(x,y,startTick,endTick){
 	new_event(startTick,endTick,function(interp){
-		gfx.fillStyle = "rgba(205,205,205,"+(1-interp)+")";
+
+		gfx.fillStyle = "rgba(" + Math.floor(255 * HIGHLIGHT_COLOR.r) + "," + Math.floor(255 * HIGHLIGHT_COLOR.g) + "," + Math.floor(255 * HIGHLIGHT_COLOR.b) + ","+(1-interp)+")";
 		renderRect(x*cellSize,y*cellSize,
 		           (x+1)*cellSize,(y+1)*cellSize);
 	},null);

@@ -76,7 +76,7 @@ function spawnStartingPolys(order) {
 //=======================================================================================
 function spawnMonoOrDomino() {
 //=======================================================================================
-  if (Math.random() < 0.25) spawnBlockInRandomLocation(1, animationOrder);
+  if (Math.random() < 0.25) spawnBlockInRandomLocation(1);
   else {
 
     //This will pick, with equal probability one empty space.

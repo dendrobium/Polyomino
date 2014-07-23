@@ -11,6 +11,8 @@ new_event = function(startTick,endTick,func,onEnd){
 
 var inactiveEvtLs = [];
 var activeEvtLs = [];
+var HIGHLIGHT_COLOR = {r:0.8, g:0.8, b:0.8}
+
 function processInactiveEvents(){
 	var migrateLs = inactiveEvtLs.filter(function(e){return e.startTick <= tick;});
 	inactiveEvtLs = inactiveEvtLs.filter(function(e){return e.startTick > tick;});
@@ -98,7 +100,7 @@ function surroundEvt(x,y,order,startTick,endTick){
 var slideInEvt = new Array(4);
 slideInEvt[NORTH] = function(x,y,startTick,endTick) { // from bottom
   new_event(startTick, endTick, function (interp) {
-    rgb(.8,.8,.8);
+    rgb(HIGHLIGHT_COLOR);
     renderRect(x * cellSize, (y + 1) * cellSize - interp * cellSize,
         (x + 1) * cellSize, (y + 1) * cellSize);
   }, null);
@@ -107,7 +109,7 @@ slideInEvt[NORTH] = function(x,y,startTick,endTick) { // from bottom
 
 slideInEvt[SOUTH] = function(x,y,startTick,endTick) { // from top
   new_event(startTick, endTick, function (interp) {
-    rgb(.8,.8,.8);
+    rgb(HIGHLIGHT_COLOR);
     renderRect(x * cellSize, y * cellSize,
         (x + 1) * cellSize, y * cellSize + interp * cellSize);
   }, null);
@@ -116,7 +118,7 @@ slideInEvt[SOUTH] = function(x,y,startTick,endTick) { // from top
 
 slideInEvt[WEST] = function(x,y,startTick,endTick) { // from right
   new_event(startTick, endTick, function (interp) {
-    rgb(.8,.8,.8);
+    rgb(HIGHLIGHT_COLOR);
     renderRect((x + 1) * cellSize - interp * cellSize, y * cellSize,
         (x + 1) * cellSize, (y + 1) * cellSize);
   }, null);
@@ -124,7 +126,7 @@ slideInEvt[WEST] = function(x,y,startTick,endTick) { // from right
 
 slideInEvt[EAST] = function(x,y,startTick,endTick) { // from left
   new_event(startTick, endTick, function (interp) {
-    rgb(.8,.8,.8);
+    rgb(HIGHLIGHT_COLOR);
     renderRect(x * cellSize, y * cellSize,
         x * cellSize + interp * cellSize, (y + 1) * cellSize);
   }, null);
@@ -137,7 +139,7 @@ slideInEvt[EAST] = function(x,y,startTick,endTick) { // from left
 
 function highlightEvt(x,y,startTick,endTick){
 	new_event(startTick,endTick,function(){
-		rgb(.8,.8,.8);
+		rgb(HIGHLIGHT_COLOR);
 		renderRect(x*cellSize,y*cellSize,
 		           (x+1)*cellSize,(y+1)*cellSize);
 	},null);

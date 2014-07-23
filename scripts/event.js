@@ -98,7 +98,7 @@ function surroundEvt(x,y,order,startTick,endTick){
 var slideInEvt = new Array(4);
 slideInEvt[NORTH] = function(x,y,startTick,endTick) { // from bottom
   new_event(startTick, endTick, function (interp) {
-    rgb(1, 1, 1);
+    rgb(.8,.8,.8);
     renderRect(x * cellSize, (y + 1) * cellSize - interp * cellSize,
         (x + 1) * cellSize, (y + 1) * cellSize);
   }, null);
@@ -107,7 +107,7 @@ slideInEvt[NORTH] = function(x,y,startTick,endTick) { // from bottom
 
 slideInEvt[SOUTH] = function(x,y,startTick,endTick) { // from top
   new_event(startTick, endTick, function (interp) {
-    rgb(1, 1, 1);
+    rgb(.8,.8,.8);
     renderRect(x * cellSize, y * cellSize,
         (x + 1) * cellSize, y * cellSize + interp * cellSize);
   }, null);
@@ -116,7 +116,7 @@ slideInEvt[SOUTH] = function(x,y,startTick,endTick) { // from top
 
 slideInEvt[WEST] = function(x,y,startTick,endTick) { // from right
   new_event(startTick, endTick, function (interp) {
-    rgb(1, 1, 1);
+    rgb(.8,.8,.8);
     renderRect((x + 1) * cellSize - interp * cellSize, y * cellSize,
         (x + 1) * cellSize, (y + 1) * cellSize);
   }, null);
@@ -124,7 +124,7 @@ slideInEvt[WEST] = function(x,y,startTick,endTick) { // from right
 
 slideInEvt[EAST] = function(x,y,startTick,endTick) { // from left
   new_event(startTick, endTick, function (interp) {
-    rgb(1, 1, 1);
+    rgb(.8,.8,.8);
     renderRect(x * cellSize, y * cellSize,
         x * cellSize + interp * cellSize, (y + 1) * cellSize);
   }, null);
@@ -137,7 +137,7 @@ slideInEvt[EAST] = function(x,y,startTick,endTick) { // from left
 
 function highlightEvt(x,y,startTick,endTick){
 	new_event(startTick,endTick,function(){
-		rgb(1,1,1);
+		rgb(.8,.8,.8);
 		renderRect(x*cellSize,y*cellSize,
 		           (x+1)*cellSize,(y+1)*cellSize);
 	},null);
@@ -145,7 +145,7 @@ function highlightEvt(x,y,startTick,endTick){
 
 function fadeOutEvt(x,y,startTick,endTick){
 	new_event(startTick,endTick,function(interp){
-		gfx.fillStyle = "rgba(255,255,255,"+(1-interp)+")";
+		gfx.fillStyle = "rgba(205,205,205,"+(1-interp)+")";
 		renderRect(x*cellSize,y*cellSize,
 		           (x+1)*cellSize,(y+1)*cellSize);
 	},null);

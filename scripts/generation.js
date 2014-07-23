@@ -20,7 +20,7 @@ function placeStartingPolys() {
 
   //var orderList = [6, 6, 6, 6, 6, 6, 6, 6];
   //var orderList = [5, 5, 5, 5, 5, 5, 5, 5, 5];
-  //var orderList = [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4];
+ // var orderList = [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4];
   //var orderList = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
   //Each number in orderList spawns, at the start of the game, a poly of that order.
   var orderList = [5, 4, 4, 3, 3, 2, 2, 2, 1];
@@ -292,12 +292,19 @@ function amimateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGr
   var myCell = board.getCell(x, y);
 
   myCell.locked = true;
-  var slowDown = 1; //For debugging, increase to 5;
-  quickSetEvt(myCell, true, id, order, keyframe((depth+1)*slowDown));
+//  quickSetEvt(myCell, true, id, order, keyframe(depth+1));
+//
+//  slideInEvt[entryDirection](x, y,keyframe(depth),keyframe(depth+1));
+//  fadeOutEvt(x, y, keyframe(depth+1), keyframe(depth+2));
+//  unlockEvt(myCell, keyframe(order+2));
 
-  slideInEvt[entryDirection](x, y,keyframe(depth*slowDown),keyframe((depth+1)*slowDown));
-  fadeOutEvt(x, y, keyframe((depth+1)*slowDown), keyframe((depth+2)*slowDown));
-  unlockEvt(myCell, keyframe((order+2)*slowDown));
+
+  quickSetEvt(myCell, true, id, order, keyframe(order+1));
+
+  slideInEvt[entryDirection](x, y, keyframe(depth),keyframe(depth+1));
+  highlightEvt(x, y, keyframe(depth+1), keyframe(order))
+  fadeOutEvt(x, y, keyframe(order), keyframe(order+2));
+  unlockEvt(myCell, keyframe(order+2));
 
 
   while(true) {

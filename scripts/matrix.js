@@ -1,4 +1,25 @@
+//=======================================================================================
+/*
+      ___           ___                         ___                       ___
+     /\  \         /\  \                       /\  \                     /|  |
+    |::\  \       /::\  \         ___         /::\  \       ___         |:|  |
+    |:|:\  \     /:/\:\  \       /\__\       /:/\:\__\     /\__\        |:|  |
+  __|:|\:\  \   /:/ /::\  \     /:/  /      /:/ /:/  /    /:/__/      __|:|__|
+ /::::|_\:\__\ /:/_/:/\:\__\   /:/__/      /:/_/:/__/___ /::\  \     /::::\__\_____
+ \:\~~\  \/__/ \:\/:/  \/__/  /::\  \      \:\/:::::/  / \/\:\  \__  ~~~~\::::/___/
+  \:\  \        \::/__/      /:/\:\  \      \::/~~/~~~~   ~~\:\/\__\     |:|~~|
+   \:\  \        \:\  \      \/__\:\  \      \:\~~\          \::/  /     |:|  |
+    \:\__\        \:\__\          \:\__\      \:\__\         /:/  /      |:|__|
+     \/__/         \/__/           \/__/       \/__/         \/__/       |/__/
+ */
+//=======================================================================================
+
+
+
+
+//=======================================================================================
 function matrix(rows, columns, defaultValue){
+//=======================================================================================
   var arr = new Array(rows);
   for (var i=0; i<rows; i++) {
     arr[i] = new Array(columns);
@@ -9,7 +30,11 @@ function matrix(rows, columns, defaultValue){
   return arr;
 }
 
+
+
+//=======================================================================================
 function matrixCopy(srcMatrix){
+//=======================================================================================
   var arr = new Array(srcMatrix.length);
   for (var i=0; i<srcMatrix.length; i++) {
     arr[i] = new Array(srcMatrix[i].length);
@@ -20,7 +45,14 @@ function matrixCopy(srcMatrix){
   return arr;
 }
 
+
+
+
+
+
+//=======================================================================================
 function matrixSet(myMatrix, value) {
+//=======================================================================================
   for (var i = 0; i < myMatrix.length; i++) {
     for (var j = 0; j < myMatrix[i].length; j++) {
       myMatrix[i][j] = value;
@@ -28,7 +60,10 @@ function matrixSet(myMatrix, value) {
   }
 }
 
+
+//=======================================================================================
 function matrixReplace(myMatrix, oldValue, newValue) {
+//=======================================================================================
   var replaceCount = 0;
   for (var i = 0; i < myMatrix.length; i++) {
     for (var j = 0; j < myMatrix[i].length; j++) {
@@ -41,7 +76,10 @@ function matrixReplace(myMatrix, oldValue, newValue) {
   return replaceCount;
 }
 
+
+//=======================================================================================
 function matrixRecursiveFillOfConnectedCells(myMatrix, x, y, searchValue, replaceValue) {
+//=======================================================================================
   if (myMatrix[x][y] != searchValue) return;
 
   myMatrix[x][y] = replaceValue;
@@ -56,7 +94,12 @@ function matrixRecursiveFillOfConnectedCells(myMatrix, x, y, searchValue, replac
   }
 }
 
+
+
+
+//=======================================================================================
 function matrixGetRandomCoordinateWithGivenValue(myMatrix, value) {
+//=======================================================================================
   var x = rInt(myMatrix.length);
   var y = rInt(myMatrix[0].length);
 
@@ -73,4 +116,22 @@ function matrixGetRandomCoordinateWithGivenValue(myMatrix, value) {
     }
   }
   return undefined;
+}
+
+
+
+//=======================================================================================
+function countNeighbor4WithID(myMatrix, x, y, id) {
+//=======================================================================================
+  var neighbor4Count = 0;
+  for (var dir = 0; dir < DIRECTION.length; dir++) {
+
+    var xx = x + DIRECTION[dir].deltaX;
+    var yy = y + DIRECTION[dir].deltaY;
+
+    if ((xx < 0) || (yy < 0) || (xx >= myMatrix.length) || (yy >= myMatrix.length)) continue;
+
+    if (myMatrix[xx][yy] === id) neighbor4Count++;
+  }
+  return neighbor4Count;
 }

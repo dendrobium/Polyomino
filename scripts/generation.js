@@ -17,6 +17,11 @@ function placeStartingPolys() {
 //=======================================================================================
   //var orderList = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
   //var orderList = [9, 9, 9, 9, 9, 9, 9, 9, 9];
+
+  //var orderList = [6, 6, 6, 6, 6, 6, 6, 6];
+  //var orderList = [5, 5, 5, 5, 5, 5, 5, 5, 5];
+  //var orderList = [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4];
+  //var orderList = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
   //Each number in orderList spawns, at the start of the game, a poly of that order.
   var orderList = [5, 4, 4, 3, 3, 2, 2, 2, 1];
   r = Math.random();
@@ -154,7 +159,7 @@ function squareToPoly(left,top,order) {
   var childId = newId();
   var hasHoles = true;
 
-  var lastCoordinate;
+  var addedCoordinate;
 
   while (hasHoles) {
     var filledCellCount = copyBoardToMatrix(spawnGrid, left, top, order, blockIdOfLastBlockPlaced, childId);
@@ -163,7 +168,7 @@ function squareToPoly(left,top,order) {
     //console.log("   Finished Copying Starting Cells: cellsNeeded="+cellsNeeded);
 
     for (var i = 0; i < cellsNeeded; i++) {
-      lastCoordinate = appendRandomCellToPoly(spawnGrid, childId, lastCoordinate);
+      addedCoordinate = appendRandomCellToPoly(spawnGrid, childId);
     }
     hasHoles = doesPolyHaveHoles(spawnGrid, order, childId);
   }
@@ -213,7 +218,7 @@ function squareToPoly(left,top,order) {
 
 
 //=======================================================================================
-function appendRandomCellToPoly(spawnGrid, id, lastCoordinate) {
+function appendRandomCellToPoly(spawnGrid, id) {
 //=======================================================================================
 
   var visitedCount = 0;
@@ -230,37 +235,38 @@ function appendRandomCellToPoly(spawnGrid, id, lastCoordinate) {
   }
 
 
-  var x = rInt(spawnGrid.length);
-  var y = rInt(spawnGrid.length);
-  //console.log("   appendRandomCellToPoly(id="+id+"): lastCoordinate="+lastCoordinate);
-  if (lastCoordinate != undefined) {
-    var tryMeFirst = getCoordinateOfCellInRandomDirectionWithGivenValue(spawnGrid, lastCoordinate.x, lastCoordinate.y, CELL_EMPTY);
-    //console.log("        appendRandomCellToPoly(id="+id+"): lastCoordinate=("+lastCoordinate.x+ ", "+lastCoordinate.y);
-    if (tryMeFirst != undefined) {
-      //console.log("            appendRandomCellToPoly(id="+id+"):  tryMeFirst="+tryMeFirst.x, tryMeFirst.y);
-      x = tryMeFirst.x;
-      y = tryMeFirst.y;
-    }
-  }
-
   while (visitedCount < totalEmptyCells) {
+    var x = rInt(spawnGrid.length);
+    var y = rInt(spawnGrid.length);
 
+    var skipForMoreEvenShapeDistribution = false;
     if (spawnGrid[x][y] === CELL_EMPTY) {
 
-      if ((numCellsInPoly === 0) || (hasNeighborWithID(spawnGrid, x, y, id))) {
+      //If (numCellsInPoly === 0), then this is the first cell of the poly
+      //   so okay to spawn in any empty cell. Otherwise, only spawn if cell
+      //   is connected to a cell of the correct id.
+      if (numCellsInPoly === 0) {
         spawnGrid[x][y] = id;
-        //console.log("     appendRandomCellToPoly(id="+id+"): x="+x+ ", y="+y);
         return {x:x,y:y};
       }
 
-      spawnGrid[x][y] = CELL_VISITED;
-      visitedCount++;
+      var neighborCount = countNeighbor4WithID(spawnGrid, x, y, id);
+
+      if (neighborCount > 0) {
+        if ((neighborCount === 2) && (Math.random() < 0.25)) skipForMoreEvenShapeDistribution = true;
+        else if ((neighborCount === 3) && (Math.random() < 0.25)) skipForMoreEvenShapeDistribution = true;
+        else {
+          spawnGrid[x][y] = id;
+          return {x: x, y: y};
+        }
+      }
+
+      if (!skipForMoreEvenShapeDistribution) {
+        spawnGrid[x][y] = CELL_VISITED;
+        visitedCount++;
+      }
     }
-
-    var x = rInt(spawnGrid.length);
-    var y = rInt(spawnGrid.length);
   }
-
   return undefined;
 }
 
@@ -353,22 +359,6 @@ function getCoordinateOfCellInRandomDirectionWithGivenValue(myGrid, x, y, value)
 }
 
 
-
-
-//=======================================================================================
-function hasNeighborWithID(spawnGrid, x, y, id) {
-//=======================================================================================
-  for (var dir = 0; dir < DIRECTION.length; dir++) {
-
-    var xx = x + DIRECTION[dir].deltaX;
-    var yy = y + DIRECTION[dir].deltaY;
-
-    if ((xx < 0) || (yy < 0) || (xx >= spawnGrid.length) || (yy >= spawnGrid.length)) continue;
-
-    if (spawnGrid[xx][yy] === id) return true;
-  }
-  return false;
-}
 
 
 

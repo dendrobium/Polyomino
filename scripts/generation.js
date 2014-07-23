@@ -18,9 +18,10 @@ function placeStartingPolys() {
   //var orderList = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
   //var orderList = [9, 9, 9, 9, 9, 9, 9, 9, 9];
 
+  //var orderList = [7, 7, 7, 7, 7, 7, 7];
   //var orderList = [6, 6, 6, 6, 6, 6, 6, 6];
-  //var orderList = [5, 5, 5, 5, 5, 5, 5, 5, 5];
- // var orderList = [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4];
+ // var orderList = [5, 5, 5, 5, 5, 5, 5, 5, 5];
+  //var orderList = [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4];
   //var orderList = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
   //Each number in orderList spawns, at the start of the game, a poly of that order.
   var orderList = [5, 4, 4, 3, 3, 2, 2, 2, 1];
@@ -56,9 +57,11 @@ function spawnStartingPolys(order) {
   //Therefore, to avoid infinite loop in such cases, after 3 trys, the
   //  requested order is reduced by 1.
   // If order reaches 0, then the function returns without haveing spawned anything.
+  var animationOrder = 5;
   while (order >= 1) {
     for (var n = 0; n < 3; n++) {
-      var done = spawnBlockInRandomLocation(order);
+
+      var done = spawnBlockInRandomLocation(order, animationOrder);
       if (done) return;
     }
     order = order - 1;
@@ -73,7 +76,7 @@ function spawnStartingPolys(order) {
 //=======================================================================================
 function spawnMonoOrDomino() {
 //=======================================================================================
-  if (Math.random() < 0.25) spawnBlockInRandomLocation(1);
+  if (Math.random() < 0.25) spawnBlockInRandomLocation(1, animationOrder);
   else {
 
     //This will pick, with equal probability one empty space.
@@ -92,11 +95,13 @@ function spawnMonoOrDomino() {
 
 
 //=======================================================================================
-function spawnBlockInRandomLocation(order) {
+function spawnBlockInRandomLocation(order, animationOrder) {
 //=======================================================================================
   //This function is called when:
   //  1) spawning starting polys.
   //  2) spawning mono or dominos when a block is moved.
+
+  if (animationOrder === undefined) animationOrder = order;
 
   var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
   copyBoardToMatrix(spawnGrid, 0, 0, gridSize);
@@ -107,7 +112,7 @@ function spawnBlockInRandomLocation(order) {
 
 
   for (var i = 0; i < order; i++) {
-    var cellAdded = appendRandomCellToPoly(spawnGrid, id);
+    var cellAdded = appendRandomCellToPoly(spawnGrid, id, order);
 
     if (cellAdded === undefined) return false;
   }
@@ -124,7 +129,7 @@ function spawnBlockInRandomLocation(order) {
   //console.log("    start= ("+start.x+", "+start.y+"),  next=("+next.x+", "+next.y+"), next.dir="+next.dir);
 
   if (next != undefined) dir =  next.dir;
-  amimateBlockAggregationInBreathFirstOrder(start.x,start.y, dir, spawnGrid, order, 0, id);
+  amimateBlockAggregationInBreathFirstOrder(start.x,start.y, dir, spawnGrid, order, 0, id, animationOrder);
 
   return true;
 }
@@ -168,7 +173,7 @@ function squareToPoly(left,top,order) {
     //console.log("   Finished Copying Starting Cells: cellsNeeded="+cellsNeeded);
 
     for (var i = 0; i < cellsNeeded; i++) {
-      addedCoordinate = appendRandomCellToPoly(spawnGrid, childId);
+      addedCoordinate = appendRandomCellToPoly(spawnGrid, childId, order);
     }
     hasHoles = doesPolyHaveHoles(spawnGrid, order, childId);
   }
@@ -218,7 +223,7 @@ function squareToPoly(left,top,order) {
 
 
 //=======================================================================================
-function appendRandomCellToPoly(spawnGrid, id) {
+function appendRandomCellToPoly(spawnGrid, id, order) {
 //=======================================================================================
 
   var visitedCount = 0;
@@ -234,6 +239,7 @@ function appendRandomCellToPoly(spawnGrid, id) {
     }
   }
 
+  var skipProbability = Math.min(0.5, Math.max(0.0, 0.2*(order-3)));
 
   while (visitedCount < totalEmptyCells) {
     var x = rInt(spawnGrid.length);
@@ -253,8 +259,8 @@ function appendRandomCellToPoly(spawnGrid, id) {
       var neighborCount = countNeighbor4WithID(spawnGrid, x, y, id);
 
       if (neighborCount > 0) {
-        if ((neighborCount === 2) && (Math.random() < 0.25)) skipForMoreEvenShapeDistribution = true;
-        else if ((neighborCount === 3) && (Math.random() < 0.25)) skipForMoreEvenShapeDistribution = true;
+        if ((neighborCount === 2) && (Math.random() < skipProbability)) skipForMoreEvenShapeDistribution = true;
+        //else if ((neighborCount === 3) && (Math.random() < 0.5)) skipForMoreEvenShapeDistribution = true;
         else {
           spawnGrid[x][y] = id;
           return {x: x, y: y};
@@ -274,7 +280,7 @@ function appendRandomCellToPoly(spawnGrid, id) {
 
 //LUKE: Update starting polys and mono/domino animation here.
 //=======================================================================================
-function amimateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGrid, order, depth, id) {
+function amimateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGrid, order, depth, id, animationOrder) {
 //=======================================================================================
   //Breath first Recersive walk through each cell of block to set animation timings at
   //  recersion level. Recersivaly walk each cell.
@@ -292,19 +298,17 @@ function amimateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGr
   var myCell = board.getCell(x, y);
 
   myCell.locked = true;
-//  quickSetEvt(myCell, true, id, order, keyframe(depth+1));
-//
-//  slideInEvt[entryDirection](x, y,keyframe(depth),keyframe(depth+1));
-//  fadeOutEvt(x, y, keyframe(depth+1), keyframe(depth+2));
-//  unlockEvt(myCell, keyframe(order+2));
 
+  //AnimationStartDelay is only non-zero for lower order polys spaned at the START of a GAME.
+  //  The purpose is that at game start, high order polys start spawing sooner
+  var animationStartDelay = animationOrder - order;
 
-  quickSetEvt(myCell, true, id, order, keyframe(order+1));
+  quickSetEvt(myCell, true, id, order, keyframe(order+1+animationStartDelay));
 
-  slideInEvt[entryDirection](x, y, keyframe(depth),keyframe(depth+1));
-  highlightEvt(x, y, keyframe(depth+1), keyframe(order))
-  fadeOutEvt(x, y, keyframe(order), keyframe(order+2));
-  unlockEvt(myCell, keyframe(order+2));
+  slideInEvt[entryDirection](x, y, keyframe(depth+animationStartDelay),keyframe(depth+1+animationStartDelay));
+  highlightEvt(x, y, keyframe(depth+1+animationStartDelay), keyframe(order+animationStartDelay))
+  fadeOutEvt(x, y, keyframe(order+animationStartDelay), keyframe(order+2+animationStartDelay));
+  unlockEvt(myCell, keyframe(order+2+animationStartDelay));
 
 
   while(true) {
@@ -314,7 +318,7 @@ function amimateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGr
     if (coordinate === undefined) return;
 
     amimateBlockAggregationInBreathFirstOrder(
-      coordinate.x, coordinate.y, coordinate.dir, spawnGrid, order, depth + 1, id);
+      coordinate.x, coordinate.y, coordinate.dir, spawnGrid, order, depth + 1, id, animationOrder);
 
   }
 }

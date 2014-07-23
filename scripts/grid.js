@@ -1,7 +1,5 @@
-function newId()
-{
-  //console.log("           grid.newId()="+blockId);
-  return ++blockId;
+function newId(){
+	return ++blockId;
 }
 
 var cell = function(){
@@ -61,4 +59,3 @@ function deselectGrid(g){
 		if(c.selected)c.selected = c.locked = false;
 	}
 }
-

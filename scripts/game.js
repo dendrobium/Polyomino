@@ -108,7 +108,6 @@ $(function(){
 	}
 
 	// setup game
-	initShapes();
 	if(!loadGame())newGame();
 	updateScoreBoxes();
 

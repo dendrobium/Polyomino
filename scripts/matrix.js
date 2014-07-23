@@ -62,7 +62,7 @@ function matrixGetRandomCoordinateWithGivenValue(myMatrix, value) {
 
   for (var i = 0; i < myMatrix.length; i++) {
     for (var j = 0; j < myMatrix[i].length; j++) {
-      if (myMatrix[x][y] === value) return new Point(x,y);
+      if (myMatrix[x][y] === value) return {x:x,y:y};
       x++;
       //Javascript is very slow at modulus, so do (x + 1) % length the dumb way:
       if (x >= myMatrix.length) {

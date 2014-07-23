@@ -29,14 +29,3 @@ function renderRect(x0,y0,x1,y1){
 	gfx.lineTo(x1,y0);
 	gfx.fill();
 }
-
-var Point = function(x, y) {
-  this.x = x;
-  this.y = y;
-}
-
-var PointAndDirection = function(x,y,dir) {
-  this.x = x;
-  this.y = y;
-  this.dir = dir;
-}

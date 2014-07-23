@@ -250,7 +250,7 @@ function appendRandomCellToPoly(spawnGrid, id, lastCoordinate) {
       if ((numCellsInPoly === 0) || (hasNeighborWithID(spawnGrid, x, y, id))) {
         spawnGrid[x][y] = id;
         //console.log("     appendRandomCellToPoly(id="+id+"): x="+x+ ", y="+y);
-        return new Point(x,y);
+        return {x:x,y:y};
       }
 
       spawnGrid[x][y] = CELL_VISITED;
@@ -346,7 +346,7 @@ function getCoordinateOfCellInRandomDirectionWithGivenValue(myGrid, x, y, value)
 
     if (myGrid[xx][yy] === value)
     { //console.log("    myGrid[xx][yy] === value");
-      return new PointAndDirection(xx, yy, dir);
+      return {x:xx,y:yy,dir:dir};
     }
   }
   return undefined;

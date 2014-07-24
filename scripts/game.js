@@ -82,6 +82,9 @@ var scoreFuncVersion = btoa(addToScore.toString());
 function updateScoreBoxes(){
 	document.querySelector(".highscore").textContent = highScore;
 	document.querySelector(".score").textContent = score;
+	$('#gameOverScore')[0].innerHTML = score;
+	$('#gameWonScore')[0].innerHTML = score;
+
 }
 
 //==  ENTRY FUNCTION  ========================================================//

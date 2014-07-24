@@ -11,6 +11,13 @@
 	border-radius: 0px;
 	color:white
 }
+em {
+	color: green;
+	font-family: arial;
+	font-size: 120%;
+	font-weight: bold;
+	font-style:normal;
+}
 
 .game_div {
 	position:fixed;

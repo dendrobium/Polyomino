@@ -33,6 +33,7 @@ function loadGame(){
 			var storedBoard = JSON.parse(localStorage.getItem("board"));
 			if(!storedBoard)
 				return false;
+			console.log(storedBoard);
 			board = new grid(gridSize);
 			for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
 				var s = storedBoard[i][j];
@@ -97,12 +98,7 @@ $(function(){
 	// see if first-time visitor and needs instructions
 	if(typeof(Storage) !== "undefined"){
 		if(resetStorage){
-			localStorage.setItem("visited",          undefined);
-			localStorage.setItem("board",            undefined);
-			localStorage.setItem("blockId",          undefined);
-			localStorage.setItem("score",            undefined);
-			localStorage.setItem("scoreFuncVersion", undefined);
-			localStorage.setItem("highScore",        undefined);
+			localStorage.clear();
 		}
 
 		var visited = localStorage.getItem("visited");
@@ -120,7 +116,10 @@ $(function(){
 	}
 
 	// setup game
-	if(!loadGame())newGame();
+	var success = loadGame();
+	console.log(success);
+	if(!success)
+		newGame();
 	updateScoreBoxes();
 
 	// begin game

@@ -142,27 +142,18 @@ function render(){
 // XXX: resize text if need be
 var firsttime = true;
 window.onresize = function(){
-	document.getElementById('header_div').style.fontSize = (window.innerWidth < 480) ? "30px" : "48px";
-
-	// Setup width/height to look good
+	//Enforces a square aspect ratio
 	var offset = $('#canvas').offset();
 	var inGameControlSpace = 40;
-	$('#game_div').width(Math.min(window.innerHeight - 2 * offset.top, window.innerWidth - 2 * offset.left));
-	$('#game_div').height(Math.min(window.innerHeight - 2 * offset.top, window.innerWidth - 2 * offset.left));
+	offset.left = window.innerWidth * 0.02;
+	var innerSize = Math.max(Math.min(window.innerWidth - offset.left, window.innerHeight - offset.top), minCanvasSize);
+
+	$('#game_div').width(   innerSize - 2*offset.left);
+	$('#canvas_div').width( innerSize - 2*offset.left);
+	$('#canvas_div').height(innerSize - 2*offset.top);
 
 	// force canvas to be square -- offset width is VERY important to preserve scale!!
 	canvasWidth = canvasHeight = canvas.height = canvas.width = $('#canvas_div').width();
-
-	// Don't want to do this while game is running!!
-	if(firsttime){
-		// XXX: why is grid size a function of how large the window is?
-		// XXX: you can lose save states because of this (play game in small window, resize to large window, refresh)
-		if( (canvasWidth - paneThickness*2)/gridSize < cellSizeThreshold ) gridSize = smallGridSize;
-		else gridSize = largeGridSize;
-		firsttime = false;
-		goalOrder = (gridSize == largeGridSize) ? 6 : 5;
-	}
-
 	cellSize = Math.floor((canvasWidth - paneThickness*2)/gridSize);
 	currentlyAnimating = true;
 }

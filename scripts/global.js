@@ -43,7 +43,7 @@ var currentlyAnimating, triggerDetectSquares, spawnNewPoly, polyMoved;
 var blockIdOfLastBlockPlaced;
 var comboActiveCtr, comboCtr;
 var gameWon;
-var highScore;
+var highScore = 0; //in case first time visitor
 
 //== GRID DIRECTION ==========================================================//
 
@@ -73,3 +73,4 @@ var canvas = null;
 var gfx = null;
 var tick, elapsed;
 var canvasWidth, canvasHeight;
+var minCanvasSize = 300;

@@ -20,18 +20,18 @@ function placeStartingPolys() {
 
   //var orderList = [7, 7, 7, 7, 7, 7, 7];
   //var orderList = [6, 6, 6, 6, 6, 6, 6, 6];
- // var orderList = [5, 5, 5, 5, 5, 5, 5, 5, 5];
-  //var orderList = [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4];
+ //var orderList = [5, 5, 5, 5, 5, 5, 5, 5, 5];
+  var orderList = [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4];
   //var orderList = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
   //Each number in orderList spawns, at the start of the game, a poly of that order.
-  var orderList = [5, 4, 4, 3, 3, 2, 2, 2, 1];
-  r = Math.random();
-  if (r < 0.2) orderList = orderList.concat(5, 2, 2, 1, 1, 1, 1);
-  else if (r < 0.4) orderList = orderList.concat(4, 2, 2, 2, 1);
-  else if (r < 0.6) orderList = orderList.concat(3, 3, 2, 2, 1);
-  else if (r < 0.8) orderList = orderList.concat(5, 2, 1, 1, 1, 1, 1);
-  else if (r < 0.9) orderList = orderList.concat(4, 2, 2, 1, 1, 1);
-  else              orderList = orderList.concat(5, 3, 3, 3);
+//  var orderList = [5, 4, 4, 3, 3, 2, 2, 2, 1];
+//  r = Math.random();
+//  if (r < 0.2) orderList = orderList.concat(5, 2, 2, 1, 1, 1, 1);
+//  else if (r < 0.4) orderList = orderList.concat(4, 2, 2, 2, 1);
+//  else if (r < 0.6) orderList = orderList.concat(3, 3, 2, 2, 1);
+//  else if (r < 0.8) orderList = orderList.concat(5, 2, 1, 1, 1, 1, 1);
+//  else if (r < 0.9) orderList = orderList.concat(4, 2, 2, 1, 1, 1);
+//  else              orderList = orderList.concat(5, 3, 3, 3);
 
 
   //console.log("placeStartingPolys(): "+orderList);
@@ -239,7 +239,9 @@ function appendRandomCellToPoly(spawnGrid, id, order) {
     }
   }
 
-  var skipProbability = Math.min(0.5, Math.max(0.0, 0.2*(order-3)));
+  var skipWhen2NeighborsProbability = 0;
+  if (order === 4) skipWhen2NeighborsProbability = 0.1;
+  else if (order >= 5) skipWhen2NeighborsProbability = 0.5;
 
   while (visitedCount < totalEmptyCells) {
     var x = rInt(spawnGrid.length);
@@ -259,7 +261,7 @@ function appendRandomCellToPoly(spawnGrid, id, order) {
       var neighborCount = countNeighbor4WithID(spawnGrid, x, y, id);
 
       if (neighborCount > 0) {
-        if ((neighborCount === 2) && (Math.random() < skipProbability)) skipForMoreEvenShapeDistribution = true;
+        if ((neighborCount === 2) && (Math.random() < skipWhen2NeighborsProbability)) skipForMoreEvenShapeDistribution = true;
         //else if ((neighborCount === 3) && (Math.random() < 0.5)) skipForMoreEvenShapeDistribution = true;
         else {
           spawnGrid[x][y] = id;

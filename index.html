@@ -33,7 +33,7 @@
 			<a style="font:20px arial; margin-right:50px" href="#close" title="Close" class="close">Keep Playing</a>
 			<h2 style="text-align:center">You Win!</h2>
 
-			<p>Score: [TODO SHOW SCORE]</p>
+			<p>Score: <b id="gameWonScore">ERROR</b></p>
 			TODO: SOCIAL BUTTONS
 			<br />
 		</div>
@@ -43,37 +43,38 @@
 		<div style="font:25px arial;letter-spacing:-1px;font-weight:800;">
 			<a style="font:20px arial;" onClick="newGame()" href="#close" title="Close" class="close">New Game</a>
 			<h2 style="text-align:center">Game Over</h2>
-			<p>Your Score: [TODO SHOW SCORE]</p>
+			<p>Score: <b id="gameOverScore">ERROR</b></p>
 			<br />
 		</div>
 	</div>
 
 	<div id="instructions" class="modalDialog">
 		<div style="font:16px arial;letter-spacing:-1px;font-weight:800;">
-			<a style="font:16px arial; margin-top:25px" href="#close" title="Close" class="close">Close</a>
+			<a style="font:16px arial; margin-top:70px" href="#close" title="Close" class="close">Close</a>
 			<h2 style="text-align:center">Instructions</h2>
-                        <p><em>Move</em> a shape by Left Click-&-Drag.</p>
-                        <p><em>Rotate</em> a shape by Right-Clicking while Left-Click Dragging.</p>
-
-
-            <p>Score points by covering an N by N box with <i>polyomino</i> shapes that are:<br>
-            1) All the same color and<br>
-            2) Each composed of less than N squares.</p>
-
-            <p>This will collapse all the shapes in the N by N box into a single <i>polyomino</i>
-                composed of N squares.</p>
-
-			<p>Example: Cover a 3<small>x</small>3 box with <i>dominos</i> to spawn a <i>tromino</i>:
-                <br><IMG src="images/Instructions_3x3.png" border="0"> &rArr; <IMG src="images/Instructions_Tro1.png" border="0">
-                or <IMG src="images/Instructions_Tro2.png" border="0"><br><br>
-            </p>
-
-            <p><em>Win</em> by continuing to merge shapes until you form a <i>hexomino</i>
-                (a polyonimo composed of 6 squares).</p>
-
-            <p>Careful: Every time you move or rotate a <i>polyonimo</i>, a new <i>monomino</i>
-                or <i>domino</i> is added to your board!</p>
-			<br />
+			<p><em>Move</em> a shape by Left Click-&-Drag.</p>
+			<p><em>Rotate</em> a shape by Right-Clicking while Left-Click Dragging.</p>
+			<ul>
+				<li>Fill squares with <i>polyomino</i> shapes of the same color to make a new, bigger polyomino.</li>
+				<li>Bigger squares = bigger polyominos! </li>
+				<li>Remember, you can never make a same size or smaller polyomino as the ones you're building with.</li>
+			</ul>
+			<br/>
+			<p>
+				Example: A 3<small>x</small>3 square of <i>dominos</i> spawns a <i>tromino</i>:
+				<br/><br/>
+				<em>
+					<IMG src="images/Instructions_3x3.png" border="0">
+					&rArr;
+					<IMG src="images/Instructions_Tro1.png" border="0">
+					or
+					<IMG src="images/Instructions_Tro2.png" border="0">
+					<br><br>
+				</em>
+			</p>
+			<p><em>Win</em> by forming a <i>hexomino</i>(has six  squares).</p>
+			<br/>
+			<br/>
 		</div>
 	</div>
 
@@ -85,16 +86,9 @@
 			<button class="btn" style="color:#424242" onclick="location='#instructions'">##<a id="nav-toggle" href="#"><span></span></a></button>
 			<div class="score">0</div>
 			<div class="highscore">0</div>
-
 		</div>
 
 		<br/>
-
-
-		<div class="beforeGrid">
-
-		</div>
-
 
 		<div class="canvas_div" id="canvas_div">
 			<canvas class="cvs" id="canvas">Sorry, your browser does not support HTML5 Canvas</canvas>

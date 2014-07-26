@@ -33,7 +33,7 @@ function loadGame(){
 			var storedBoard = JSON.parse(localStorage.getItem("board"));
 			if(!storedBoard)
 				return false;
-			console.log(storedBoard);
+			//console.log(storedBoard);
 			board = new grid(gridSize);
 			for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
 				var s = storedBoard[i][j];
@@ -120,7 +120,7 @@ $(function(){
 
 	// setup game
 	var success = loadGame();
-	console.log(success);
+	//console.log(success);
 	if(!success)
 		newGame();
 	updateScoreBoxes();

@@ -11,6 +11,7 @@
 
 var CELL_EMPTY = -1;
 var CELL_VISITED = -2;
+var CELL_NONEXISTANT_ID = -3;
 
 //=======================================================================================
 function placeStartingPolys() {
@@ -32,6 +33,8 @@ function placeStartingPolys() {
   else if (r < 0.8) orderList = orderList.concat(5, 2, 1, 1, 1, 1, 1);
   else if (r < 0.9) orderList = orderList.concat(4, 2, 2, 1, 1, 1);
   else              orderList = orderList.concat(5, 3, 3, 3);
+
+  //var orderList = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1 , 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 
 
   //console.log("placeStartingPolys(): "+orderList);
@@ -87,6 +90,7 @@ function spawnMonoOrDomino() {
   }
   currentlyAnimating = true;
   triggerDetectSquares = true;
+  saveGame();
 }
 
 
@@ -142,6 +146,7 @@ function spawnBlockInRandomLocation(order, animationOrder) {
 function squareToPoly(left,top,order) {
 //=======================================================================================
   //console.log("squareToPoly("+left+","+top+","+order+") blockIdOfLastBlockPlaced="+blockIdOfLastBlockPlaced);
+  if (blockIdOfLastBlockPlaced === undefined) blockIdOfLastBlockPlaced = CELL_NONEXISTANT_ID;
 
   var spawnGrid = matrix(order, order, CELL_EMPTY);
 
@@ -150,7 +155,7 @@ function squareToPoly(left,top,order) {
 	// TODO: move these to the bottom of squareToPoly() vvvvvvvvvvvv
 	// calculate score, handle combos
 	comboActiveEvt(order*100+1000); // TODO: CHANGE TIMING WITH NEW ANIMATION
-	if(comboActiveCtr === 1)comboCtr = 1;
+	if(comboActiveCtr === 1) comboCtr = 1;
 	else comboCtr++;
 	addToScore(order, parentOrder, comboCtr);
 
@@ -174,6 +179,7 @@ function squareToPoly(left,top,order) {
 
     for (var i = 0; i < cellsNeeded; i++) {
       addedCoordinate = appendRandomCellToPoly(spawnGrid, childId, order);
+      //if (addedCoordinate) console.log("    Added Cell: " + addedCoordinate. x + ", "+ addedCoordinate.y);
     }
     hasHoles = doesPolyHaveHoles(spawnGrid, order, childId);
   }
@@ -442,13 +448,8 @@ function doesPolyHaveHoles(spawnGrid, order, id) {
 //=======================================================================================
 function copyBoardToMatrix(myMatrix, left, top, size, onlyBlockId, childID) {
 //=======================================================================================
-  if(onlyBlockId === undefined) {
-    //console.log("    copyBoardToMatrix: left=" + left + ", top=" + top + ", size=" + size);
-  }
-  else {
-    //console.log("    copyBoardToMatrix: left=" + left + ", top=" + top + ", size=" + size + ", onlyBlockId=" + onlyBlockId + ", childID=" + childID);
-  }
-  var filledCellCount = 0;
+
+  var filledCount = 0;
   for (var x = left; x < left+size; x++) {
     for (var y = top; y < top+size; y++) {
       var myCell = board.getCell(x, y);
@@ -458,16 +459,18 @@ function copyBoardToMatrix(myMatrix, left, top, size, onlyBlockId, childID) {
       if (myCell.occupied || myCell.locked) {
         if (onlyBlockId === undefined) {
           myMatrix[xx][yy] = myCell.id;
-          filledCellCount++;
+          filledCount++;
+          //console.log("          Found Cell: board.getCell("+x+", "+y+")="+myCell.id+":  ==>  xx=" + xx+", yy="+yy +", filledCellCount="+filledCellCount);
+
         }
         else if (myCell.id === onlyBlockId) {
           myMatrix[xx][yy] = childID;
-          filledCellCount++;
+          filledCount++;
           //console.log("          id === onlyBlockID: x="+x+", y="+y+" ==>  xx=" + xx+", yy="+yy +", filledCellCount="+filledCellCount);
         }
       }
     }
   }
-  return filledCellCount;
+  return filledCount;
 }
 

@@ -305,7 +305,7 @@ function amimateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGr
   //  The purpose is that at game start, high order polys start spawing sooner
   var animationStartDelay = animationOrder - order;
 
-  quickSetEvt(myCell, true, id, order, keyframe(order+1+animationStartDelay));
+  quickSetEvt(myCell, true, id, order, keyframe(order+animationStartDelay));
 
   slideInEvt[entryDirection](x, y, keyframe(depth+animationStartDelay),keyframe(depth+1+animationStartDelay));
   highlightEvt(x, y, keyframe(depth+1+animationStartDelay), keyframe(order+animationStartDelay))

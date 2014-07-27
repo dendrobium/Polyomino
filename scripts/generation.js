@@ -434,7 +434,7 @@ function doesPolyHaveHoles(spawnGrid, order, id) {
   var holeCount = matrixReplace(tmpGrid, CELL_EMPTY, CELL_VISITED);
 
   if (holeCount > 0) {
-    console.log("Found " + POLYONIMO_NAME[order] + " with " + holeCount +" holes");
+    //console.log("Found " + POLYONIMO_NAME[order] + " with " + holeCount +" holes");
     return true;
   }
   return false;

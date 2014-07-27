@@ -1,5 +1,5 @@
 function newId(){
-	return ++blockId;
+  return ++blockId;
 }
 
 var cell = function(){

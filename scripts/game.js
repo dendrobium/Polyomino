@@ -9,6 +9,7 @@ function initGame(){
 	triggerDetectSquares = true;
 	spawnNewPoly         = false;
 	gameWon              = false
+	polyMoved            = false;
 	comboActiveCtr       = 0;
 }
 

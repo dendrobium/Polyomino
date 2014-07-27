@@ -13,7 +13,7 @@ cellSize           = 32; // may vary during runtime as the application SHOULD si
 initPieceCount     = 4;
 dragSpeed          = 0.3;
 hoverOffset        = 8;
-keyframeSpeed      = 150;
+keyframeSpeed      = 100;
 goalOrder          = 6;  // for now, trying 6/5 with gridsize = 10/8, respectively
 cellSizeThreshold  = 50; // may need tweaking
 

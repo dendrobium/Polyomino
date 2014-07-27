@@ -36,7 +36,6 @@ function placeStartingPolys() {
 
   //var orderList = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1 , 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 
-
   //console.log("placeStartingPolys(): "+orderList);
 
   function shuffle(o){

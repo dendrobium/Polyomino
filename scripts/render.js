@@ -1,3 +1,11 @@
+var interpolate = function(val,goal,mult){
+	var origVal = val;
+	val += (goal-val)*mult*elapsed;
+	if(origVal < goal && val > goal)val = goal;
+	if(origVal > goal && val < goal)val = goal;
+	return val;
+};
+
 function interpColor(c1,c2,interp){
 	rgb(c1.r+(c2.r-c1.r)*interp,
 	    c1.g+(c2.g-c1.g)*interp,
@@ -59,6 +67,11 @@ function render(){
 	if(!currentlyAnimating)return;
 	currentlyAnimating = false;
 
+	score = Math.ceil(interpolate(score,goalScore,0.0001));
+	if(score > highScore)highScore = score;
+	if(score != goalScore)currentlyAnimating = true;
+	updateScoreBoxes();
+
 	gfx.clearRect(0,0,canvasWidth,canvasHeight);
 	gfx.save();
 	gfx.translate(paneThickness,paneThickness);
@@ -85,14 +98,6 @@ function render(){
 	if(dragging){
 		currentlyAnimating = true;
 		var goalHover = snapping?0:hoverOffset;
-
-		var interpolate = function(val,goal,mult){
-			var origVal = val;
-			val += (goal-val)*mult*elapsed;
-			if(origVal < goal && val > goal)val = goal;
-			if(origVal > goal && val < goal)val = goal;
-			return val;
-		};
 
 		floatX = interpolate(floatX,goalFloatX       ,0.016);
 		floatY = interpolate(floatY,goalFloatY       ,0.016);

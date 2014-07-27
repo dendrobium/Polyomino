@@ -11,6 +11,7 @@ function initGame(){
 	gameWon              = false
 	polyMoved            = false;
 	comboActiveCtr       = 0;
+	score                = 0;
 }
 
 function newGame(){
@@ -18,8 +19,11 @@ function newGame(){
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
 		board.setCell(i,j,new cell());
 
-	blockId = 0;
-	score   = 0;
+	inactiveEvtLs = [];
+	activeEvtLs = [];
+
+	blockId   = 0;
+	goalScore = 0;
 
 	initGame();
 	placeStartingPolys();
@@ -42,8 +46,8 @@ function loadGame(){
 				c.quickSet(s.occupied,s.id,s.order);
 				board.setCell(i,j,c);
 			}
-			blockId = parseInt(localStorage.getItem("blockId"));
-			score   = parseInt(localStorage.getItem("score"));
+			blockId   = parseInt(localStorage.getItem("blockId"));
+			goalScore = parseInt(localStorage.getItem("score"));
 			var testscoreFuncVersion = parseInt(localStorage.getItem("scoreFuncVersion"));
 			if(scoreFuncVersion === testscoreFuncVersion)
 				highScore = parseInt(localStorage.getItem("highScore"));
@@ -60,7 +64,7 @@ function saveGame(){
 	if(typeof(Storage) !== "undefined") {
 		localStorage.setItem("board",            JSON.stringify(board));
 		localStorage.setItem("blockId",          blockId);
-		localStorage.setItem("score",            score);
+		localStorage.setItem("score",            goalScore);
 		localStorage.setItem("scoreFuncVersion", scoreFuncVersion);
 		localStorage.setItem("highScore",        highScore);
 	}
@@ -73,9 +77,8 @@ function gameOver(){
 //==  SCORE RELATED  =========================================================//
 
 function addToScore(squareOrder,pieceOrder,multiplier){
-	score += Math.floor(Math.pow(squareOrder*squareOrder*pieceOrder, multiplier*0.5+0.5));
-	if(score > highScore)highScore = score;
-	updateScoreBoxes();
+	goalScore += Math.floor(Math.pow(squareOrder*squareOrder*pieceOrder, multiplier*0.5+0.5));
+	currentlyAnimating = true;
 }
 
 var scoreFuncVersion = btoa(addToScore.toString());

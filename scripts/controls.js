@@ -47,7 +47,7 @@ function touchHandler(event){
 	                              false,false,false,button,null);
 	console.log(simulatedEvent);
 	first.target.dispatchEvent(simulatedEvent);
-	event.preventDefault();
+	//event.preventDefault();
 }
 
 function setupControls(){

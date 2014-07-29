@@ -70,7 +70,6 @@ function render(){
 	score = Math.ceil(interpolate(score,goalScore,0.0001));
 	if(score > highScore)highScore = score;
 	if(score != goalScore)currentlyAnimating = true;
-	updateScoreBoxes();
 
 	gfx.clearRect(0,0,canvasWidth,canvasHeight);
 	renderTopBar();

@@ -84,13 +84,7 @@ function addToScore(squareOrder,pieceOrder,multiplier){
 	goalScore += Math.floor(Math.pow(squareOrder*squareOrder*pieceOrder, multiplier*0.5+0.5));
 	currentlyAnimating = true;
 }
-
 var scoreFuncVersion = btoa(addToScore.toString());
-
-function updateScoreBoxes(){
-
-
-}
 
 //==  ENTRY FUNCTION  ========================================================//
 
@@ -127,7 +121,6 @@ $(function(){
 	//console.log(success);
 	if(!success)
 		newGame();
-	updateScoreBoxes();
 
 	// begin game
 	tick=new Date().getTime();

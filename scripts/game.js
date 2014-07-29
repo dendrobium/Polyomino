@@ -52,7 +52,7 @@ function loadGame(){
 			}
 			blockId   = parseInt(localStorage.getItem("blockId"));
 			goalScore = parseInt(localStorage.getItem("score"));
-			var testscoreFuncVersion = parseInt(localStorage.getItem("scoreFuncVersion"));
+			var testscoreFuncVersion = localStorage.getItem("scoreFuncVersion");
 			if(scoreFuncVersion === testscoreFuncVersion)
 				highScore = parseInt(localStorage.getItem("highScore"));
 			else
@@ -118,6 +118,8 @@ $(function(){
 			// XXX: direct user to instructions
 			drawInstructions = true;
 		}
+	} else { //they have no local storage: assume 1st time visitor
+		drawInstructions = true;
 	}
 
 	// setup game

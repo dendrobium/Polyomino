@@ -31,7 +31,7 @@ function touchHandler(event){
 	var type    = "";
 
 	switch(event.type){
-		case "touchstart" : type = "mousedown";  console.log(event); break;
+		case "touchstart" : type = "mousedown"; break;
 		case "touchmove"  : type = "mousemove"; break;
 		case "touchend"   : type = "mouseup";   break;
 		default:return;
@@ -39,11 +39,13 @@ function touchHandler(event){
 	var button = 0;
 	if(first.identifier >= 1)
 		button = 2;
+	document.getElementById("foo").innerHTML = button;
 	var simulatedEvent = document.createEvent("MouseEvent");
 	simulatedEvent.initMouseEvent(type,true,true,window,1,
 	                              first.screenX,first.screenY,
 	                              first.clientX,first.clientY,false,
 	                              false,false,false,button,null);
+	console.log(simulatedEvent);
 	first.target.dispatchEvent(simulatedEvent);
 	event.preventDefault();
 }
@@ -72,7 +74,7 @@ function setupControls(){
 	canvas.addEventListener("mousedown",function(e){
 		mouse = getMousePos(e);
 		rawMouse = getRawMousePos(e);
-		document.getElementById("foo").innerHTML = e.which;
+
 		if(drawMenu){
 			drawMenu = false;
 			currentlyAnimating = true;

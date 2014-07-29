@@ -264,8 +264,8 @@ function renderMenu(){
 
 window.onresize = function(){
 	gridOffsetY   = 60;
-	var gridMarginY = 40; //will be used soon, don't remove
-	var gridPaddingY = 40;
+	var gridMarginY = 60; //will be used soon, don't remove
+	var gridPaddingY = 20;
 
 	canvasWidth   = canvas.width  = window.innerWidth;
 	canvasHeight  = canvas.height = window.innerHeight-gridMarginY;

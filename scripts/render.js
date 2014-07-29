@@ -264,11 +264,16 @@ function renderMenu(){
 
 window.onresize = function(){
 	gridOffsetY   = 60;
-	var gridMarginY = 0; //will be used soon, don't remove
+	var gridMarginY = 40; //will be used soon, don't remove
 	var gridPaddingY = 40;
 
 	canvasWidth   = canvas.width  = window.innerWidth;
 	canvasHeight  = canvas.height = window.innerHeight-gridMarginY;
+	document.getElementById("cvs_div").style.width = canvasWidth+"px";
+	document.getElementById("cvs_div").style.height = canvasHeight+"px";
+	document.getElementById("social_div").style.width = canvasWidth+"px";
+	document.getElementById("social_div").style.height = gridMarginY+"px";
+	document.getElementById("social_div").style.top = canvasHeight+"px";
 
 
 	cellSize      = Math.floor((Math.min(window.innerWidth, window.innerHeight-gridPaddingY-gridOffsetY-gridMarginY)+paneThickness*2)/gridSize);

@@ -11,6 +11,7 @@
 
 var CELL_EMPTY = -1;
 var CELL_VISITED = -2;
+var CELL_NONEXISTANT_ID = -3;
 
 //=======================================================================================
 function placeStartingPolys() {
@@ -33,11 +34,18 @@ function placeStartingPolys() {
   else if (r < 0.9) orderList = orderList.concat(4, 2, 2, 1, 1, 1);
   else              orderList = orderList.concat(5, 3, 3, 3);
 
+  //var orderList = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1 , 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 
   //console.log("placeStartingPolys(): "+orderList);
 
+  function shuffle(o){
+      for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+      return o;
+  };
+
+  shuffle(orderList);
   for (var i=0; i<orderList.length; i++) {
-    spawnStartingPolys(orderList[i]);
+    spawnStartingPolys(orderList[i],i);
   }
   currentlyAnimating = true;
 }
@@ -46,7 +54,7 @@ function placeStartingPolys() {
 
 
 //=======================================================================================
-function spawnStartingPolys(order) {
+function spawnStartingPolys(order,delay) {
 //=======================================================================================
   //console.log("spawnStartingPolys("+order+")");
 
@@ -57,11 +65,10 @@ function spawnStartingPolys(order) {
   //Therefore, to avoid infinite loop in such cases, after 3 trys, the
   //  requested order is reduced by 1.
   // If order reaches 0, then the function returns without haveing spawned anything.
-  var animationOrder = 5;
   while (order >= 1) {
     for (var n = 0; n < 3; n++) {
 
-      var done = spawnBlockInRandomLocation(order, animationOrder);
+      var done = spawnBlockInRandomLocation(order, delay);
       if (done) return;
     }
     order = order - 1;
@@ -87,6 +94,7 @@ function spawnMonoOrDomino() {
   }
   currentlyAnimating = true;
   triggerDetectSquares = true;
+  saveGame();
 }
 
 
@@ -95,21 +103,19 @@ function spawnMonoOrDomino() {
 
 
 //=======================================================================================
-function spawnBlockInRandomLocation(order, animationOrder) {
+function spawnBlockInRandomLocation(order, delay) {
 //=======================================================================================
   //This function is called when:
   //  1) spawning starting polys.
   //  2) spawning mono or dominos when a block is moved.
 
-  if (animationOrder === undefined) animationOrder = order;
+  if (delay === undefined) delay = 0;
 
   var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
   copyBoardToMatrix(spawnGrid, 0, 0, gridSize);
 
   var id = newId();
   //console.log("spawnBlockInRandomLocation("+order+"): id="+id);
-
-
 
   for (var i = 0; i < order; i++) {
     var cellAdded = appendRandomCellToPoly(spawnGrid, id, order);
@@ -125,11 +131,10 @@ function spawnBlockInRandomLocation(order, animationOrder) {
   var start = matrixGetRandomCoordinateWithGivenValue(spawnGrid, id);
   var next = getCoordinateOfCellInRandomDirectionWithGivenValue(spawnGrid, start.x,start.y, id);
 
-
   //console.log("    start= ("+start.x+", "+start.y+"),  next=("+next.x+", "+next.y+"), next.dir="+next.dir);
 
   if (next != undefined) dir =  next.dir;
-  amimateBlockAggregationInBreathFirstOrder(start.x,start.y, dir, spawnGrid, order, 0, id, animationOrder);
+  amimateBlockAggregationInBreathFirstOrder(start.x,start.y, dir, spawnGrid, order, 0, id, delay);
 
   return true;
 }
@@ -142,6 +147,7 @@ function spawnBlockInRandomLocation(order, animationOrder) {
 function squareToPoly(left,top,order) {
 //=======================================================================================
   //console.log("squareToPoly("+left+","+top+","+order+") blockIdOfLastBlockPlaced="+blockIdOfLastBlockPlaced);
+  if (blockIdOfLastBlockPlaced === undefined) blockIdOfLastBlockPlaced = CELL_NONEXISTANT_ID;
 
   var spawnGrid = matrix(order, order, CELL_EMPTY);
 
@@ -150,7 +156,7 @@ function squareToPoly(left,top,order) {
 	// TODO: move these to the bottom of squareToPoly() vvvvvvvvvvvv
 	// calculate score, handle combos
 	comboActiveEvt(order*100+1000); // TODO: CHANGE TIMING WITH NEW ANIMATION
-	if(comboActiveCtr === 1)comboCtr = 1;
+	if(comboActiveCtr === 1) comboCtr = 1;
 	else comboCtr++;
 	addToScore(order, parentOrder, comboCtr);
 
@@ -174,6 +180,7 @@ function squareToPoly(left,top,order) {
 
     for (var i = 0; i < cellsNeeded; i++) {
       addedCoordinate = appendRandomCellToPoly(spawnGrid, childId, order);
+      //if (addedCoordinate) console.log("    Added Cell: " + addedCoordinate. x + ", "+ addedCoordinate.y);
     }
     hasHoles = doesPolyHaveHoles(spawnGrid, order, childId);
   }
@@ -282,7 +289,7 @@ function appendRandomCellToPoly(spawnGrid, id, order) {
 
 //LUKE: Update starting polys and mono/domino animation here.
 //=======================================================================================
-function amimateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGrid, order, depth, id, animationOrder) {
+function amimateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGrid, order, depth, id, delay) {
 //=======================================================================================
   //Breath first Recersive walk through each cell of block to set animation timings at
   //  recersion level. Recersivaly walk each cell.
@@ -298,20 +305,16 @@ function amimateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGr
   spawnGrid[x][y] = CELL_VISITED;
 
   var myCell = board.getCell(x, y);
-
   myCell.locked = true;
 
-  //AnimationStartDelay is only non-zero for lower order polys spaned at the START of a GAME.
-  //  The purpose is that at game start, high order polys start spawing sooner
-  var animationStartDelay = animationOrder - order;
-
-  quickSetEvt(myCell, true, id, order, keyframe(order+1+animationStartDelay));
-
-  slideInEvt[entryDirection](x, y, keyframe(depth+animationStartDelay),keyframe(depth+1+animationStartDelay));
-  highlightEvt(x, y, keyframe(depth+1+animationStartDelay), keyframe(order+animationStartDelay))
-  fadeOutEvt(x, y, keyframe(order+animationStartDelay), keyframe(order+2+animationStartDelay));
-  unlockEvt(myCell, keyframe(order+2+animationStartDelay));
-
+  var color = polyColor[order];
+  slideInEvt[entryDirection](x, y, keyframe(depth+(delay/4)),keyframe(depth+1+(delay/4)),color.secondary);
+  highlightEvt(x, y, keyframe(depth+1+(delay/4)), keyframe(order+order+(delay/4)),color.secondary);
+  slideInEvt[entryDirection](x, y, keyframe(depth+order+(delay/4)),keyframe(depth+order+1+(delay/4)),color.primary);
+  highlightEvt(x, y, keyframe(depth+order+1+(delay/4)), keyframe(order+order+(delay/4)),color.primary);
+  quickSetEvt(myCell, true, id, order, keyframe(order+order+(delay/4)));
+  fadeOutEvt(x, y, keyframe(order+order+(delay/4)), keyframe(order+order+2+(delay/4)),color.primary);
+  unlockEvt(myCell, keyframe(order+order+2+(delay/4)));
 
   while(true) {
     var coordinate = getCoordinateOfCellInRandomDirectionWithGivenValue(spawnGrid, x, y, id);
@@ -320,7 +323,7 @@ function amimateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGr
     if (coordinate === undefined) return;
 
     amimateBlockAggregationInBreathFirstOrder(
-      coordinate.x, coordinate.y, coordinate.dir, spawnGrid, order, depth + 1, id, animationOrder);
+      coordinate.x, coordinate.y, coordinate.dir, spawnGrid, order, depth + 1, id, delay);
 
   }
 }
@@ -431,7 +434,7 @@ function doesPolyHaveHoles(spawnGrid, order, id) {
   var holeCount = matrixReplace(tmpGrid, CELL_EMPTY, CELL_VISITED);
 
   if (holeCount > 0) {
-    console.log("Found " + POLYONIMO_NAME[order] + " with " + holeCount +" holes");
+    //console.log("Found " + POLYONIMO_NAME[order] + " with " + holeCount +" holes");
     return true;
   }
   return false;
@@ -442,13 +445,8 @@ function doesPolyHaveHoles(spawnGrid, order, id) {
 //=======================================================================================
 function copyBoardToMatrix(myMatrix, left, top, size, onlyBlockId, childID) {
 //=======================================================================================
-  if(onlyBlockId === undefined) {
-    //console.log("    copyBoardToMatrix: left=" + left + ", top=" + top + ", size=" + size);
-  }
-  else {
-    //console.log("    copyBoardToMatrix: left=" + left + ", top=" + top + ", size=" + size + ", onlyBlockId=" + onlyBlockId + ", childID=" + childID);
-  }
-  var filledCellCount = 0;
+
+  var filledCount = 0;
   for (var x = left; x < left+size; x++) {
     for (var y = top; y < top+size; y++) {
       var myCell = board.getCell(x, y);
@@ -458,16 +456,18 @@ function copyBoardToMatrix(myMatrix, left, top, size, onlyBlockId, childID) {
       if (myCell.occupied || myCell.locked) {
         if (onlyBlockId === undefined) {
           myMatrix[xx][yy] = myCell.id;
-          filledCellCount++;
+          filledCount++;
+          //console.log("          Found Cell: board.getCell("+x+", "+y+")="+myCell.id+":  ==>  xx=" + xx+", yy="+yy +", filledCellCount="+filledCellCount);
+
         }
         else if (myCell.id === onlyBlockId) {
           myMatrix[xx][yy] = childID;
-          filledCellCount++;
+          filledCount++;
           //console.log("          id === onlyBlockID: x="+x+", y="+y+" ==>  xx=" + xx+", yy="+yy +", filledCellCount="+filledCellCount);
         }
       }
     }
   }
-  return filledCellCount;
+  return filledCount;
 }
 

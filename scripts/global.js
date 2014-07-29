@@ -13,8 +13,8 @@ cellSize           = 32; // may vary during runtime as the application SHOULD si
 initPieceCount     = 4;
 dragSpeed          = 0.3;
 hoverOffset        = 8;
-keyframeSpeed      = 150;
-goalOrder          = 5;
+keyframeSpeed      = 100;
+goalOrder          = 5; //I think this is 0-indexed, hence the bugs
 
 //==  POLYOMINO COLORS  ======================================================//
 
@@ -34,7 +34,7 @@ var polyColor = [
 
 //==  GLOBAL VARS  ===========================================================//
 
-var blockId, score;
+var blockId, score, goalScore;
 var board, floating, transfer, transferId;
 var mouse, dragging, snapping, mouseDX, mouseDY, downGX, downGY, mouseGX, mouseGY, placeX, placeY;
 var goalFloatX, goalFloatY, floatX, floatY, hover, goalRot, rot;
@@ -76,3 +76,4 @@ var minGridPixelSize = 500;
 var gridOffsetX = 0;
 var gridOffsetY = 0;
 var gridPixelSize = 500;
+var minCanvasSize = 300;

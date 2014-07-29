@@ -72,6 +72,7 @@ function setupControls(){
 	canvas.addEventListener("mousedown",function(e){
 		mouse = getMousePos(e);
 		rawMouse = getRawMousePos(e);
+		document.getElementById("foo").innerHTML = e.which;
 		if(drawMenu){
 			drawMenu = false;
 			currentlyAnimating = true;

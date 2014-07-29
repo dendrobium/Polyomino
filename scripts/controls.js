@@ -39,7 +39,8 @@ function touchHandler(event){
 	var button = 0;
 	if(first.identifier >= 1)
 		button = 2;
-	document.getElementById("foo").innerHTML = touches.length;
+	console.log(first);
+	document.getElementById("foo").innerHTML = first.identifier;
 	var simulatedEvent = document.createEvent("MouseEvent");
 	simulatedEvent.initMouseEvent(type,true,true,window,1,
 	                              first.screenX,first.screenY,

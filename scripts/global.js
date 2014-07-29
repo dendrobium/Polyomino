@@ -14,8 +14,7 @@ initPieceCount     = 4;
 dragSpeed          = 0.3;
 hoverOffset        = 8;
 keyframeSpeed      = 150;
-goalOrder          = 6;  // for now, trying 6/5 with gridsize = 10/8, respectively
-cellSizeThreshold  = 50; // may need tweaking
+goalOrder          = 5;
 
 //==  POLYOMINO COLORS  ======================================================//
 
@@ -42,7 +41,7 @@ var goalFloatX, goalFloatY, floatX, floatY, hover, goalRot, rot;
 var currentlyAnimating, triggerDetectSquares, spawnNewPoly, polyMoved;
 var blockIdOfLastBlockPlaced;
 var comboActiveCtr, comboCtr;
-var gameWon;
+var gameWon, gameLost;
 var highScore = 0; //in case first time visitor
 
 //== GRID DIRECTION ==========================================================//
@@ -73,4 +72,7 @@ var canvas = null;
 var gfx = null;
 var tick, elapsed;
 var canvasWidth, canvasHeight;
-var minCanvasSize = 300;
+var minGridPixelSize = 500;
+var gridOffsetX = 0;
+var gridOffsetY = 0;
+var gridPixelSize = 500;

@@ -1,6 +1,11 @@
 function getMousePos(evt){
 	var rect = canvas.getBoundingClientRect();
-	return{x:evt.clientX-rect.left-paneThickness,y:evt.clientY-rect.top-paneThickness};
+	return{x:evt.clientX-rect.left-paneThickness-gridOffsetX,y:evt.clientY-rect.top-paneThickness-gridOffsetY};
+}
+
+function getRawMousePos(evt){
+	var rect = canvas.getBoundingClientRect();
+	return{x:evt.clientX-rect.left,y:evt.clientY-rect.top};
 }
 
 function calcMouseGridVars(){
@@ -66,7 +71,11 @@ function setupControls(){
 
 	canvas.addEventListener("mousedown",function(e){
 		mouse = getMousePos(e);
-
+		rawMouse = getRawMousePos(e);
+		if(drawMenu){
+			drawMenu = false;
+			currentlyAnimating = true;
+		}
 		if(e.which === 2)debugMouseDown = !debugMouseDown;
 		if(debugMode){
 			calcMouseGridVars();
@@ -89,6 +98,29 @@ function setupControls(){
 
 		switch(e.which){
 			case 1:
+				//check buttons
+				for(var b in buttons){
+					if(buttons[b].clickLogic(rawMouse.x, rawMouse.y))
+						return;
+				}
+
+				if(gameLost){
+					gameLostOverlayShown = true;
+					currentlyAnimating = true;
+					return; //no game input after losing
+				}
+				if(gameWon && !gameWonOverlayShown){
+					//or while gameWon screen shows
+					gameWonOverlayShown = true;
+					currentlyAnimating = true;
+					return;
+				}
+				if(drawInstructions){
+					drawInstructions = false;
+					currentlyAnimating = true;
+					return;
+				}
+
 				if(dragging)return;
 				var c = board.getCell(mouse.x/cellSize,mouse.y/cellSize);
         if (c) blockIdOfLastBlockPlaced = c.id;

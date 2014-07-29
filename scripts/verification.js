@@ -52,10 +52,10 @@ function recalculateOrder(){
 }
 
 // opens game-over dialog if game is lost
-function checkGameOver(){
+function checkGameLost(){
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
 		if(!board[i][j].occupied || board[i][j].locked) return;
-	location = '#gameOver'; //CSS/HTML
+	gameLost = true;
 }
 
 // TODO: detect endgame
@@ -109,7 +109,7 @@ function detectSquares(){
 		++squaresDetected;
 	}
 
-	checkGameOver(); // XXX: is this the final place to check end game?
+	checkGameLost(); // XXX: is this the final place to check end game?
 	if(!newPolyOnMerge && squaresDetected > 0)spawnNewPoly = false;
 
 	// placing these here rather than right after squareToPoly allows for comboing

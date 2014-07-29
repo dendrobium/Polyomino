@@ -1,6 +1,6 @@
 //==  GAME UTILS  ============================================================//
 
-var resetStorage = false;
+var resetStorage = true;
 
 function initGame(){
 	dragging             = false;
@@ -8,8 +8,11 @@ function initGame(){
 	currentlyAnimating   = true;
 	triggerDetectSquares = true;
 	spawnNewPoly         = false;
-	gameWon              = false
+	gameWon              = false;
+	gameLost             = false;
 	comboActiveCtr       = 0;
+	gameWonOverlayShown  = false;
+	gameLostOverlayShown = false;
 }
 
 function newGame(){
@@ -80,10 +83,7 @@ function addToScore(squareOrder,pieceOrder,multiplier){
 var scoreFuncVersion = btoa(addToScore.toString());
 
 function updateScoreBoxes(){
-	document.querySelector(".highscore").textContent = highScore;
-	document.querySelector(".score").textContent = score;
-	$('#gameOverScore')[0].innerHTML = score;
-	$('#gameWonScore')[0].innerHTML = score;
+
 
 }
 
@@ -111,7 +111,7 @@ $(function(){
 			localStorage.setItem("highScore",        0);
 
 			// XXX: direct user to instructions
-			location = "#instructions";
+			drawInstructions = true;
 		}else{
 			// XXX: direct user to game
 			location = "#close";

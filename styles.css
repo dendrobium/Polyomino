@@ -1,3 +1,9 @@
+*{
+	position:absolute;
+	padding:0;
+	margin:0;
+}
+
 .cvs {
 	-moz-user-select:      none;
 	-khtml-user-select:    none;
@@ -5,132 +11,18 @@
 	-webkit-touch-callout: none;
 	-ms-user-select:       none;
 	user-select:           none;
-	padding:1px;
-	background:#424242;
-	margin-top:2px;
-	border-radius: 0px;
-	color:white
-}
-em {
-	color: green;
-	font-family: arial;
-	font-size: 120%;
-	font-weight: bold;
-	font-style:normal;
-}
-
-.game_div {
-	position:fixed;
-	right:0;
+	top:0;
 	left:0;
 	bottom:0;
-	top:0;
-	margin:0 auto;
-}
-
-.canvas_div {
-	width: 100%;
-}
-
-#nav-toggle span, #nav-toggle span:before, #nav-toggle span:after {
-	cursor: pointer;
-	border-radius: 1px;
-	margin-top:-13px;
-	height: 5px;
-	width: 35px;
-	background: white;
-	position: absolute;
-	display: block;
-	content: '';
-}
-#nav-toggle span:before {
-	top: 3px;
-}
-#nav-toggle span:after {
-	bottom: -10px;
-}
-
-.btn {
-	font-family: Arial;
-	color: #f0f0f0;
-	font-size: 20px;
+	right:0;
+	margin:0px;
+	padding:0px;
+	background:#a0a0a0;
 	border-radius: 0px;
 	border:0px;
-	background: #424242;
-	height:35px;
-	padding: 5px 30px;
-	letter-spacing: 0px;
-	font-weight:800;
-	margin-bottom: 2px;
-
+	color:white
+	position:absolute;
 }
-
-.btn:hover {
-	background: #5f5f5f;
-	-moz-box-shadow: 1px 1px 3px #000;
-	-webkit-box-shadow: 1px 1px 3px #000;
-	box-shadow: 1px 1px 3px #000;
-}
-
-
-
-.header {
-	width: 100%;
-	margin-top: 4px;
-	letter-spacing:-3px;
-	font-weight:bold;
-	color: #f0f0f0;
-
-	float: right;
-	text-align: right;
-	background: #424242;
-	margin-top: 8px;
-}
-
-.beforeGrid {
-	margin-top: 4px;
-	width: 100%;
-}
-
-
-.score, .highscore {
-	position: relative;
-	display: inline-block;
-	letter-spacing: 0px;
-	padding: 13px 30px;
-	font-size: 20px;
-	height: 25px;
-	line-height: 47px;
-	font-weight: bold;
-	color: #f0f0f0;
-
-	text-align: center;
-
-
-}
-.highscore {
-	border-left: 1px solid #f0f0f0;
-}
-
-.score:after, .highscore:after {
-	position: absolute;
-	width: 100%;
-	top: 10px;
-	left: 0;
-	font-size: 14px;
-	line-height: 5px;
-	text-align: center;
-	color: #909090;
-}
-
-.score:after {
-	content: "Score";
-}
-
-.highscore:after {
-	content: "Record";
-}
-
 
 .modalDialog {
 	position: fixed;

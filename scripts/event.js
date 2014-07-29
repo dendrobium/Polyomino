@@ -158,6 +158,6 @@ function fadeOutEvt(x,y,startTick,endTick){
 
 function gameWonEvt(){
 	new_event(0,10,null,function(){
-		location = "#gameWon";
+		gameWon = true;
 	});
 }

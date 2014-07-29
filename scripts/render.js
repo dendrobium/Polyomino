@@ -41,13 +41,14 @@ function renderGrid(g){
 	renderGridRaw(g,1,false);
 	renderGridRaw(g,3,true);
 }
-
+var a = 0;
 function render(){
 	requestAnimationFrame(render);
 	var currentTick = new Date().getTime();
 	elapsed = currentTick-tick;
 	tick = currentTick;
-
+	document.getElementById("foo").innerHTML = a;
+	a++;
 	// preprocess event list
 	processInactiveEvents();
 

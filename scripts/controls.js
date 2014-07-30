@@ -124,12 +124,11 @@ function setupControls(){
 				if(dragging)return;
 				var c = board.getCell(mouse.x/cellSize,mouse.y/cellSize);
         //console.log("Lifting cell with  id="+c.id);
-        if (c.cemented) return;
-        if (c) blockIdOfLastBlockPlaced = c.id;
 
 
         // verify locks
-				if(!c || !c.occupied || c.locked)return;
+				if(!c || !c.occupied || c.locked || c.cemented)return;
+        if (c) blockIdOfLastBlockPlaced = c.id;
 				for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
 					var b = board.getCell(i,j);
 					if(b.id === c.id && b.locked)return;

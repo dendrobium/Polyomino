@@ -137,7 +137,7 @@ function spawnBlockInRandomLocation(order, delay) {
   //console.log("    start= ("+start.x+", "+start.y+"),  next=("+next.x+", "+next.y+"), next.dir="+next.dir);
 
   if (next != undefined) dir =  next.dir;
-  amimateBlockAggregationInBreathFirstOrder(start.x,start.y, dir, spawnGrid, order, 0, id, delay, cement);
+  animateBlockAggregationInBreathFirstOrder(start.x,start.y, dir, spawnGrid, order, 0, id, delay, cement);
 
 
   return true;
@@ -295,7 +295,7 @@ function appendRandomCellToPoly(spawnGrid, id, order) {
 
 //LUKE: Update starting polys and mono/domino animation here.
 //=======================================================================================
-function amimateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGrid, order, depth, id, delay, cement) {
+function animateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGrid, order, depth, id, delay, cement) {
 //=======================================================================================
   //Breath first Recersive walk through each cell of block to set animation timings at
   //  recersion level. Recersivaly walk each cell.
@@ -313,7 +313,7 @@ function amimateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGr
   var myCell = board.getCell(x, y);
   myCell.locked = true;
   if (cement) {
-    console.log("cemented[" + x + "][" + y + "] id=" + myCell.id);
+    //console.log("cemented[" + x + "][" + y + "] id=" + myCell.id);
     myCell.cemented = true;
   }
 
@@ -332,7 +332,7 @@ function amimateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGr
     //If there is no place left to go, then back out of recursion.
     if (coordinate === undefined) return;
 
-    amimateBlockAggregationInBreathFirstOrder(
+    animateBlockAggregationInBreathFirstOrder(
       coordinate.x, coordinate.y, coordinate.dir, spawnGrid, order, depth + 1, id, delay, cement);
 
   }

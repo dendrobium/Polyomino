@@ -87,6 +87,7 @@ $(function(){
 	// setup controls and canvas element
 	canvas = document.getElementById("canvas");
 	gfx = canvas.getContext("2d");
+  tick=new Date().getTime();
 	window.onresize();  // determine grid/cell size
 	//setupInstruction(); // setup instructions based on grid size
 	setupControls();
@@ -117,6 +118,6 @@ $(function(){
 		newGame();
 
 	// begin game
-	tick=new Date().getTime();
+
 	render();
 });

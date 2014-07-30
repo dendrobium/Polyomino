@@ -123,6 +123,8 @@ function setupControls(){
 
 				if(dragging)return;
 				var c = board.getCell(mouse.x/cellSize,mouse.y/cellSize);
+        console.log("Lifting cell with  id="+c.id);
+        if (c.cemented) return;
         if (c) blockIdOfLastBlockPlaced = c.id;
 
 

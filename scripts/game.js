@@ -3,19 +3,14 @@
 var resetStorage = false;
 
 function initGame(){
-	dragging             = false;
-	snapping             = false;
-	currentlyAnimating   = true;
-	triggerDetectSquares = true;
-	spawnNewPoly         = false;
-	gameWon              = false;
-	gameLost             = false;
-	comboActiveCtr       = 0;
-	gameWonOverlayShown  = false;
-	gameLostOverlayShown = false;
-	polyMoved            = false;
-	comboActiveCtr       = 0;
-	score                = 0;
+	dragging = snapping             = false;
+	currentlyAnimating              = true;
+	triggerDetectSquares            = true;
+	spawnNewPoly = polyMoved        = false;
+	gameWon  = gameWonOverlayShown  = false;
+	gameLost = gameLostOverlayShown = false;
+	comboActiveCtr                  = 0;
+	score                           = 0;
 }
 
 function newGame(){

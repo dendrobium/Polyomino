@@ -42,6 +42,7 @@ function loadGame(){
 				var s = storedBoard[i][j];
 				var c = new cell();
 				c.quickSet(s.occupied,s.id,s.order);
+        c.cemented = s.cemented;
 				board.setCell(i,j,c);
 			}
 			blockId   = parseInt(localStorage.getItem("blockId"));

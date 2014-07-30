@@ -19,7 +19,10 @@ function renderGridRaw(g,offset,usePrimary){
 		var c = g.getCell(i,j);
 		if(!c.occupied)continue;
 
-		if(usePrimary){
+    if(c.cemented) {
+      rgb(0.5, 0.5, 0.5);
+    }
+		else if(usePrimary){
 			if(Math.floor(c.order)===0)rgb(polyColor[c.order].primary.r,polyColor[c.order].primary.g,polyColor[c.order].primary.b);
 			else interpColor(polyColor[Math.floor(c.order)].primary,polyColor[Math.ceil(c.order)].primary,c.order%1);
 		}else{
@@ -34,6 +37,8 @@ function renderGridRaw(g,offset,usePrimary){
 		var down = g.getCell(i,j+1);
 		if(down && down.occupied && down.id === c.id)
 			renderRect(i*cs+offset,(j+1)*cs-offset-1,(i+1)*cs-offset,(j+1)*cs+offset+1);
+
+
 	}
 }
 

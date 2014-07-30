@@ -115,7 +115,7 @@ function spawnBlockInRandomLocation(order, delay) {
   copyBoardToMatrix(spawnGrid, 0, 0, gridSize);
 
   var id = newId();
-  console.log("spawnBlockInRandomLocation("+order+"): id="+id);
+  //console.log("spawnBlockInRandomLocation("+order+"): id="+id);
 
   for (var i = 0; i < order; i++) {
     var cellAdded = appendRandomCellToPoly(spawnGrid, id, order);
@@ -295,7 +295,7 @@ function appendRandomCellToPoly(spawnGrid, id, order) {
 
 //LUKE: Update starting polys and mono/domino animation here.
 //=======================================================================================
-function animateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGrid, order, depth, id, delay) {
+function animateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGrid, order, depth, id, delay, cement) {
 //=======================================================================================
   //Breath first Recersive walk through each cell of block to set animation timings at
   //  recersion level. Recersivaly walk each cell.

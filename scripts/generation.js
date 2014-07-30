@@ -313,7 +313,7 @@ function amimateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGr
   var myCell = board.getCell(x, y);
   myCell.locked = true;
   if (cement) {
-    console.log("cemented[" + x + "][" + y + "] id=" + myCell.id);
+    //console.log("cemented[" + x + "][" + y + "] id=" + myCell.id);
     myCell.cemented = true;
   }
 

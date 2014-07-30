@@ -83,7 +83,7 @@ var scoreFuncVersion = btoa(addToScore.toString());
 
 //==  ENTRY FUNCTION  ========================================================//
 
-$(function(){
+window.onload = function(){
 
 	// setup controls and canvas element
 	canvas = document.getElementById("canvas");
@@ -121,4 +121,4 @@ $(function(){
 	// begin game
 
 	render();
-});
+}

@@ -115,7 +115,7 @@ function spawnBlockInRandomLocation(order, delay) {
   copyBoardToMatrix(spawnGrid, 0, 0, gridSize);
 
   var id = newId();
-  //console.log("spawnBlockInRandomLocation("+order+"): id="+id);
+  console.log("spawnBlockInRandomLocation("+order+"): id="+id);
 
   for (var i = 0; i < order; i++) {
     var cellAdded = appendRandomCellToPoly(spawnGrid, id, order);
@@ -134,7 +134,7 @@ function spawnBlockInRandomLocation(order, delay) {
   //console.log("    start= ("+start.x+", "+start.y+"),  next=("+next.x+", "+next.y+"), next.dir="+next.dir);
 
   if (next != undefined) dir =  next.dir;
-  amimateBlockAggregationInBreathFirstOrder(start.x,start.y, dir, spawnGrid, order, 0, id, delay);
+  animateBlockAggregationInBreathFirstOrder(start.x,start.y, dir, spawnGrid, order, 0, id, delay);
 
   return true;
 }
@@ -289,7 +289,7 @@ function appendRandomCellToPoly(spawnGrid, id, order) {
 
 //LUKE: Update starting polys and mono/domino animation here.
 //=======================================================================================
-function amimateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGrid, order, depth, id, delay) {
+function animateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGrid, order, depth, id, delay) {
 //=======================================================================================
   //Breath first Recersive walk through each cell of block to set animation timings at
   //  recersion level. Recersivaly walk each cell.
@@ -297,7 +297,7 @@ function amimateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGr
   //Note: since each recersive call needs its own x, y and entryDirection, these values cannot be
   //   passed in as a sthructure (which is passed by reference).
 
-  //console.log("amimateBlockAggregationInBreathFirstOrder(x="+x +
+  //console.log("animateBlockAggregationInBreathFirstOrder(x="+x +
   //  ", y=" + y + ", dir="+ entryDirection + ", order=" + order + ", depth=" + depth + ", id=" + id);
 
 
@@ -322,7 +322,7 @@ function amimateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGr
     //If there is no place left to go, then back out of recursion.
     if (coordinate === undefined) return;
 
-    amimateBlockAggregationInBreathFirstOrder(
+    animateBlockAggregationInBreathFirstOrder(
       coordinate.x, coordinate.y, coordinate.dir, spawnGrid, order, depth + 1, id, delay);
 
   }

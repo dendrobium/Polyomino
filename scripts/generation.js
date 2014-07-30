@@ -25,14 +25,14 @@ function placeStartingPolys() {
   //var orderList = [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4];
   //var orderList = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
   //Each number in orderList spawns, at the start of the game, a poly of that order.
-  var orderList = [5, 4, 4, 3, 3, 2, 2, 2, 1];
+  var orderList = [4, 4, 3];
   r = Math.random();
-  if (r < 0.2) orderList = orderList.concat(5, 2, 2, 1, 1, 1, 1);
-  else if (r < 0.4) orderList = orderList.concat(4, 2, 2, 2, 1);
-  else if (r < 0.6) orderList = orderList.concat(3, 3, 2, 2, 1);
-  else if (r < 0.8) orderList = orderList.concat(5, 2, 1, 1, 1, 1, 1);
-  else if (r < 0.9) orderList = orderList.concat(4, 2, 2, 1, 1, 1);
-  else              orderList = orderList.concat(5, 3, 3, 3);
+  if (r < 0.2) orderList = orderList.concat(3, 2, 2, 2, 2, 1);
+  else if (r < 0.4) orderList = orderList.concat(3, 2, 2, 2, 1, 1, 1);
+  else if (r < 0.6) orderList = orderList.concat(2, 2, 2, 2, 1, 1, 1, 1);
+  else if (r < 0.6) orderList = orderList.concat(2, 2, 2, 1, 1, 1, 1, 1);
+  else if (r < 0.6) orderList = orderList.concat(2, 2, 1, 1, 1, 1, 1, 1);
+  else              orderList = orderList.concat(2, 1, 1, 1, 1, 1, 1, 1);
 
   //var orderList = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1 , 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 
@@ -125,6 +125,9 @@ function spawnBlockInRandomLocation(order, delay) {
 
   if (doesPolyHaveHoles(spawnGrid, order, id)) return false;
 
+  var cement = false;
+  if (order > 2) cement = true;
+
 
   //Animate random first block in direction of a block attached to it.
   var dir = rInt(DIRECTION.length);
@@ -134,7 +137,8 @@ function spawnBlockInRandomLocation(order, delay) {
   //console.log("    start= ("+start.x+", "+start.y+"),  next=("+next.x+", "+next.y+"), next.dir="+next.dir);
 
   if (next != undefined) dir =  next.dir;
-  amimateBlockAggregationInBreathFirstOrder(start.x,start.y, dir, spawnGrid, order, 0, id, delay);
+  amimateBlockAggregationInBreathFirstOrder(start.x,start.y, dir, spawnGrid, order, 0, id, delay, cement);
+
 
   return true;
 }
@@ -191,16 +195,18 @@ function squareToPoly(left,top,order) {
       var i = x + left;
       var j = y + top;
 
-      var cell = board.getCell(i, j);
-      cell.locked = true;
-      unlockEvt(cell,keyframe(3));
+      var myCell = board.getCell(i, j);
+      myCell.locked = true;
+      myCell.cemented = false;
+
+      unlockEvt(myCell,keyframe(3));
 
       if (spawnGrid[x][y] === childId) {
         //console.log("    copy matrix: (" + x + ", " + y + ") ==> board: (" + i + ", " + j+")");
-        cell.quickSet(true, childId, order);
+        myCell.quickSet(true, childId, order);
       }
       else {
-        cell.occupied = false;
+        myCell.occupied = false;
       }
     }
   }
@@ -289,7 +295,7 @@ function appendRandomCellToPoly(spawnGrid, id, order) {
 
 //LUKE: Update starting polys and mono/domino animation here.
 //=======================================================================================
-function amimateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGrid, order, depth, id, delay) {
+function amimateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGrid, order, depth, id, delay, cement) {
 //=======================================================================================
   //Breath first Recersive walk through each cell of block to set animation timings at
   //  recersion level. Recersivaly walk each cell.
@@ -306,6 +312,10 @@ function amimateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGr
 
   var myCell = board.getCell(x, y);
   myCell.locked = true;
+  if (cement) {
+    console.log("cemented[" + x + "][" + y + "] id=" + myCell.id);
+    myCell.cemented = true;
+  }
 
   var color = polyColor[order];
   slideInEvt[entryDirection](x, y, keyframe(depth+(delay/4)),keyframe(depth+1+(delay/4)),color.secondary);
@@ -323,7 +333,7 @@ function amimateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGr
     if (coordinate === undefined) return;
 
     amimateBlockAggregationInBreathFirstOrder(
-      coordinate.x, coordinate.y, coordinate.dir, spawnGrid, order, depth + 1, id, delay);
+      coordinate.x, coordinate.y, coordinate.dir, spawnGrid, order, depth + 1, id, delay, cement);
 
   }
 }

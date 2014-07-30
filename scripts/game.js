@@ -3,19 +3,14 @@
 var resetStorage = false;
 
 function initGame(){
-	dragging             = false;
-	snapping             = false;
-	currentlyAnimating   = true;
-	triggerDetectSquares = true;
-	spawnNewPoly         = false;
-	gameWon              = false;
-	gameLost             = false;
-	comboActiveCtr       = 0;
-	gameWonOverlayShown  = false;
-	gameLostOverlayShown = false;
-	polyMoved            = false;
-	comboActiveCtr       = 0;
-	score                = 0;
+	dragging = snapping             = false;
+	currentlyAnimating              = true;
+	triggerDetectSquares            = true;
+	spawnNewPoly = polyMoved        = false;
+	gameWon  = gameWonOverlayShown  = false;
+	gameLost = gameLostOverlayShown = false;
+	comboActiveCtr                  = 0;
+	score                           = 0;
 }
 
 function newGame(){
@@ -31,7 +26,6 @@ function newGame(){
 
 	initGame();
 	placeStartingPolys();
-
 	saveGame();
 }
 
@@ -87,14 +81,15 @@ function addToScore(squareOrder,pieceOrder,multiplier){
 var scoreFuncVersion = btoa(addToScore.toString());
 
 //==  ENTRY FUNCTION  ========================================================//
+var successfulLoad = false;
 
-$(function(){
+window.onload = function(){
 
 	// setup controls and canvas element
 	canvas = document.getElementById("canvas");
 	gfx = canvas.getContext("2d");
+	tick=new Date().getTime();
 	window.onresize();  // determine grid/cell size
-	//setupInstruction(); // setup instructions based on grid size
 	setupControls();
 
 	// see if first-time visitor and needs instructions
@@ -109,20 +104,16 @@ $(function(){
 			localStorage.setItem("scoreFuncVersion", scoreFuncVersion);
 			localStorage.setItem("highScore",        0);
 
-			// XXX: direct user to instructions
 			drawInstructions = true;
 		}
-	} else { //they have no local storage: assume 1st time visitor
+	} else { //they have no local storage; assume 1st time visitor
 		drawInstructions = true;
 	}
 
 	// setup game
-	var success = loadGame();
-	//console.log(success);
-	if(!success)
+	if(!loadGame())
 		newGame();
 
 	// begin game
-	tick=new Date().getTime();
 	render();
-});
+}

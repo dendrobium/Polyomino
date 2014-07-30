@@ -195,16 +195,18 @@ function squareToPoly(left,top,order) {
       var i = x + left;
       var j = y + top;
 
-      var cell = board.getCell(i, j);
-      cell.locked = true;
-      unlockEvt(cell,keyframe(3));
+      var myCell = board.getCell(i, j);
+      myCell.locked = true;
+      myCell.cemented = false;
+
+      unlockEvt(myCell,keyframe(3));
 
       if (spawnGrid[x][y] === childId) {
         //console.log("    copy matrix: (" + x + ", " + y + ") ==> board: (" + i + ", " + j+")");
-        cell.quickSet(true, childId, order);
+        myCell.quickSet(true, childId, order);
       }
       else {
-        cell.occupied = false;
+        myCell.occupied = false;
       }
     }
   }
@@ -310,7 +312,10 @@ function amimateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGr
 
   var myCell = board.getCell(x, y);
   myCell.locked = true;
-  if (cement) myCell.cemented = true;
+  if (cement) {
+    console.log("cemented[" + x + "][" + y + "] id=" + myCell.id);
+    myCell.cemented = true;
+  }
 
   var color = polyColor[order];
   slideInEvt[entryDirection](x, y, keyframe(depth+(delay/4)),keyframe(depth+1+(delay/4)),color.secondary);
@@ -328,7 +333,7 @@ function amimateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGr
     if (coordinate === undefined) return;
 
     amimateBlockAggregationInBreathFirstOrder(
-      coordinate.x, coordinate.y, coordinate.dir, spawnGrid, order, depth + 1, id, delay);
+      coordinate.x, coordinate.y, coordinate.dir, spawnGrid, order, depth + 1, id, delay, cement);
 
   }
 }

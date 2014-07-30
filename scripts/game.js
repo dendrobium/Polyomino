@@ -31,7 +31,7 @@ function newGame(){
 
 	initGame();
 	placeStartingPolys();
-	updateScoreBoxes();
+
 	saveGame();
 }
 

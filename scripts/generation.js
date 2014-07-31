@@ -19,7 +19,7 @@ function placeStartingPolys() {
 
   var orderList;
 
-  if (Math.random() < 0.25) {
+  if (Math.random() < -0.25) {
     //Spawn 2 cemented Tetrominos and 2 cemented Trominos
     var x1, y1, x2, y2, x3, y3, x4, y4;
     if (Math.random() < 0.5) {
@@ -67,7 +67,7 @@ function placeStartingPolys() {
   }
 
 
-  else if (Math.random() < 0.5) {
+  else if (Math.random() < -0.5) {
     //Spawn 4 cemented Tetrominos
 
     spawnBlock(4, true, rInt(3), rInt(3));
@@ -76,22 +76,31 @@ function placeStartingPolys() {
     spawnBlock(4, true, (gridSize - 3) + rInt(3), (gridSize - 3) + rInt(3));
   }
 
-  else if (Math.random() < 0.75) {
-    //Spawn 6 cemented Trominos and 1 Tetromino
-    var bounds = spawnBlock(3, true, rInt(3), rInt(3));
+  else if (Math.random() < 1.75) {
+    //Spawn 8 cemented Trominos
 
-    var x2 = bounds.maxX + 1;
-    bounds = spawnBlock(3, true, x2, rInt(3));
+    var x = 0;
+    var y = rInt(gridSize);
 
-    var y3 = bounds.maxY + 1;
-    bounds = spawnBlock(3, true, x2, y3);
+    for (var i=0; i<8; i++) {
 
-    var x4 = bounds.maxX + 1;
-    bounds = spawnBlock(3, true, x4, y3);
+      var bounds = spawnBlock(3, true, x, y);
+      if (bounds === false) {
+        bounds = spawnBlock(3, true);
+      }
+      x = bounds.maxX + 1;
+      if (x > 9) {
+        bounds = spawnBlock(3, true);
+      }
 
-    spawnBlock(3, true, (gridSize - 3) + rInt(3), rInt(3));
-    spawnBlock(3, true, rInt(3), (gridSize - 3) + rInt(3));
-    spawnBlock(4, true);
+      var goingUp = true;
+      if (Math.random() < 0.5) goingUp = false;
+
+      if (bounds.minY - 1 < 0) goingUp = false;
+      else if (bounds.maxY + 1 > 9) goingUp = true;
+      y = bounds.maxY + 1;
+      if (goingUp) y = bounds.minY - 1;
+    }
   }
 
   else {
@@ -153,9 +162,15 @@ function spawnBlock(order, cement, x0, y0) {
   var cellsNeeded = order;
   var minX=99, maxX=0, minY=99, maxY=0;
   if (x0 != undefined) {
-    spawnGrid[x0][y0] = id;
-    cellsNeeded = order - 1;
-    var minX=x0, maxX=x0, minY=y0, maxY=y0;
+    //for robustness.....
+    if ((x0 >=0) && (y0 >= 0) && (x0 < gridSize) && (y0 < gridSize)) {
+      if (spawnGrid[x0][y0] === CELL_EMPTY) {
+
+        spawnGrid[x0][y0] = id;
+        cellsNeeded = order - 1;
+        minX = x0, maxX = x0, minY = y0, maxY = y0;
+      }
+    }
   }
 
 

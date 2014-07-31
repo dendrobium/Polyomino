@@ -19,7 +19,7 @@ function placeStartingPolys() {
 
   var orderList;
 
-  if (Math.random() < -0.25) {
+  if (Math.random() < 0.25) {
     //Spawn 2 cemented Tetrominos and 2 cemented Trominos
     var x1, y1, x2, y2, x3, y3, x4, y4;
     if (Math.random() < 0.5) {
@@ -67,7 +67,7 @@ function placeStartingPolys() {
   }
 
 
-  else if (Math.random() < -0.5) {
+  else if (Math.random() < 0.5) {
     //Spawn 4 cemented Tetrominos
 
     spawnBlock(4, true, rInt(3), rInt(3));
@@ -76,7 +76,7 @@ function placeStartingPolys() {
     spawnBlock(4, true, (gridSize - 3) + rInt(3), (gridSize - 3) + rInt(3));
   }
 
-  else if (Math.random() < 1.75) {
+  else if (Math.random() < .75) {
     //Spawn 8 cemented Trominos
 
     var x = 0;

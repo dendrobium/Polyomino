@@ -6,8 +6,6 @@
 
 	<link rel="stylesheet" type="text/css" href="styles.css">
 
-	<script type="text/javascript" src="scripts/lib/jquery-1.11.1.min.js"></script>
-
 	<script type="text/javascript" src="scripts/utils.js"       ></script>
 	<script type="text/javascript" src="scripts/matrix.js"      ></script>
 	<script type="text/javascript" src="scripts/global.js"      ></script>
@@ -17,6 +15,7 @@
 	<script type="text/javascript" src="scripts/generation.js"  ></script>
 	<script type="text/javascript" src="scripts/controls.js"    ></script>
 	<script type="text/javascript" src="scripts/particle.js"    ></script>
+	<script type="text/javascript" src="scripts/menu.js"      ></script>
 	<script type="text/javascript" src="scripts/render.js"      ></script>
 	<!-- NOT IN USE <script type="text/javascript" src="scripts/shapes.js"      ></script>-->
 	<script type="text/javascript" src="scripts/game.js"        ></script>
@@ -36,19 +35,6 @@
 
 <body style="background:#a0a0a0">
 
-	<!-- Section modals
-	<div id="gameWon" class="modalDialog">
-		<div style="font:25px arial;letter-spacing:-1px;font-weight:800;">
-			<a style="font:20px arial; margin-right:-200px" onClick="newGame()" href="#close" title="Close" class="close">New Game</a>
-			<a style="font:20px arial; margin-right:50px" href="#close" title="Close" class="close">Keep Playing</a>
-			<h2 style="text-align:center">You Win!</h2>
-
-			<p>Score: <b id="gameWonScore">ERROR</b></p>
-			TODO: SOCIAL BUTTONS
-			<br />
-		</div>
-	</div>-->
-
 	<!-- Section main content -->
 	<div id="cvs_div">
 		<canvas class="cvs" id="canvas">
@@ -56,20 +42,33 @@
 		</canvas>
 	</div>
 	<div id="social_div">
-		<div style="position:relative; text-align:center">
+		<table style="position:relative; text-align:center">
+			<tr>
+				<td>
+				<a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+				</td>
+				<td>
+				<div class="g-plusone"></div>
+				</td>
+				<td>
+
+				</td>
+
+			</tr>
+		</table>
+		<!--<div style="position:relative; text-align:center">
 			Created by <b>Luke Balaoro</b>, <b>Ezra Stallings</b> and <b>Joel Castellanos</b>
-		<!-- Place this tag where you want the +1 button to render. -->
 		<br/>
 		<div style="display:inline-block; position:relative">
-			<a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+
 		</div>
 		<div style="display:inline-block; position:relative">
-			<div class="g-plusone"></div>
+
 		</div>
 		<div style="display:inline-block; position:relative">
 		</div>
 
-		</div>
+		</div>-->
 	</div>
 
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>

@@ -76,10 +76,6 @@ function setupControls(){
 		mouse = getMousePos(e);
 		rawMouse = getRawMousePos(e);
 
-		if(drawMenu){
-			drawMenu = false;
-			currentlyAnimating = true;
-		}
 		if(e.which === 2)debugMouseDown = !debugMouseDown;
 		if(debugMode){
 			calcMouseGridVars();
@@ -107,6 +103,9 @@ function setupControls(){
 					if(buttons[b].clickLogic(rawMouse.x, rawMouse.y))
 						return;
 				}
+				if(drawMenu){
+					setMenuDraw(false);
+				}
 
 				if(gameLost){
 					gameLostOverlayShown = true;
@@ -127,11 +126,12 @@ function setupControls(){
 
 				if(dragging)return;
 				var c = board.getCell(mouse.x/cellSize,mouse.y/cellSize);
-        if (c) blockIdOfLastBlockPlaced = c.id;
+        //console.log("Lifting cell with  id="+c.id);
 
 
         // verify locks
-				if(!c || !c.occupied || c.locked)return;
+				if(!c || !c.occupied || c.locked || c.cemented)return;
+        if (c) blockIdOfLastBlockPlaced = c.id;
 				for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
 					var b = board.getCell(i,j);
 					if(b.id === c.id && b.locked)return;
@@ -163,6 +163,7 @@ function setupControls(){
 				currentlyAnimating = true;
 				return;
 			case 3:
+				if(drawMenu) setMenuDraw(false);
 				if(!allowRotations)return;
 				if(!dragging)return;
 				++goalRot;

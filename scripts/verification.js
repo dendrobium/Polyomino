@@ -17,12 +17,12 @@ function recalculateIds(){
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
 	if(!visited.getCell(i,j)){
 		var c = board.getCell(i,j);
-		if(!c.occupied || c.locked)continue;
+		if(!c.occupied || c.locked) continue;
 		recurse(visited,i,j,c);
 		var id = newId();
-		for(var x=0;x<board.size;++x)for(var y=0;y<board.size;++y){
+		for(var x=0; x<board.size; ++x)for(var y=0; y<board.size; ++y){
 			var chk = board.getCell(x,y);
-			if(!chk.occupied || chk.locked)continue;
+			if(!chk.occupied || chk.locked) continue;
 			if(chk.id === c.id && !visited.getCell(x,y)){
 				chk.id = id;
 				saveFlag = true;
@@ -44,7 +44,8 @@ function recalculateOrder(){
 		// if counted order doesnt match assigned order,reassign
 		if(count === c.order)continue;
 		recurse(new grid(board.size),i,j,c,function(e){
-			orderChangeEvt(e,e.order,count,keyframe(0),keyframe(1));
+      e.cemented = false;
+      orderChangeEvt(e,e.order,count,keyframe(0),keyframe(1));
 			unlockEvt(e,keyframe(1));
 			saveGameEvt(keyframe(1));
 		});

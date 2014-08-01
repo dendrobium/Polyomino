@@ -218,7 +218,7 @@ var newGameButton = new CButton(function(){return gridOffsetX+gridPixelSize-44},
 																	gfx.fillStyle = '#808080';
 																	gfx.fillRect(this.x(), this.y(), this.size, this.size);
 																},
-																function(){newGame();});
+																function(){newGame(); setMenuDraw(false);});
 
 var instructionsButton = new CButton(function(){return gridOffsetX+gridPixelSize-44},
 																		function(){return gridOffsetY+52},
@@ -227,7 +227,7 @@ var instructionsButton = new CButton(function(){return gridOffsetX+gridPixelSize
 																			gfx.fillStyle = '#808080';
 																			gfx.fillRect(this.x(), this.y(), this.size, this.size);
 																		},
-																		function(){drawInstructions = true;});
+																		function(){drawInstructions = true; setMenuDraw(false);});
 
 
 var trophiesButton = new CButton(function(){return gridOffsetX+gridPixelSize-44},
@@ -237,7 +237,7 @@ var trophiesButton = new CButton(function(){return gridOffsetX+gridPixelSize-44}
 																	gfx.fillStyle = '#808080';
 																	gfx.fillRect(this.x(), this.y(), this.size, this.size);
 																},
-																function(){ console.log("foo"); /* TODO show trophies */});
+																function(){ console.log("foo");  setMenuDraw(false); /* TODO show trophies */});
 function renderTopBar(){
 	gfx.fillStyle = '#424242';
 	gfx.fillRect(gridOffsetX, 4, gridPixelSize, gridOffsetY-8);

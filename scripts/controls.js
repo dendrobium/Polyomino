@@ -72,10 +72,7 @@ function setupControls(){
 	canvas.addEventListener("mousedown",function(e){
 		mouse = getMousePos(e);
 		rawMouse = getRawMousePos(e);
-		if(drawMenu){
-			drawMenu = false;
-			currentlyAnimating = true;
-		}
+
 		if(e.which === 2)debugMouseDown = !debugMouseDown;
 		if(debugMode){
 			calcMouseGridVars();
@@ -102,6 +99,9 @@ function setupControls(){
 				for(var b in buttons){
 					if(buttons[b].clickLogic(rawMouse.x, rawMouse.y))
 						return;
+				}
+				if(drawMenu){
+					setMenuDraw(false);
 				}
 
 				if(gameLost){
@@ -160,6 +160,7 @@ function setupControls(){
 				currentlyAnimating = true;
 				return;
 			case 3:
+				if(drawMenu) setMenuDraw(false);
 				if(!allowRotations)return;
 				if(!dragging)return;
 				++goalRot;

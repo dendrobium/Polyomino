@@ -9,6 +9,11 @@ b{
 	position:relative;
 }
 
+td {
+	position:static;
+	padding:1px;
+	margin:2px;
+}
 .cvs {
 	-moz-user-select:      none;
 	-khtml-user-select:    none;

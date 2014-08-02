@@ -100,6 +100,7 @@ function setupControls(){
 					if(buttons[b].clickLogic(rawMouse.x, rawMouse.y))
 						return;
 				}
+
 				if(drawMenu){
 					setMenuDraw(false);
 				}
@@ -109,12 +110,14 @@ function setupControls(){
 					currentlyAnimating = true;
 					return; //no game input after losing
 				}
+
 				if(gameWon && !gameWonOverlayShown){
 					//or while gameWon screen shows
 					gameWonOverlayShown = true;
 					currentlyAnimating = true;
 					return;
 				}
+
 				if(drawInstructions){
 					drawInstructions = false;
 					currentlyAnimating = true;
@@ -123,12 +126,10 @@ function setupControls(){
 
 				if(dragging)return;
 				var c = board.getCell(mouse.x/cellSize,mouse.y/cellSize);
-        //console.log("Lifting cell with  id="+c.id);
 
-
-        // verify locks
+				// verify locks
 				if(!c || !c.occupied || c.locked || c.cemented)return;
-        if (c) blockIdOfLastBlockPlaced = c.id;
+				blockIdOfLastBlockPlaced = c.id;
 				for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
 					var b = board.getCell(i,j);
 					if(b.id === c.id && b.locked)return;
@@ -137,7 +138,10 @@ function setupControls(){
 				// set lock and selected flags for selected cells
 				for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
 					var b = board.getCell(i,j);
-					if(b.occupied && b.id === c.id)b.locked = b.selected = true;
+					if(b.occupied && b.id === c.id){
+						b.locked = b.selected = true;
+						selection.setCell(i,j,selectionOpacity);
+					}
 				}
 
 				// move selected piece onto floating layer,remove from board
@@ -160,7 +164,7 @@ function setupControls(){
 				currentlyAnimating = true;
 				return;
 			case 3:
-				if(drawMenu) setMenuDraw(false);
+				if(drawMenu)setMenuDraw(false);
 				if(!allowRotations)return;
 				if(!dragging)return;
 				++goalRot;

@@ -225,9 +225,11 @@ function squareToPoly(left,top,order) {
 	else comboCtr++;
 	addToScore(order, parentOrder, comboCtr);
 
+  //Track player progress
+  savePolyominoStats(order, null); //need to tell it the shape later on... or make a new function for that
+
 	// check win condition
 	if(order > goalOrder && !gameWon){
-		gameWon = true;
 		gameWonEvt(); // TODO: this needs to be scheduled with animations
 	}
 	// TODO ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -289,6 +291,7 @@ function squareToPoly(left,top,order) {
   beginSurroundEvt(left, top, order,0, order*100);
   surroundEvt(left, top,order,order*100,order*100+1000);
 
+  identifyShape(spawnGrid, order, childId);
   saveGame();
 }
 
@@ -541,4 +544,3 @@ function copyBoardToMatrix(myMatrix, left, top, size, onlyBlockId, childID) {
   }
   return filledCount;
 }
-

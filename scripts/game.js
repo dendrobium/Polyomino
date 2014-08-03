@@ -1,6 +1,7 @@
 //==  GAME UTILS  ============================================================//
 
 var resetStorage = false;
+var version = "0.91"; //to be used to reset testing computers
 
 function initGame(){
 	dragging = snapping             = false;
@@ -11,6 +12,9 @@ function initGame(){
 	gameLost = gameLostOverlayShown = false;
 	comboActiveCtr                  = 0;
 	score                           = 0;
+	timeStarted                     = new Date().getTime();
+
+  initShapes();
 
 	selection = new grid(gridSize);
 	for(var i=0;i<selection.size;++i)for(var j=0;j<selection.size;++j)
@@ -79,7 +83,10 @@ function gameOver(){
 //==  SCORE RELATED  =========================================================//
 
 function addToScore(squareOrder,pieceOrder,multiplier){
-	goalScore += Math.floor(Math.pow(squareOrder*squareOrder*pieceOrder, multiplier*0.5+0.5));
+	var points = Math.floor(Math.pow(squareOrder*squareOrder*pieceOrder, multiplier*0.5+0.5));
+	goalScore += points;
+	var totalScore = parseInt(localStorage.getItem("totalScore"));
+	localStorage.setItem("totalScore", totalScore + points);
 	currentlyAnimating = true;
 }
 var scoreFuncVersion = btoa(addToScore.toString());
@@ -102,26 +109,28 @@ window.onload = function(){
 			localStorage.clear();
 		}
 
-		var visited = localStorage.getItem("visited");
-		if(!visited){
-			localStorage.setItem("visited",          true);
+		var versionNum = localStorage.getItem("version");
+		if(version !== versionNum){
+			localStorage.setItem("version",          version);
 			localStorage.setItem("scoreFuncVersion", scoreFuncVersion);
 			localStorage.setItem("highScore",        0);
+			localStorage.setItem("bestTime",         "N/A");
+			localStorage.setItem("totalScore",       0);
+			localStorage.setItem("highestOrder",     "N/A");
+			for(var i = 2; i < 9; i++)
+				localStorage.setItem("#of"+i,          0);
 
-			// XXX: direct user to instructions
 			drawInstructions = true;
+			newGame();
+		}
+		else{ //previous visitor; try to load game
+			if(!loadGame())
+				newGame();
 		}
 	} else { //they have no local storage: assume 1st time visitor
 		drawInstructions = true;
-	}
-
-	// setup game
-	var success = loadGame();
-	//console.log(success);
-	if(!success)
 		newGame();
-
-	// begin game
+	}
 
 	render();
 }

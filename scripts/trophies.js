@@ -53,6 +53,12 @@ var getTrophyData = function(){
 	_trophyData.push(m("Fastest Time:", time));
 	_trophyData.push(m("Highest Order Polyomino:", order))
 
+	for(var o=2; o<9; o++){
+		var num = localStorage.getItem("#of"+o);
+		console.log(num);
+		_trophyData.push(m(POLYOMINO_NAME[o]+"s:", num));
+	}
+
 }
 
 function renderTrophies(){

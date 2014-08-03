@@ -1,7 +1,7 @@
 //==  GAME UTILS  ============================================================//
 
 var resetStorage = false;
-var version = 0.91; //to be used to reset testing computers
+var version = "0.91"; //to be used to reset testing computers
 
 function initGame(){
 	dragging = snapping             = false;
@@ -109,7 +109,7 @@ window.onload = function(){
 			localStorage.clear();
 		}
 
-		var versionNum = parseInt(localStorage.getItem("version"));
+		var versionNum = localStorage.getItem("version");
 		if(version !== versionNum){
 			localStorage.setItem("version",          version);
 			localStorage.setItem("scoreFuncVersion", scoreFuncVersion);
@@ -117,7 +117,7 @@ window.onload = function(){
 			localStorage.setItem("bestTime",         "N/A");
 			localStorage.setItem("totalScore",       0);
 			localStorage.setItem("highestOrder",     "N/A");
-			for(var i = 2; i < 8; i++)
+			for(var i = 2; i < 9; i++)
 				localStorage.setItem("#of"+i,          0);
 
 			drawInstructions = true;

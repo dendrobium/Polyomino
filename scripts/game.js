@@ -1,6 +1,6 @@
 //==  GAME UTILS  ============================================================//
 
-var resetStorage = false;
+var resetStorage = true;
 
 function initGame(){
 	dragging = snapping             = false;

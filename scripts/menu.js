@@ -38,8 +38,6 @@ function renderMenu(){
 	drawText("Trophies",     gridOffsetX+gridPixelSize-60, gridOffsetY+120, "Bold 20px arial",false, true);
 }
 
-
-
 //==== Overlays ====//
 
 
@@ -51,20 +49,7 @@ var img_tro2 = new Image();
 img_3x3.src  = "images/Instructions_3x3.png";
 img_tro1.src = "images/Instructions_Tro1.png";
 img_tro2.src = "images/Instructions_Tro2.png";
-function drawText(text, x, y, font, centered, rightAlign){
-	gfx.font = font;
-	if(centered){
-		var w = gfx.measureText(text).width;
-		gfx.fillText(text,x-w/2,y);
-		return;
-	}
-	if(rightAlign){
-		var w = gfx.measureText(text).width;
-		gfx.fillText(text,x-w,y);
-		return;
-	}
-	gfx.fillText(text, x, y);
-}
+
 function renderInstructionsOverlay(){
 	if(!(img_3x3.complete && img_tro1.complete && img_tro2.complete))
 		currentlyAnimating = true; //ensure images load

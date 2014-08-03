@@ -18,14 +18,18 @@ function renderGridRaw(g,offset,usePrimary){
 	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
 		var c = g.getCell(i,j);
 		if(!c.occupied)continue;
+		if(c.cemented && usePrimary)continue;
 
-		if(usePrimary){
+		var primarySecondary = usePrimary;
+		if(c.cemented)primarySecondary = !primarySecondary;
+		if(primarySecondary){
 			if(Math.floor(c.order)===0)rgb(polyColor[c.order].primary.r,polyColor[c.order].primary.g,polyColor[c.order].primary.b);
 			else interpColor(polyColor[Math.floor(c.order)].primary,polyColor[Math.ceil(c.order)].primary,c.order%1);
 		}else{
 			if(Math.floor(c.order)===0)rgb(polyColor[c.order].secondary.r,polyColor[c.order].secondary.g,polyColor[c.order].secondary.b);
 			else interpColor(polyColor[Math.floor(c.order)].secondary,polyColor[Math.ceil(c.order)].secondary,c.order%1);
 		}
+
 
 		renderRect(i*cs+offset,j*cs+offset,(i+1)*cs-offset,(j+1)*cs-offset);
 		var right = g.getCell(i+1,j);
@@ -50,22 +54,21 @@ function renderGrid(g){
 		var d  = g.getCell(i  ,j+1);d=d?d.id===c.id:false;
 		var l  = g.getCell(i-1,j  );l=l?l.id===c.id:false;
 		var r  = g.getCell(i+1,j  );r=r?r.id===c.id:false;
-		var ul = g.getCell(i-1,j-1);ul=ul?ul.id===c.id:false;
-		var ur = g.getCell(i+1,j-1);ur=ur?ur.id===c.id:false;
-		var dl = g.getCell(i-1,j+1);dl=dl?dl.id===c.id:false;
-		var dr = g.getCell(i+1,j+1);dr=dr?dr.id===c.id:false;
 
 		rgb(0.25,0.25,0.25);
-		if(!u&&!l||u&&l&&!ul)renderRect( i   *cs+4, j   *cs+4, i   *cs+10, j   *cs+10); // top left
-		if(!u&&!r||u&&r&&!ur)renderRect((i+1)*cs-4, j   *cs+4,(i+1)*cs-10, j   *cs+10); // top right
-		if(!d&&!l||d&&l&&!dl)renderRect( i   *cs+4,(j+1)*cs-4, i   *cs+10,(j+1)*cs-10); // bottom left
-		if(!d&&!r||d&&r&&!dr)renderRect((i+1)*cs-4,(j+1)*cs-4,(i+1)*cs-10,(j+1)*cs-10); // bottom right
+		if(!u&&!l)renderRect( i   *cs+5, j   *cs+5, i   *cs+11, j   *cs+11); // top left
+		if(!u&&!r)renderRect((i+1)*cs-5, j   *cs+5,(i+1)*cs-11, j   *cs+11); // top right
+		if(!d&&!l)renderRect( i   *cs+5,(j+1)*cs-5, i   *cs+11,(j+1)*cs-11); // bottom left
+		if(!d&&!r)renderRect((i+1)*cs-5,(j+1)*cs-5,(i+1)*cs-11,(j+1)*cs-11); // bottom right
 
-		rgb(0.5,0.5,0.5);
-		if(!u&&!l||u&&l&&!ul)renderRect( i   *cs+6, j   *cs+6, i   *cs+8, j   *cs+8); // top left
-		if(!u&&!r||u&&r&&!ur)renderRect((i+1)*cs-6, j   *cs+6,(i+1)*cs-8, j   *cs+8); // top right
-		if(!d&&!l||d&&l&&!dl)renderRect( i   *cs+6,(j+1)*cs-6, i   *cs+8,(j+1)*cs-8); // bottom left
-		if(!d&&!r||d&&r&&!dr)renderRect((i+1)*cs-6,(j+1)*cs-6,(i+1)*cs-8,(j+1)*cs-8); // bottom right
+		// rgb(0.5,0.5,0.5);
+		rgb(polyColor[c.order].secondary.r,polyColor[c.order].secondary.g,polyColor[c.order].secondary.b); // XXX: this might break
+		if(!u&&!l)renderRect( i   *cs+7, j   *cs+7, i   *cs+9, j   *cs+9); // top left
+		if(!u&&!r)renderRect((i+1)*cs-7, j   *cs+7,(i+1)*cs-9, j   *cs+9); // top right
+		if(!d&&!l)renderRect( i   *cs+7,(j+1)*cs-7, i   *cs+9,(j+1)*cs-9); // bottom left
+		if(!d&&!r)renderRect((i+1)*cs-7,(j+1)*cs-7,(i+1)*cs-9,(j+1)*cs-9); // bottom right
+	//	if(l)renderRect(i*cs-1,j*cs+5,i*cs+1,(j+1)*cs-5);
+	//	if(u)renderRect(i*cs+5,j*cs-1,(i+1)*cs-5,j*cs+1);
 	}
 }
 
@@ -128,7 +131,8 @@ function render(){
 			if(s<0.01)s = 0;
 			selection.setCell(i,j,s);
 		}else currentlyAnimating = true;
-		rgba(polyColor[b.order].secondary.r,polyColor[b.order].secondary.g,polyColor[b.order].secondary.b,s);
+		var color = Math.floor(b.order);
+		rgba(polyColor[color].secondary.r,polyColor[color].secondary.g,polyColor[color].secondary.b,s);
 		renderRect(i*cs,j*cs,(i+1)*cs,(j+1)*cs);
 	}
 

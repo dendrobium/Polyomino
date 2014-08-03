@@ -15,7 +15,7 @@ dragSpeed          = 0.3;
 hoverOffset        = 8;
 keyframeSpeed      = 100;
 goalOrder          = 5; //I think this is 0-indexed, hence the bugs
-selectionOpacity   = 0.5;
+selectionOpacity   = 0.25;
 
 //==  POLYOMINO COLORS  ======================================================//
 

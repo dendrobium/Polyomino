@@ -40,7 +40,7 @@ function processActiveEvents(){
 function orderChangeEvt(cell,oldOrder,newOrder,startTick,endTick){
 	cell.locked = true;
 	new_event(startTick,endTick,function(interp){
-		cell.order =(newOrder-oldOrder)*interp+oldOrder;
+		cell.order = (newOrder-oldOrder)*interp+oldOrder;
 	},function(){cell.order = newOrder;});
 }
 

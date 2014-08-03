@@ -14,6 +14,7 @@ function initGame(){
 	score                           = 0;
 	timeStarted                     = new Date().getTime();
 	maxCombo                        = 0; // TODO: initialize this properly with user stats
+	maxComboScore                   = 0; // TODO: initialize this properly with user stats
 
 	selection = new grid(gridSize);
 	for(var i=0;i<selection.size;++i)for(var j=0;j<selection.size;++j)
@@ -84,9 +85,15 @@ function gameOver(){
 //==  SCORE RELATED  =========================================================//
 
 function addToScore(squareOrder,pieceOrder,combo){
-	if(combo > maxCombo)maxCombo = combo;
+	console.log(combo);
 	var points = Math.floor(Math.pow(squareOrder*squareOrder*pieceOrder, combo*0.5+0.5));
 	goalScore += points;
+
+	if(combo > maxCombo)maxCombo = combo;
+	if(combo > 1)currentComboScore += points;
+	else currentComboScore = points;
+	if(currentComboScore > maxComboScore)maxComboScore = currentComboScore;
+
 	var totalScore = parseInt(localStorage.getItem("totalScore"));
 	localStorage.setItem("totalScore", totalScore + points);
 	currentlyAnimating = true;
@@ -100,7 +107,7 @@ window.onload = function(){
 	// setup controls and canvas element
 	canvas = document.getElementById("canvas");
 	gfx = canvas.getContext("2d");
-  tick=new Date().getTime();
+	tick=new Date().getTime();
 	window.onresize();  // determine grid/cell size
 	//setupInstruction(); // setup instructions based on grid size
 	setupControls();

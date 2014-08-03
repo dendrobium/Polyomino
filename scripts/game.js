@@ -13,12 +13,13 @@ function initGame(){
 	comboActiveCtr                  = 0;
 	score                           = 0;
 	timeStarted                     = new Date().getTime();
-
-  initShapes();
+	maxCombo                        = 0; // TODO: initialize this properly with user stats
 
 	selection = new grid(gridSize);
 	for(var i=0;i<selection.size;++i)for(var j=0;j<selection.size;++j)
 		selection.setCell(i,j,0);
+
+	initShapes();
 }
 
 function newGame(){
@@ -82,8 +83,9 @@ function gameOver(){
 
 //==  SCORE RELATED  =========================================================//
 
-function addToScore(squareOrder,pieceOrder,multiplier){
-	var points = Math.floor(Math.pow(squareOrder*squareOrder*pieceOrder, multiplier*0.5+0.5));
+function addToScore(squareOrder,pieceOrder,combo){
+	if(combo > maxCombo)maxCombo = combo;
+	var points = Math.floor(Math.pow(squareOrder*squareOrder*pieceOrder, combo*0.5+0.5));
 	goalScore += points;
 	var totalScore = parseInt(localStorage.getItem("totalScore"));
 	localStorage.setItem("totalScore", totalScore + points);

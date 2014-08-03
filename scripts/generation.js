@@ -225,9 +225,11 @@ function squareToPoly(left,top,order) {
 	else comboCtr++;
 	addToScore(order, parentOrder, comboCtr);
 
+  //Track player progress
+  savePolyominoStats(order, null); //need to tell it the shape later on... or make a new function for that
+
 	// check win condition
 	if(order > goalOrder && !gameWon){
-		gameWon = true;
 		gameWonEvt(); // TODO: this needs to be scheduled with animations
 	}
 	// TODO ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

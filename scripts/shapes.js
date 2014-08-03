@@ -2,8 +2,8 @@
 /*============================================================================*\
 		   _  ______  ______  _____  __  __  __________
 		  / |/ / __ \/_  __/ /  _/ |/ / / / / / __/ __/
-		 /    / /_/ / / /   _/ //    / / /_/ /\ \/ _/  
-		/_/|_/\____/ /_/   /___/_/|_/  \____/___/___/  
+		 /    / /_/ / / /   _/ //    / / /_/ /\ \/ _/
+		/_/|_/\____/ /_/   /___/_/|_/  \____/___/___/
 
 \*============================================================================*/
 
@@ -23,18 +23,18 @@ var DEDECOMINO = 11;
 
 // Useful for displaying player achievements
 
-var POLYONIMO_NAME = new Array(DEDECOMINO + 1);
-    POLYONIMO_NAME[MONOMINO]   = "Monomino";
-    POLYONIMO_NAME[DOMINO]     = "Domino";
-    POLYONIMO_NAME[TROMINO]    = "Tromino";
-    POLYONIMO_NAME[TETROMINO]  = "Tetromino";
-    POLYONIMO_NAME[PENTOMINO]  = "Pentomino";
-    POLYONIMO_NAME[HEXOMINO]   = "Hexomino";
-    POLYONIMO_NAME[HEPTOMINO]  = "Heptomino";
-    POLYONIMO_NAME[OCTOMINO]   = "Octomino";
-    POLYONIMO_NAME[NONOMINO]   = "Nonomino";
-    POLYONIMO_NAME[DECOMINO]   = "Decomino";
-    POLYONIMO_NAME[DEDECOMINO] = "Dedecomino";
+var POLYOMINO_NAME = new Array(DEDECOMINO + 1);
+    POLYOMINO_NAME[MONOMINO]   = "Monomino";
+    POLYOMINO_NAME[DOMINO]     = "Domino";
+    POLYOMINO_NAME[TROMINO]    = "Tromino";
+    POLYOMINO_NAME[TETROMINO]  = "Tetromino";
+    POLYOMINO_NAME[PENTOMINO]  = "Pentomino";
+    POLYOMINO_NAME[HEXOMINO]   = "Hexomino";
+    POLYOMINO_NAME[HEPTOMINO]  = "Heptomino";
+    POLYOMINO_NAME[OCTOMINO]   = "Octomino";
+    POLYOMINO_NAME[NONOMINO]   = "Nonomino";
+    POLYOMINO_NAME[DECOMINO]   = "Decomino";
+    POLYOMINO_NAME[DEDECOMINO] = "Dedecomino";
 
 var MAX_ORDER = OCTOMINO;
 var MAX_ORDER_OF_SHAPE_IDENTIFICATION = TROMINO;

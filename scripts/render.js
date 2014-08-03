@@ -74,6 +74,13 @@ function renderGrid(g){
 
 function render(){
 	requestAnimationFrame(render);
+
+	//If rendering trophies, suspend everything else (pause the game) including events and tick
+	if(modeTrophies){
+		renderTrophies();
+		return;
+	}
+
 	var currentTick = new Date().getTime();
 	elapsed = currentTick-tick;
 	tick = currentTick;
@@ -201,25 +208,35 @@ function render(){
 	}
 }
 
+function drawText(text, x, y, font, centered, rightAlign){
+	gfx.font = font;
+	if(centered){
+		var w = gfx.measureText(text).width;
+		gfx.fillText(text,x-w/2,y);
+		return;
+	}
+	if(rightAlign){
+		var w = gfx.measureText(text).width;
+		gfx.fillText(text,x-w,y);
+		return;
+	}
+	gfx.fillText(text, x, y);
+}
 //==== Resizing ====//
 
+var gridMarginY = 0;
+var gridPaddingY = 40;
 window.onresize = function(){
 	gridOffsetY   = 60;
-	var gridMarginY = 0; //will be used soon, don't remove
-	var gridPaddingY = 40;
 
 	canvasWidth   = canvas.width  = window.innerWidth;
-	canvasHeight  = canvas.height = window.innerHeight-gridMarginY;
-
+	canvasHeight  = canvas.height = (modeTrophies) ? modeTrophiesHeight : window.innerHeight-gridMarginY;
 	cellSize      = Math.floor((Math.min(window.innerWidth, window.innerHeight-gridPaddingY-gridOffsetY-gridMarginY)+paneThickness*2)/gridSize);
 	gridPixelSize = cellSize * gridSize + paneThickness*2;
-	gridOffsetX   = Math.floor(window.innerWidth/2) - gridPixelSize/2;
-
+	gridOffsetX   = window.innerWidth/2 - gridPixelSize/2;
 	overlayRect.w = 0.8  * gridPixelSize;
 	overlayRect.h = 0.9  * gridPixelSize;
 	overlayRect.x = 0.1  * gridPixelSize + gridOffsetX;
 	overlayRect.y = 0.05 * gridPixelSize + gridOffsetY;
-	//cellSize = Math.floor((gridPixelSize - paneThickness*2)/gridSize);
 	currentlyAnimating = true;
 }
-

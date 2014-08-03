@@ -11,6 +11,7 @@ function initGame(){
 	gameLost = gameLostOverlayShown = false;
 	comboActiveCtr                  = 0;
 	score                           = 0;
+  initShapes();
 }
 
 function newGame(){

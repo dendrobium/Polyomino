@@ -13,8 +13,8 @@ function initGame(){
 	comboActiveCtr                  = 0;
 	score                           = 0;
 	timeStarted                     = new Date().getTime();
-	maxCombo                        = 0; // TODO: initialize this properly with user stats
-	maxComboScore                   = 0; // TODO: initialize this properly with user stats
+	maxCombo                        = parseInt(localStorage.getItem("maxCombo")) || 0;
+	maxComboScore                   = parseInt(localStorage.getItem("maxComboScore")) || 0;
 
 	selection = new grid(gridSize);
 	for(var i=0;i<selection.size;++i)for(var j=0;j<selection.size;++j)
@@ -75,6 +75,8 @@ function saveGame(){
 		localStorage.setItem("score",            goalScore);
 		localStorage.setItem("scoreFuncVersion", scoreFuncVersion);
 		localStorage.setItem("highScore",        highScore);
+		localStorage.setItem("maxComboScore", maxComboScore);
+		localStorage.setItem("maxCombo", maxCombo);
 	}
 }
 
@@ -93,7 +95,6 @@ function addToScore(squareOrder,pieceOrder,combo){
 	if(combo > 1)currentComboScore += points;
 	else currentComboScore = points;
 	if(currentComboScore > maxComboScore)maxComboScore = currentComboScore;
-
 	var totalScore = parseInt(localStorage.getItem("totalScore"));
 	localStorage.setItem("totalScore", totalScore + points);
 	currentlyAnimating = true;

@@ -1,23 +1,9 @@
 //Having multiple HTML pages introduces a lot of complexity
 //Instead, use this flag to determine whether we're on the trophy pages
 
-//when we are:
-//  Input needs to be redirected/cancelled (probably just cancelled)
-//  Resize function needs to resize with respect to the height of this pages
-//  No need to render the rest of the game
 var modeTrophies = false;
 
 var modeTrophiesHeight = 2000;
-
-
-/*
-	Top score
-	Total score
-	top combo multiplier
-	top combo score
-
-
-*/
 
 var saveTime = function(time){
 	var oldTime = parseInt(localStorage.getItem("bestTime"));
@@ -52,6 +38,8 @@ var getTrophyData = function(){
 	_trophyData.push(m("Total Score:", localStorage.getItem("totalScore")));
 	_trophyData.push(m("Fastest Time:", time));
 	_trophyData.push(m("Highest Order Polyomino:", order))
+	_trophyData.push(m("Biggest Combo:", maxCombo));
+	_trophyData.push(m("Best Combo Score:", maxComboScore));
 
 	for(var o=2; o<9; o++){
 		var num = localStorage.getItem("#of"+o);

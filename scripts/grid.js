@@ -1,12 +1,12 @@
 function newId(){
-  return ++blockId;
+	return ++blockId;
 }
 
 var cell = function(){
 	this.locked   = false;
 	this.selected = false;
 	this.occupied = false;
-  this.cemented = false;
+	this.cemented = false;
 	this.id = 0;
 	this.order = 0;
 

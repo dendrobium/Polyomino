@@ -40,7 +40,7 @@ function processActiveEvents(){
 function orderChangeEvt(cell,oldOrder,newOrder,startTick,endTick){
 	cell.locked = true;
 	new_event(startTick,endTick,function(interp){
-		cell.order =(newOrder-oldOrder)*interp+oldOrder;
+		cell.order = (newOrder-oldOrder)*interp+oldOrder;
 	},function(){cell.order = newOrder;});
 }
 
@@ -165,5 +165,6 @@ function fadeOutEvt(x,y,startTick,endTick,color){
 function gameWonEvt(){
 	new_event(0,10,null,function(){
 		gameWon = true;
+		saveTime(new Date().getTime() - timeStarted);
 	});
 }

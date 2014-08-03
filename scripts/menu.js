@@ -151,7 +151,6 @@ function CButton(x, y, width, height, render, callback){
 			 y < (this.y()+this.height) && y >= this.y()){
 			this.callback();
 			return true;
-			console.log("button clicked");
 		}
 	}
 
@@ -226,7 +225,6 @@ var trophiesButton = new CButton(function(){
 			setMenuDraw(false);
 			menuButton.enabled = false;
 			trophiesReturnToGameButton.enabled = true;
-			console.log('foo');
 			onresize();
 		}
 	);

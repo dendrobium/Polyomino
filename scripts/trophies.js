@@ -55,7 +55,6 @@ var getTrophyData = function(){
 
 	for(var o=2; o<9; o++){
 		var num = localStorage.getItem("#of"+o);
-		console.log(num);
 		_trophyData.push(m(POLYOMINO_NAME[o]+"s:", num));
 	}
 

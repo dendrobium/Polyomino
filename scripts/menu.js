@@ -24,7 +24,6 @@ function renderTopBar(){
 	drawText(highScore, 	gridOffsetX+gridPixelSize-130, 46, "small-caps bold 18px arial");
 }
 
-
 function renderMenu(){
 	gfx.fillStyle = 'rgba(0,0,0,0.7)';
 	gfx.fillRect(gridOffsetX+gridPixelSize-180, gridOffsetY, 180, 140);

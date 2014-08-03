@@ -28,7 +28,7 @@ var getTrophyData = function(){
 
 	var time = localStorage.getItem("bestTime");
 	if(!isNaN(parseInt(time)))
-		time = (time/1000).toFixed(1) + " seconds";
+		time = (time/60000).toFixed(1) + " minutes";
 
 	var order = localStorage.getItem("highestOrder");
 	if(!isNaN(parseInt(order))){

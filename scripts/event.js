@@ -165,5 +165,6 @@ function fadeOutEvt(x,y,startTick,endTick,color){
 function gameWonEvt(){
 	new_event(0,10,null,function(){
 		gameWon = true;
+		saveTime(new Date().getTime() - timeStarted);
 	});
 }

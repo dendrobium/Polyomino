@@ -7,7 +7,7 @@ var drawMenu = false;
 var img_polyomino = new Image();
 img_polyomino.src = "images/Polyomino.png";
 function setMenuDraw(bool){
-	newGameButton.enabled = instructionsButton.enabled = drawMenu = bool;
+	newGameButton.enabled = instructionsButton.enabled = trophiesButton.enabled = drawMenu = bool;
 	currentlyAnimating = true;
 }
 
@@ -16,7 +16,6 @@ function renderTopBar(){
 	gfx.fillRect(gridOffsetX, 4, gridPixelSize, gridOffsetY-8);
 	menuButton.render();
 	gfx.fillStyle = '#f0f0f0';
-	//drawText("Polyomino", gridOffsetX+4, 44, "italic small-caps bold 40px arial");
 	gfx.drawImage(img_polyomino, gridOffsetX+4, 6);
 	drawText("score: ", 	gridOffsetX+gridPixelSize-130, 26, "small-caps bold 18px arial",false,true);
 	drawText("high: ",  	gridOffsetX+gridPixelSize-130, 46, "small-caps bold 18px arial",false,true);
@@ -30,11 +29,6 @@ function renderMenu(){
 	newGameButton.render();
 	instructionsButton.render();
 	trophiesButton.render();
-
-	gfx.fillStyle = '#f0f0f0';
-	drawText("New Game",     gridOffsetX+gridPixelSize-60, gridOffsetY+32,  "Bold 20px arial",false, true);
-	drawText("Instructions", gridOffsetX+gridPixelSize-60, gridOffsetY+78,  "Bold 20px arial",false, true);
-	drawText("Trophies",     gridOffsetX+gridPixelSize-60, gridOffsetY+120, "Bold 20px arial",false, true);
 }
 
 //==== Overlays ====//
@@ -188,30 +182,74 @@ var menuButton = new CButton(
 
 menuButton.enabled = true;
 
-var newGameButton = new CButton(function(){return gridOffsetX+gridPixelSize-44},
-																function(){return gridOffsetY+8},
-																100, 36,
-																function(){
-																	gfx.fillStyle = '#808080';
-																	gfx.fillRect(this.x(), this.y(), this.width, this.height);
-																},
-																function(){newGame(); setMenuDraw(false);});
+var newGameButton = new CButton(function(){
+		return gridOffsetX+gridPixelSize-175},
+		function(){return gridOffsetY+8},
+		170, 36,
+		function(){
+			gfx.fillStyle = '#808080';
+			gfx.fillRect(this.x(), this.y(), this.width, this.height);
+						gfx.fillStyle = '#f0f0f0';
+			drawText("New Game",       this.x()+85, gridOffsetY+32,  "Bold 20px arial",true, false);
+		},
+		function(){
+			newGame();
+			setMenuDraw(false);
+		}
+	);
 
-var instructionsButton = new CButton(function(){return gridOffsetX+gridPixelSize-44},
-																		function(){return gridOffsetY+52},
-																		100, 36,
-																		function(){
-																			gfx.fillStyle = '#808080';
-																			gfx.fillRect(this.x(), this.y(), this.width, this.height);
-																		},
-																		function(){drawInstructions = true; setMenuDraw(false);});
+var instructionsButton = new CButton(function(){
+		return gridOffsetX+gridPixelSize-175},
+		function(){return gridOffsetY+52},
+		170, 36,
+		function(){
+			gfx.fillStyle = '#808080';
+			gfx.fillRect(this.x(), this.y(), this.width, this.height);
+						gfx.fillStyle = '#f0f0f0';
+			drawText("Instructions",   this.x()+85, gridOffsetY+78,  "Bold 20px arial",true, false);
+		},
+		function(){
+			drawInstructions = true;
+			setMenuDraw(false);
+		}
+	);
 
 
-var trophiesButton = new CButton(function(){return gridOffsetX+gridPixelSize-44},
-																function(){return gridOffsetY+96},
-																100, 36,
-																function(){
-																	gfx.fillStyle = '#808080';
-																	gfx.fillRect(this.x(), this.y(), this.width, this.height);
-																},
-																function(){ console.log("foo");  setMenuDraw(false); /* TODO show trophies */});
+var trophiesButton = new CButton(function(){
+		return gridOffsetX+gridPixelSize-175},
+		function(){return gridOffsetY+96},
+		170, 36,
+		function(){
+			gfx.fillStyle = '#808080';
+			gfx.fillRect(this.x(), this.y(), this.width, this.height);
+			gfx.fillStyle = '#f0f0f0';
+			drawText("Statistics",     this.x()+85, gridOffsetY+120, "Bold 20px arial", true, false);
+		},
+		function(){
+			modeTrophies = true;
+			setMenuDraw(false);
+			menuButton.enabled = false;
+			trophiesReturnToGameButton.enabled = true;
+			console.log('foo');
+			onresize();
+		}
+	);
+
+var trophiesReturnToGameButton = new CButton(
+		function(){return gridOffsetX+gridPixelSize-178;},
+		function(){return 12;},
+		170, 36,
+		function(){
+			gfx.fillStyle = '#808080';
+			gfx.fillRect(this.x(), this.y(), this.width, this.height);
+			gfx.fillStyle = '#f0f0f0';
+			drawText("Back",     this.x()+85, 35, "Bold 20px arial", true, false);
+		},
+		function(){
+			modeTrophies = false;
+			menuButton.enabled = true;
+			trophiesReturnToGameButton.enabled = false;
+			onresize();
+		}
+	);
+trophiesReturnToGameButton.enabled = false;

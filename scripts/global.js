@@ -43,6 +43,7 @@ var blockIdOfLastBlockPlaced;
 var comboActiveCtr, comboCtr;
 var gameWon, gameLost;
 var highScore = 0; //in case first time visitor
+var timeStarted; //for fastest-game detection
 
 //== GRID DIRECTION ==========================================================//
 

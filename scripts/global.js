@@ -15,6 +15,7 @@ dragSpeed          = 0.3;
 hoverOffset        = 8;
 keyframeSpeed      = 100;
 goalOrder          = 5; //I think this is 0-indexed, hence the bugs
+selectionOpacity   = 0.25;
 
 //==  POLYOMINO COLORS  ======================================================//
 
@@ -35,7 +36,7 @@ var polyColor = [
 //==  GLOBAL VARS  ===========================================================//
 
 var blockId, score, goalScore;
-var board, floating, transfer, transferId;
+var board, floating, selection, transfer, transferId;
 var mouse, dragging, snapping, mouseDX, mouseDY, downGX, downGY, mouseGX, mouseGY, placeX, placeY;
 var goalFloatX, goalFloatY, floatX, floatY, hover, goalRot, rot;
 var currentlyAnimating, triggerDetectSquares, spawnNewPoly, polyMoved;

@@ -18,17 +18,18 @@ function renderGridRaw(g,offset,usePrimary){
 	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
 		var c = g.getCell(i,j);
 		if(!c.occupied)continue;
+		if(c.cemented && usePrimary)continue;
 
-    if(c.cemented) {
-      rgb(0.5, 0.5, 0.5);
-    }
-		else if(usePrimary){
+		var primarySecondary = usePrimary;
+		if(c.cemented)primarySecondary = !primarySecondary;
+		if(primarySecondary){
 			if(Math.floor(c.order)===0)rgb(polyColor[c.order].primary.r,polyColor[c.order].primary.g,polyColor[c.order].primary.b);
 			else interpColor(polyColor[Math.floor(c.order)].primary,polyColor[Math.ceil(c.order)].primary,c.order%1);
 		}else{
 			if(Math.floor(c.order)===0)rgb(polyColor[c.order].secondary.r,polyColor[c.order].secondary.g,polyColor[c.order].secondary.b);
 			else interpColor(polyColor[Math.floor(c.order)].secondary,polyColor[Math.ceil(c.order)].secondary,c.order%1);
 		}
+
 
 		renderRect(i*cs+offset,j*cs+offset,(i+1)*cs-offset,(j+1)*cs-offset);
 		var right = g.getCell(i+1,j);
@@ -37,14 +38,38 @@ function renderGridRaw(g,offset,usePrimary){
 		var down = g.getCell(i,j+1);
 		if(down && down.occupied && down.id === c.id)
 			renderRect(i*cs+offset,(j+1)*cs-offset-1,(i+1)*cs-offset,(j+1)*cs+offset+1);
-
-
 	}
 }
 
 function renderGrid(g){
 	renderGridRaw(g,1,false);
 	renderGridRaw(g,3,true);
+
+	// draw cement "bolts"
+	var cs = cellSize;
+	for(var i=0;i<g.size;++i)for(var j=0;j<g.size;++j){
+		var c = g.getCell(i,j);
+		if(!c.occupied || !c.cemented)continue;
+		var u  = g.getCell(i  ,j-1);u=u?u.id===c.id:false;
+		var d  = g.getCell(i  ,j+1);d=d?d.id===c.id:false;
+		var l  = g.getCell(i-1,j  );l=l?l.id===c.id:false;
+		var r  = g.getCell(i+1,j  );r=r?r.id===c.id:false;
+
+		rgb(0.25,0.25,0.25);
+		if(!u&&!l)renderRect( i   *cs+5, j   *cs+5, i   *cs+11, j   *cs+11); // top left
+		if(!u&&!r)renderRect((i+1)*cs-5, j   *cs+5,(i+1)*cs-11, j   *cs+11); // top right
+		if(!d&&!l)renderRect( i   *cs+5,(j+1)*cs-5, i   *cs+11,(j+1)*cs-11); // bottom left
+		if(!d&&!r)renderRect((i+1)*cs-5,(j+1)*cs-5,(i+1)*cs-11,(j+1)*cs-11); // bottom right
+
+		// rgb(0.5,0.5,0.5);
+		rgb(polyColor[c.order].secondary.r,polyColor[c.order].secondary.g,polyColor[c.order].secondary.b); // XXX: this might break
+		if(!u&&!l)renderRect( i   *cs+7, j   *cs+7, i   *cs+9, j   *cs+9); // top left
+		if(!u&&!r)renderRect((i+1)*cs-7, j   *cs+7,(i+1)*cs-9, j   *cs+9); // top right
+		if(!d&&!l)renderRect( i   *cs+7,(j+1)*cs-7, i   *cs+9,(j+1)*cs-9); // bottom left
+		if(!d&&!r)renderRect((i+1)*cs-7,(j+1)*cs-7,(i+1)*cs-9,(j+1)*cs-9); // bottom right
+	//	if(l)renderRect(i*cs-1,j*cs+5,i*cs+1,(j+1)*cs-5);
+	//	if(u)renderRect(i*cs+5,j*cs-1,(i+1)*cs-5,j*cs+1);
+	}
 }
 
 function render(){
@@ -78,7 +103,7 @@ function render(){
 
 	gfx.clearRect(0,0,canvasWidth,canvasHeight);
 	renderTopBar();
-	gfx.fillStyle = '#424242';
+	rgb(0.26,0.26,0.26);
 	gfx.fillRect(gridOffsetX, gridOffsetY, gridPixelSize, gridPixelSize);
 	gfx.save();
 	gfx.translate(paneThickness+gridOffsetX,paneThickness+gridOffsetY);
@@ -94,6 +119,21 @@ function render(){
 		rgb(0.3,0.3,0.3);
 		for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
 			renderRect(i*cs+4,j*cs+4,(i+1)*cs-4,(j+1)*cs-4);
+	}
+
+	// render selection
+	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
+		var s = selection.getCell(i,j);
+		if(s === 0)continue;
+		var b = board.getCell(i,j);
+		if(!b.selected){
+			s = interpolate(s,0,0.01);
+			if(s<0.01)s = 0;
+			selection.setCell(i,j,s);
+		}else currentlyAnimating = true;
+		var color = Math.floor(b.order);
+		rgba(polyColor[color].secondary.r,polyColor[color].secondary.g,polyColor[color].secondary.b,s);
+		renderRect(i*cs,j*cs,(i+1)*cs,(j+1)*cs);
 	}
 
 	// render board and process events and animations
@@ -117,7 +157,7 @@ function render(){
 		gfx.translate((downGX+0.5)*cs,(downGY+0.5)*cs);
 		gfx.rotate(rot);
 		gfx.translate((downGX+0.5)*-cs,(downGY+0.5)*-cs);
-		gfx.fillStyle = "rgba(0,0,0,0.3)";
+		rgba(0,0,0,0.3);
 		for(var i=0;i<floating.size;++i)for(var j=0;j<floating.size;++j)
 		if(floating.getCell(i,j).occupied)
 			renderRect(i*cs,j*cs,(i+1)*cs,(j+1)*cs);
@@ -171,10 +211,9 @@ window.onresize = function(){
 	canvasWidth   = canvas.width  = window.innerWidth;
 	canvasHeight  = canvas.height = window.innerHeight-gridMarginY;
 
-
 	cellSize      = Math.floor((Math.min(window.innerWidth, window.innerHeight-gridPaddingY-gridOffsetY-gridMarginY)+paneThickness*2)/gridSize);
 	gridPixelSize = cellSize * gridSize + paneThickness*2;
-	gridOffsetX   = window.innerWidth/2 - gridPixelSize/2;
+	gridOffsetX   = Math.floor(window.innerWidth/2) - gridPixelSize/2;
 
 	overlayRect.w = 0.8  * gridPixelSize;
 	overlayRect.h = 0.9  * gridPixelSize;

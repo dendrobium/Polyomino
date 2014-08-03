@@ -12,6 +12,10 @@ function initGame(){
 	comboActiveCtr                  = 0;
 	score                           = 0;
   initShapes();
+
+	selection = new grid(gridSize);
+	for(var i=0;i<selection.size;++i)for(var j=0;j<selection.size;++j)
+		selection.setCell(i,j,0);
 }
 
 function newGame(){
@@ -37,13 +41,12 @@ function loadGame(){
 			var storedBoard = JSON.parse(localStorage.getItem("board"));
 			if(!storedBoard)
 				return false;
-			//console.log(storedBoard);
 			board = new grid(gridSize);
 			for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j){
 				var s = storedBoard[i][j];
 				var c = new cell();
 				c.quickSet(s.occupied,s.id,s.order);
-        c.cemented = s.cemented;
+				c.cemented = s.cemented;
 				board.setCell(i,j,c);
 			}
 			blockId   = parseInt(localStorage.getItem("blockId"));

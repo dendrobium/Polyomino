@@ -1,3 +1,4 @@
+
 /*============================================================================*\
 		   _  ______  ______  _____  __  __  __________
 		  / |/ / __ \/_  __/ /  _/ |/ / / / / / __/ __/
@@ -84,7 +85,7 @@ function initShapes() {
 		gamePolyominoCount[order] = 0;
     if (order > MAX_ORDER_OF_SHAPE_IDENTIFICATION) break;
 
-    console.log("shapes.initShapes():	order="+order);
+    //console.log("shapes.initShapes():	order="+order);
 		gameShapeCount[order] = new Array(SHAPE[order].length);
 		for (var shapeNum = 0; shapeNum <SHAPE[order].length; shapeNum++) {
 			gameShapeCount[order][shapeNum] = 0;

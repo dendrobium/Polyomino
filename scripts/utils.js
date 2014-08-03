@@ -2,14 +2,17 @@ function rFloat(x){return Math.random()*x;}
 function rInt(x){return Math.floor(Math.random()*x);}
 
 function rgb(r,g,b) {
-  //Arguments can be: r, g, b [0, 1]
-  //   or r {r:r, g:g, b:b}
-  if (g != undefined) {
-    gfx.fillStyle = "rgb(" + Math.floor(255 * r) + "," + Math.floor(255 * g) + "," + Math.floor(255 * b) + ")";
-  }
-  else {
-    gfx.fillStyle = "rgb(" + Math.floor(255 * r.r) + "," + Math.floor(255 * r.g) + "," + Math.floor(255 * r.b) + ")";
-  }
+	// Arguments can be: r, g, b [0, 1]
+	//               or: r {r:r, g:g, b:b}
+	if(g != undefined){
+		gfx.fillStyle = "rgb(" + Math.floor(255 * r) + "," + Math.floor(255 * g) + "," + Math.floor(255 * b) + ")";
+	}else{
+		gfx.fillStyle = "rgb(" + Math.floor(255 * r.r) + "," + Math.floor(255 * r.g) + "," + Math.floor(255 * r.b) + ")";
+	}
+}
+
+function rgba(r,g,b,a){
+	gfx.fillStyle = "rgba(" + Math.floor(255 * r) + "," + Math.floor(255 * g) + "," + Math.floor(255 * b) + "," + a + ")";
 }
 
 function hsv(h,s,v){

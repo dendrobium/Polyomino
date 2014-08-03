@@ -18,6 +18,7 @@ function placeStartingPolys() {
 //=======================================================================================
 
   var orderList;
+  var delay = 0;
 
   if (Math.random() < 0.25) {
     //Spawn 2 cemented Tetrominos and 2 cemented Trominos
@@ -28,13 +29,13 @@ function placeStartingPolys() {
       y1 = rInt(gridSize);
       y2 = rInt(gridSize);
 
-      var bounds = spawnBlock(4, true, x1, y1);
+      var bounds = spawnBlock(4, true, ++delay, x1, y1);
       //console.log("    spawned order 4: bounds= (" + bounds.minX + ", " + bounds.minY + ") - (" + bounds.maxX + ", " + bounds.maxY + ")");
 
       if (bounds.minY < gridSize / 2) y3 = bounds.maxY + 1; else y3 = bounds.minY - 1;
       x3 = rInt(3);
 
-      bounds = spawnBlock(4, true, x2, y2);
+      bounds = spawnBlock(4, true, ++delay, x2, y2);
       //console.log("    spawned order 4: bounds= (" + bounds.minX + ", " + bounds.minY + ") - (" + bounds.maxX + ", " + bounds.maxY + ")");
 
       if (bounds.minY < gridSize / 2) y4 = bounds.maxY + 1; else y4 = bounds.minY - 1;
@@ -46,7 +47,7 @@ function placeStartingPolys() {
       x1 = rInt(gridSize);
       x2 = rInt(gridSize);
 
-      var bounds = spawnBlock(4, true, x1, y1);
+      var bounds = spawnBlock(4, true, ++delay, x1, y1);
       // console.log("    spawned order 4: bounds= (" + bounds.minX + ", " + bounds.minY + ") - (" + bounds.maxX + ", " + bounds.maxY + ")");
 
 
@@ -54,7 +55,7 @@ function placeStartingPolys() {
       else                          x3 = bounds.minX - 1;
       y3 = rInt(3);
 
-      bounds = spawnBlock(4, true, x2, y2);
+      bounds = spawnBlock(4, true, ++delay, x2, y2);
       //console.log("    spawned order 4: bounds= (" + bounds.minX + ", " + bounds.minY + ") - (" + bounds.maxX + ", " + bounds.maxY + ")");
 
       if (bounds.minX < gridSize / 2) x4 = bounds.maxX + 1;
@@ -62,18 +63,18 @@ function placeStartingPolys() {
       y4 = (gridSize - 3) + rInt(3);
     }
 
-    spawnBlock(3, true, x3, y3);
-    spawnBlock(3, true, x4, y4);
+    spawnBlock(3, true, ++delay, x3, y3);
+    spawnBlock(3, true, ++delay, x4, y4);
   }
 
 
   else if (Math.random() < 0.5) {
     //Spawn 4 cemented Tetrominos
 
-    spawnBlock(4, true, rInt(3), rInt(3));
-    spawnBlock(4, true, (gridSize - 3) + rInt(3), rInt(3));
-    spawnBlock(4, true, rInt(3), (gridSize - 3) + rInt(3));
-    spawnBlock(4, true, (gridSize - 3) + rInt(3), (gridSize - 3) + rInt(3));
+    spawnBlock(4, true, ++delay, rInt(3), rInt(3));
+    spawnBlock(4, true, ++delay, (gridSize - 3) + rInt(3), rInt(3));
+    spawnBlock(4, true, ++delay, rInt(3), (gridSize - 3) + rInt(3));
+    spawnBlock(4, true, ++delay, (gridSize - 3) + rInt(3), (gridSize - 3) + rInt(3));
   }
 
   else if (Math.random() < .75) {
@@ -84,13 +85,13 @@ function placeStartingPolys() {
 
     for (var i=0; i<8; i++) {
 
-      var bounds = spawnBlock(3, true, x, y);
+      var bounds = spawnBlock(3, true, ++delay, x, y);
       if (bounds === false) {
-        bounds = spawnBlock(3, true);
+        bounds = spawnBlock(3, true, ++delay);
       }
       x = bounds.maxX + 1;
       if (x > 9) {
-        bounds = spawnBlock(3, true);
+        bounds = spawnBlock(3, true, ++delay);
       }
 
       var goingUp = true;
@@ -105,13 +106,13 @@ function placeStartingPolys() {
 
   else {
     //Spawn 1 cemented Pentomino
-    spawnBlock(5, true, gridSize / 2, gridSize / 2);
+    spawnBlock(5, true, ++delay, gridSize / 2, gridSize / 2);
   }
 
 
   for (var i=0; i<12; i++) {
-    if (Math.random() < .3) spawnBlock(2, false);
-    else if (Math.random() < .5) spawnBlock(1, false);
+    if (Math.random() < .3) spawnBlock(2, false, ++delay);
+    else if (Math.random() < .5) spawnBlock(1, false, ++delay);
   }
   currentlyAnimating = true;
 }
@@ -131,8 +132,8 @@ function spawnMonoOrDomino() {
     //This will pick, with equal probability one empty space.
     //Then, starting in a random direction, it will look in each
     //   of the 4 directions until it can create a domino - or return false if it cannot.
-    var done = spawnBlock(2, false);
-    if (!done) spawnBlock(1, false);
+    var done = spawnBlock(2, false, 0);
+    if (!done) spawnBlock(1, false, 0);
   }
   currentlyAnimating = true;
   triggerDetectSquares = true;
@@ -145,7 +146,7 @@ function spawnMonoOrDomino() {
 
 
 //=======================================================================================
-function spawnBlock(order, cement, x0, y0) {
+function spawnBlock(order, cement, delay, x0, y0) {
 //=======================================================================================
   //This function is called when:
   //  1) spawning starting polys.
@@ -197,7 +198,9 @@ function spawnBlock(order, cement, x0, y0) {
   //console.log("    start= ("+start.x+", "+start.y+"),  next=("+next.x+", "+next.y+"), next.dir="+next.dir);
 
   if (next != undefined) dir =  next.dir;
-  animateBlockAggregationInBreathFirstOrder(start.x,start.y, dir, spawnGrid, order, 0, id, cement);
+  if (delay === undefined) delay = 0;
+  delay *= 100;
+  animateBlockAggregationInBreathFirstOrder(start.x,start.y, dir, spawnGrid, order, 0, id, cement, delay);
   return { id:id, minX:minX, minY:minY, maxX:maxX, maxY:maxY};
 }
 
@@ -353,7 +356,7 @@ function appendRandomCellToPoly(spawnGrid, id, order) {
 
 //LUKE: Update starting polys and mono/domino animation here.
 //=======================================================================================
-function animateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGrid, order, depth, id, cement) {
+function animateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGrid, order, depth, id, cement, delay) {
 //=======================================================================================
   //Breath first Recersive walk through each cell of block to set animation timings at
   //  recersion level. Recersivaly walk each cell.
@@ -376,13 +379,13 @@ function animateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGr
   }
 
   var color = polyColor[order];
-  slideInEvt[entryDirection](x, y, keyframe(depth),keyframe(depth+1),color.secondary);
-  highlightEvt(x, y, keyframe(depth+1), keyframe(order+order),color.secondary);
-  slideInEvt[entryDirection](x, y, keyframe(depth+order),keyframe(depth+order+1),color.primary);
-  highlightEvt(x, y, keyframe(depth+order+1), keyframe(order+order),color.primary);
-  quickSetEvt(myCell, true, id, order, keyframe(order+order));
-  fadeOutEvt(x, y, keyframe(order+order), keyframe(order+order+2),color.primary);
-  unlockEvt(myCell, keyframe(order+order+2));
+  slideInEvt[entryDirection](x, y, delay+keyframe(depth),delay+keyframe(depth+1),color.secondary);
+  highlightEvt(x, y, delay+keyframe(depth+1), delay+keyframe(order+order),color.secondary);
+  slideInEvt[entryDirection](x, y, delay+keyframe(depth+order),delay+keyframe(depth+order+1),color.primary);
+  highlightEvt(x, y, delay+keyframe(depth+order+1), delay+keyframe(order+order),color.primary);
+  quickSetEvt(myCell, true, id, order, delay+keyframe(order+order));
+  fadeOutEvt(x, y, delay+keyframe(order+order), delay+keyframe(order+order+2),color.primary);
+  unlockEvt(myCell, delay+keyframe(order+order+2));
 
   while(true) {
     var coordinate = getCoordinateOfCellInRandomDirectionWithGivenValue(spawnGrid, x, y, id);
@@ -391,7 +394,7 @@ function animateBlockAggregationInBreathFirstOrder(x, y, entryDirection, spawnGr
     if (coordinate === undefined) return;
 
     animateBlockAggregationInBreathFirstOrder(
-      coordinate.x, coordinate.y, coordinate.dir, spawnGrid, order, depth + 1, id,  cement);
+      coordinate.x, coordinate.y, coordinate.dir, spawnGrid, order, depth + 1, id,  cement, delay);
 
   }
 }

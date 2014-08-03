@@ -1,6 +1,7 @@
 //==  GAME UTILS  ============================================================//
 
 var resetStorage = false;
+var version = 0.91; //to be used to reset testing computers
 
 function initGame(){
 	dragging = snapping             = false;
@@ -108,9 +109,9 @@ window.onload = function(){
 			localStorage.clear();
 		}
 
-		var visited = localStorage.getItem("visited");
-		if(!visited){
-			localStorage.setItem("visited",          true);
+		var versionNum = parseInt(localStorage.getItem("version"));
+		if(version !== versionNum){
+			localStorage.setItem("version",          version);
 			localStorage.setItem("scoreFuncVersion", scoreFuncVersion);
 			localStorage.setItem("highScore",        0);
 			localStorage.setItem("bestTime",         "N/A");
@@ -119,20 +120,17 @@ window.onload = function(){
 			for(var i = 2; i < 8; i++)
 				localStorage.setItem("#of"+i,          0);
 
-			// XXX: direct user to instructions
 			drawInstructions = true;
+			newGame();
+		}
+		else{ //previous visitor; try to load game
+			if(!loadGame())
+				newGame();
 		}
 	} else { //they have no local storage: assume 1st time visitor
 		drawInstructions = true;
-	}
-
-	// setup game
-	var success = loadGame();
-	//console.log(success);
-	if(!success)
 		newGame();
-
-	// begin game
+	}
 
 	render();
 }

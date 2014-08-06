@@ -230,7 +230,7 @@ window.onresize = function(){
 	canvasHeight  = canvas.height = (modeTrophies) ? modeTrophiesHeight : window.innerHeight-gridMarginY;
 	cellSize      = Math.floor((Math.min(window.innerWidth, window.innerHeight-gridPaddingY-gridOffsetY-gridMarginY)+paneThickness*2)/gridSize);
 	gridPixelSize = cellSize * gridSize + paneThickness*2;
-	gridOffsetX   = window.innerWidth/2 - gridPixelSize/2;
+	gridOffsetX   = Math.floor(window.innerWidth/2 - gridPixelSize/2);
 	overlayRect.w = 0.8  * gridPixelSize;
 	overlayRect.h = 0.9  * gridPixelSize;
 	overlayRect.x = 0.1  * gridPixelSize + gridOffsetX;

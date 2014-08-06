@@ -64,15 +64,15 @@ function renderTrophies(){
 	gfx.fillStyle = '#f0f0f0';
 	drawText("Statistics", canvasWidth/2, 40+gridOffsetY, "40px Arial Bold", true, false)
 
-	var rightBuffer = canvasWidth/8;
+	var rightBuffer = gridPixelSize/2;
 	var y = 80+gridOffsetY;
 	var lineHeight = 30;
 	for(var i in _trophyData){
 		var name = _trophyData[i].name;
 		var value = _trophyData[i].value;
-		drawText(name, canvasWidth/2-rightBuffer,y+i*lineHeight, "22px Arial", false, true);
-		drawText(value, canvasWidth/2+rightBuffer,y+i*lineHeight, "22px Arial", false, false);
-		gfx.fillRect(gridOffsetX+30, y+i*lineHeight+5, gridPixelSize-60, 2);
+		drawText(name, canvasWidth/2-rightBuffer+30,y+i*lineHeight, "22px Arial", false, false);
+		drawText(value, canvasWidth/2+rightBuffer/2,y+i*lineHeight, "22px Arial", false, false);
+		gfx.fillRect(gridOffsetX+20, y+i*lineHeight+5, gridPixelSize-40, 2);
 	}
 }
 

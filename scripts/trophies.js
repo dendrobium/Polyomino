@@ -60,7 +60,6 @@ function renderTrophies(){
 	gfx.fillRect(gridOffsetX, 4, gridPixelSize, gridOffsetY-8);
 	trophiesReturnToGameButton.render(); //render the back-to-game button instead
 	gfx.fillStyle = '#f0f0f0';
-	//drawText("Polyomino", gridOffsetX+4, 44, "italic small-caps bold 40px arial");
 	gfx.drawImage(img_polyomino, gridOffsetX+4, 6);
 
 
@@ -69,6 +68,15 @@ function renderTrophies(){
 	gfx.fillRect(gridOffsetX, gridOffsetY, gridPixelSize, modeTrophiesHeight-gridMarginY-gridOffsetY*2);
 	gfx.fillStyle = '#f0f0f0';
 	drawText("Statistics", canvasWidth/2, 40+gridOffsetY, "40px Arial Bold", true, false)
+	var w = gfx.measureText("Statistics").width;
+	var ord = rInt(8)+1;
+	rgb(polyColor[ord].secondary.r,polyColor[ord].secondary.g,polyColor[ord].secondary.b);
+	gfx.fillRect(canvasWidth/2+w/2+12, gridOffsetY+10, 32, 32);
+	gfx.fillRect(canvasWidth/2-w/2-42, gridOffsetY+10, 32, 32);
+
+	rgb(polyColor[ord].primary.r,polyColor[ord].primary.g,polyColor[ord].primary.b);
+	gfx.fillRect(canvasWidth/2+w/2+14, gridOffsetY+12, 28, 28);
+	gfx.fillRect(canvasWidth/2-w/2-40, gridOffsetY+12, 28, 28);
 
 	var rightBuffer = gridPixelSize/2;
 	var y = 80+gridOffsetY;
@@ -86,7 +94,6 @@ function renderTrophies(){
 			rgb(polyColor[color].secondary.r,polyColor[color].secondary.g,polyColor[color].secondary.b);
 			gfx.fillRect(canvasWidth/2-rightBuffer+30, y+i*lineHeight-13, 10, 10);
 		}
-		// gfx.fillRect(gridOffsetX+gridPixelSize - 14, y+i*lineHeight-13, 10, 10);
 	}
 }
 

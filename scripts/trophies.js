@@ -26,7 +26,7 @@ var savePolyominoStats = function(order, type){
 var _trophyData = [];
 var getTrophyData = function(){
 	_trophyData = [];
-	var m = function(a, b){ return {name:a,value:b}};
+	var m = function(a, b, c){ return {name:a,value:b,color:c}};
 
 	var time = localStorage.getItem("bestTime");
 	if(!isNaN(parseInt(time)))
@@ -46,7 +46,7 @@ var getTrophyData = function(){
 
 	for(var o=2; o<9; o++){
 		var num = localStorage.getItem("#of"+o);
-		_trophyData.push(m("    " + POLYOMINO_NAME[o]+"s:", num));
+		_trophyData.push(m("    " + POLYOMINO_NAME[o]+"s:", num, o));
 	}
 
 }
@@ -76,14 +76,16 @@ function renderTrophies(){
 	for(var i in _trophyData){
 		var name = _trophyData[i].name;
 		var value = _trophyData[i].value;
+		var color = _trophyData[i].color;
 		gfx.fillStyle = '#f0f0f0';
 		drawText(name, canvasWidth/2-rightBuffer+30,y+i*lineHeight, "22px Arial", false, false);
 		drawText(value, canvasWidth/2+rightBuffer/2,y+i*lineHeight, "22px Arial", false, false);
 		gfx.fillRect(gridOffsetX+20, y+i*lineHeight+10, gridPixelSize-40, 2);
 
-		var ord = i%8 + 1;
-		rgb(polyColor[ord].secondary.r,polyColor[ord].secondary.g,polyColor[ord].secondary.b);
-		gfx.fillRect(gridOffsetX+4, y+i*lineHeight-13, 10, 10);
+		if(color){
+			rgb(polyColor[color].secondary.r,polyColor[color].secondary.g,polyColor[color].secondary.b);
+			gfx.fillRect(canvasWidth/2-rightBuffer+30, y+i*lineHeight-13, 10, 10);
+		}
 		// gfx.fillRect(gridOffsetX+gridPixelSize - 14, y+i*lineHeight-13, 10, 10);
 	}
 }

@@ -16,7 +16,7 @@ function renderTopBar(){
 	gfx.fillRect(gridOffsetX, 4, gridPixelSize, gridOffsetY-8);
 	menuButton.render();
 	gfx.fillStyle = '#f0f0f0';
-	gfx.drawImage(img_polyomino, gridOffsetX+4, 6);
+	gfx.drawImage(img_polyomino, gridOffsetX+4, 10);
 	drawText("score: ", 	gridOffsetX+gridPixelSize-130, 26, "small-caps bold 18px arial",false,true);
 	drawText("high: ",  	gridOffsetX+gridPixelSize-130, 46, "small-caps bold 18px arial",false,true);
 	drawText(score, 			gridOffsetX+gridPixelSize-130, 26, "small-caps bold 18px arial");

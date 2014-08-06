@@ -236,4 +236,5 @@ window.onresize = function(){
 	overlayRect.x = 0.1  * gridPixelSize + gridOffsetX;
 	overlayRect.y = 0.05 * gridPixelSize + gridOffsetY;
 	currentlyAnimating = true;
+	trophiesAnimating = true;
 }

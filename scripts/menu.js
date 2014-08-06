@@ -225,6 +225,7 @@ var trophiesButton = new CButton(function(){
 			setMenuDraw(false);
 			menuButton.enabled = false;
 			trophiesReturnToGameButton.enabled = true;
+			trophiesAnimating = true;
 			onresize();
 		}
 	);

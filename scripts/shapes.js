@@ -54,11 +54,16 @@ function initShapes() {
 
   SHAPE[MONOMINO] = [[[1]]];
 
-  SHAPE[DOMINO] = [[[3,1], [2,0]]];
+  SHAPE[DOMINO] = [[[3,1],
+                    [2,0]]];
 
-	SHAPE[TROMINO]   = [[[ 3,3,3], [ 1, 0,0], [1,0,0]],
-                      [[11,7,0], [13,14,0], [0,0,0]]];
+	SHAPE[TROMINO]   = [[[3,2,2],
+                       [1,0,0],
+                       [1,0,0]],
 
+                      [[11, 7,0],
+                       [13,14,0],
+                       [ 0, 0,0]]];
 
 
 
@@ -85,7 +90,6 @@ function initShapes() {
 		gamePolyominoCount[order] = 0;
     if (order > MAX_ORDER_OF_SHAPE_IDENTIFICATION) break;
 
-    //console.log("shapes.initShapes():	order="+order);
 		gameShapeCount[order] = new Array(SHAPE[order].length);
 		for (var shapeNum = 0; shapeNum <SHAPE[order].length; shapeNum++) {
 			gameShapeCount[order][shapeNum] = 0;
@@ -148,8 +152,8 @@ function identifyShape(myMatrix, order, id) {
      for (var y = 0; y < myMatrix[x].length; y++) {
        if (myMatrix[x][y] === id) {
 
-         //console.log("     SHAPE["+order+"]["+shapeNum+"]["+(y - minY)+"]["+(x - minX)+"]="+SHAPE[order][shapeNum][y - minY][x - minX] +
-         //  "  & " + mask + " = " +((SHAPE[order][shapeNum][y - minY][x - minX]) & mask));
+         console.log("     SHAPE["+order+"]["+shapeNum+"]["+(y - minY)+"]["+(x - minX)+"]="+SHAPE[order][shapeNum][y - minY][x - minX] +
+           "  & " + mask + " = " +((SHAPE[order][shapeNum][y - minY][x - minX]) & mask));
          if (((SHAPE[order][shapeNum][y - minY][x - minX]) & mask) === 0) return false;
        }
      }

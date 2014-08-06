@@ -55,25 +55,29 @@ function renderGrid(g){
 		var l  = g.getCell(i-1,j  );l=l?l.id===c.id:false;
 		var r  = g.getCell(i+1,j  );r=r?r.id===c.id:false;
 
-		rgb(0.25,0.25,0.25);
+		rgb(0.28,0.28,0.28);
 		if(!u&&!l)renderRect( i   *cs+5, j   *cs+5, i   *cs+11, j   *cs+11); // top left
 		if(!u&&!r)renderRect((i+1)*cs-5, j   *cs+5,(i+1)*cs-11, j   *cs+11); // top right
 		if(!d&&!l)renderRect( i   *cs+5,(j+1)*cs-5, i   *cs+11,(j+1)*cs-11); // bottom left
 		if(!d&&!r)renderRect((i+1)*cs-5,(j+1)*cs-5,(i+1)*cs-11,(j+1)*cs-11); // bottom right
 
-		// rgb(0.5,0.5,0.5);
 		rgb(polyColor[c.order].secondary.r,polyColor[c.order].secondary.g,polyColor[c.order].secondary.b); // XXX: this might break
 		if(!u&&!l)renderRect( i   *cs+7, j   *cs+7, i   *cs+9, j   *cs+9); // top left
 		if(!u&&!r)renderRect((i+1)*cs-7, j   *cs+7,(i+1)*cs-9, j   *cs+9); // top right
 		if(!d&&!l)renderRect( i   *cs+7,(j+1)*cs-7, i   *cs+9,(j+1)*cs-9); // bottom left
 		if(!d&&!r)renderRect((i+1)*cs-7,(j+1)*cs-7,(i+1)*cs-9,(j+1)*cs-9); // bottom right
-	//	if(l)renderRect(i*cs-1,j*cs+5,i*cs+1,(j+1)*cs-5);
-	//	if(u)renderRect(i*cs+5,j*cs-1,(i+1)*cs-5,j*cs+1);
 	}
 }
 
 function render(){
 	requestAnimationFrame(render);
+
+	//If rendering trophies, suspend everything else (pause the game) including events and tick
+	if(modeTrophies){
+		renderTrophies();
+		return;
+	}
+
 	var currentTick = new Date().getTime();
 	elapsed = currentTick-tick;
 	tick = currentTick;
@@ -201,25 +205,35 @@ function render(){
 	}
 }
 
+function drawText(text, x, y, font, centered, rightAlign){
+	gfx.font = font;
+	if(centered){
+		var w = gfx.measureText(text).width;
+		gfx.fillText(text,x-w/2,y);
+		return;
+	}
+	if(rightAlign){
+		var w = gfx.measureText(text).width;
+		gfx.fillText(text,x-w,y);
+		return;
+	}
+	gfx.fillText(text, x, y);
+}
 //==== Resizing ====//
 
+var gridMarginY = 0;
+var gridPaddingY = 40;
 window.onresize = function(){
 	gridOffsetY   = 60;
-	var gridMarginY = 0; //will be used soon, don't remove
-	var gridPaddingY = 40;
 
 	canvasWidth   = canvas.width  = window.innerWidth;
-	canvasHeight  = canvas.height = window.innerHeight-gridMarginY;
-
+	canvasHeight  = canvas.height = (modeTrophies) ? modeTrophiesHeight : window.innerHeight-gridMarginY;
 	cellSize      = Math.floor((Math.min(window.innerWidth, window.innerHeight-gridPaddingY-gridOffsetY-gridMarginY)+paneThickness*2)/gridSize);
 	gridPixelSize = cellSize * gridSize + paneThickness*2;
-	gridOffsetX   = Math.floor(window.innerWidth/2) - gridPixelSize/2;
-
+	gridOffsetX   = Math.floor(window.innerWidth/2 - gridPixelSize/2);
 	overlayRect.w = 0.8  * gridPixelSize;
 	overlayRect.h = 0.9  * gridPixelSize;
 	overlayRect.x = 0.1  * gridPixelSize + gridOffsetX;
 	overlayRect.y = 0.05 * gridPixelSize + gridOffsetY;
-	//cellSize = Math.floor((gridPixelSize - paneThickness*2)/gridSize);
 	currentlyAnimating = true;
 }
-

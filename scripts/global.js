@@ -41,9 +41,10 @@ var mouse, dragging, snapping, mouseDX, mouseDY, downGX, downGY, mouseGX, mouseG
 var goalFloatX, goalFloatY, floatX, floatY, hover, goalRot, rot;
 var currentlyAnimating, triggerDetectSquares, spawnNewPoly, polyMoved;
 var blockIdOfLastBlockPlaced;
-var comboActiveCtr, comboCtr;
+var comboActiveCtr, comboCtr, maxCombo, currentComboScore, maxComboScore;
 var gameWon, gameLost;
 var highScore = 0; //in case first time visitor
+var timeStarted; //for fastest-game detection
 
 //== GRID DIRECTION ==========================================================//
 

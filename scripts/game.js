@@ -1,6 +1,7 @@
 //==  GAME UTILS  ============================================================//
 
 var resetStorage = false;
+var version = "0.91"; //to be used to reset testing computers
 
 function initGame(){
 	dragging = snapping             = false;
@@ -11,11 +12,15 @@ function initGame(){
 	gameLost = gameLostOverlayShown = false;
 	comboActiveCtr                  = 0;
 	score                           = 0;
-  initShapes();
+	timeStarted                     = new Date().getTime();
+	maxCombo                        = parseInt(localStorage.getItem("maxCombo")) || 0;
+	maxComboScore                   = parseInt(localStorage.getItem("maxComboScore")) || 0;
 
 	selection = new grid(gridSize);
 	for(var i=0;i<selection.size;++i)for(var j=0;j<selection.size;++j)
 		selection.setCell(i,j,0);
+
+	initShapes();
 }
 
 function newGame(){
@@ -70,6 +75,8 @@ function saveGame(){
 		localStorage.setItem("score",            goalScore);
 		localStorage.setItem("scoreFuncVersion", scoreFuncVersion);
 		localStorage.setItem("highScore",        highScore);
+		localStorage.setItem("maxComboScore", maxComboScore);
+		localStorage.setItem("maxCombo", maxCombo);
 	}
 }
 
@@ -79,8 +86,17 @@ function gameOver(){
 
 //==  SCORE RELATED  =========================================================//
 
-function addToScore(squareOrder,pieceOrder,multiplier){
-	goalScore += Math.floor(Math.pow(squareOrder*squareOrder*pieceOrder, multiplier*0.5+0.5));
+function addToScore(squareOrder,pieceOrder,combo){
+	console.log(combo);
+	var points = Math.floor(Math.pow(squareOrder*squareOrder*pieceOrder, combo*0.5+0.5));
+	goalScore += points;
+
+	if(combo > maxCombo)maxCombo = combo;
+	if(combo > 1)currentComboScore += points;
+	else currentComboScore = points;
+	if(currentComboScore > maxComboScore)maxComboScore = currentComboScore;
+	var totalScore = parseInt(localStorage.getItem("totalScore"));
+	localStorage.setItem("totalScore", totalScore + points);
 	currentlyAnimating = true;
 }
 var scoreFuncVersion = btoa(addToScore.toString());
@@ -92,7 +108,7 @@ window.onload = function(){
 	// setup controls and canvas element
 	canvas = document.getElementById("canvas");
 	gfx = canvas.getContext("2d");
-  tick=new Date().getTime();
+	tick=new Date().getTime();
 	window.onresize();  // determine grid/cell size
 	//setupInstruction(); // setup instructions based on grid size
 	setupControls();
@@ -103,26 +119,28 @@ window.onload = function(){
 			localStorage.clear();
 		}
 
-		var visited = localStorage.getItem("visited");
-		if(!visited){
-			localStorage.setItem("visited",          true);
+		var versionNum = localStorage.getItem("version");
+		if(version !== versionNum){
+			localStorage.setItem("version",          version);
 			localStorage.setItem("scoreFuncVersion", scoreFuncVersion);
 			localStorage.setItem("highScore",        0);
+			localStorage.setItem("bestTime",         "N/A");
+			localStorage.setItem("totalScore",       0);
+			localStorage.setItem("highestOrder",     "N/A");
+			for(var i = 2; i < 9; i++)
+				localStorage.setItem("#of"+i,          0);
 
-			// XXX: direct user to instructions
 			drawInstructions = true;
+			newGame();
+		}
+		else{ //previous visitor; try to load game
+			if(!loadGame())
+				newGame();
 		}
 	} else { //they have no local storage: assume 1st time visitor
 		drawInstructions = true;
-	}
-
-	// setup game
-	var success = loadGame();
-	//console.log(success);
-	if(!success)
 		newGame();
-
-	// begin game
+	}
 
 	render();
 }

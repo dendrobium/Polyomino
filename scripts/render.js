@@ -219,6 +219,13 @@ function drawText(text, x, y, font, centered, rightAlign){
 	}
 	gfx.fillText(text, x, y);
 }
+
+function drawNames(){
+	var names = ["Luke Balaoro", "Joel Castellanos", "Ezra Stallings"];
+	shuffle(names);
+	var text = "Created by <b>" + names[0] + "</b>, <b>" + names[1] + "</b>, and <b>" + names[2] + "</b>.";
+}
+
 //==== Resizing ====//
 
 var gridMarginY = 0;

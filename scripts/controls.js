@@ -227,25 +227,36 @@ function cancelMove(){
 	}snapping = true;
 };
 
+//'g' for "global"
+var gTouches = [null, null];
 function touchHandler(event){
-	var touches = event.changedTouches;
-	var first   = touches[0];
-	var type    = "";
+	event.preventDefault();
+	var first   = event.changedTouches[0];
+	var id = 0;
+	if(gTouches[0] === null || gTouches[0] === first.identifier){
+		gTouches[0] = first.identifier;
+		id = 0;
+	}
+	else if(gTouches[1] === null || gTouches[1] === first.identifier){
+		gTouches[1] = first.identifier;
+		id = 1;
+	}
+	else return;
 
 	switch(event.type){
 		case "touchstart" :
-			if(first.identifier == 0) evts.lDown = true;
-			else if(first.identifier == 1) evts.rDown = true;
+			if(id == 0) evts.lDown = true;
+			else if(id == 1) evts.rDown = true;
 			break;
 		case "touchend"   :
-			if(first.identifier == 0) evts.lUp = true;
+			if(id == 0) evts.lUp = true;
+			gTouches[id] = null;
 			break;
 	}
 
 	if(first.identifier == 0){
 		getMouseFromEvent(first);
 	}
-	event.preventDefault();
 }
 
 function setupControls(){

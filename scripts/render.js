@@ -72,6 +72,9 @@ function renderGrid(g){
 function render(){
 	requestAnimationFrame(render);
 
+	//handle inputs
+	processInputs();
+
 	//If rendering trophies, suspend everything else (pause the game) including events and tick
 	if(modeTrophies){
 		renderTrophies();
@@ -224,17 +227,23 @@ function drawNames(){
 	var names = ["Luke Balaoro", "Joel Castellanos", "Ezra Stallings"];
 	shuffle(names);
 	var text = "Created by <b>" + names[0] + "</b>, <b>" + names[1] + "</b>, and <b>" + names[2] + "</b>.";
+	document.getElementById("credits").innerHTML = text;
 }
 
 //==== Resizing ====//
 
-var gridMarginY = 0;
-var gridPaddingY = 40;
+var gridMarginY = 60;
+var gridPaddingY = 20;
 window.onresize = function(){
 	gridOffsetY   = 60;
 
 	canvasWidth   = canvas.width  = window.innerWidth;
 	canvasHeight  = canvas.height = (modeTrophies) ? modeTrophiesHeight : window.innerHeight-gridMarginY;
+	document.getElementById("cvs_div").style.width = canvasWidth+"px";
+	document.getElementById("cvs_div").style.height = canvasHeight+"px";
+	document.getElementById("social_div").style.width = canvasWidth+"px";
+	document.getElementById("social_div").style.height = gridMarginY+"px";
+	document.getElementById("social_div").style.top = canvasHeight+"px";
 	cellSize      = Math.floor((Math.min(window.innerWidth, window.innerHeight-gridPaddingY-gridOffsetY-gridMarginY)+paneThickness*2)/gridSize);
 	gridPixelSize = cellSize * gridSize + paneThickness*2;
 	gridOffsetX   = Math.floor(window.innerWidth/2 - gridPixelSize/2);

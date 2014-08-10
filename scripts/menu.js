@@ -41,7 +41,6 @@ var img_tro2 = new Image();
 img_3x3.src  = "images/Instructions_3x3.png";
 img_tro1.src = "images/Instructions_Tro1.png";
 img_tro2.src = "images/Instructions_Tro2.png";
-
 function renderInstructionsOverlay(){
 	if(!(img_3x3.complete && img_tro1.complete && img_tro2.complete))
 		currentlyAnimating = true; //ensure images load
@@ -247,4 +246,3 @@ var trophiesReturnToGameButton = new CButton(
 			onresize();
 		}
 	);
-trophiesReturnToGameButton.enabled = false;

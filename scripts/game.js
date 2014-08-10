@@ -12,7 +12,6 @@ function initGame(){
 	gameLost = gameLostOverlayShown = false;
 	comboActiveCtr                  = 0;
 	score                           = 0;
-	timeStarted                     = new Date().getTime();
 	maxCombo                        = parseInt(localStorage.getItem("maxCombo")) || 0;
 	maxComboScore                   = parseInt(localStorage.getItem("maxComboScore")) || 0;
 
@@ -37,6 +36,8 @@ function newGame(){
 	initGame();
 	placeStartingPolys();
 	saveGame();
+	timeStarted = new Date().getTime();
+	localStorage.setItem("time", timeStarted);
 }
 
 function loadGame(){
@@ -56,6 +57,7 @@ function loadGame(){
 			}
 			blockId   = parseInt(localStorage.getItem("blockId"));
 			goalScore = parseInt(localStorage.getItem("score"));
+			timeStarted = parseInt(localStorage.getItem("time"));
 			var testscoreFuncVersion = localStorage.getItem("scoreFuncVersion");
 			if(scoreFuncVersion === testscoreFuncVersion)
 				highScore = parseInt(localStorage.getItem("highScore"));
@@ -107,6 +109,7 @@ window.onload = function(){
 
 	// setup controls and canvas element
 	canvas = document.getElementById("canvas");
+	drawNames();
 	gfx = canvas.getContext("2d");
 	tick=new Date().getTime();
 	window.onresize();  // determine grid/cell size

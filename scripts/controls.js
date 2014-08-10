@@ -230,9 +230,8 @@ function cancelMove(){
 //'g' for "global"
 var gTouches = [null, null];
 function touchHandler(event){
-	event.preventDefault();
 	var first   = event.changedTouches[0];
-	var id = 0;
+	var id = null;
 	if(gTouches[0] === null || gTouches[0] === first.identifier){
 		gTouches[0] = first.identifier;
 		id = 0;
@@ -241,7 +240,6 @@ function touchHandler(event){
 		gTouches[1] = first.identifier;
 		id = 1;
 	}
-	else return;
 
 	switch(event.type){
 		case "touchstart" :
@@ -257,6 +255,7 @@ function touchHandler(event){
 	if(first.identifier == 0){
 		getMouseFromEvent(first);
 	}
+	event.preventDefault();
 }
 
 function setupControls(){

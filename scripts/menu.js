@@ -16,7 +16,7 @@ function renderTopBar(){
 	gfx.fillRect(gridOffsetX, 4, gridPixelSize, gridOffsetY-8);
 	menuButton.render();
 	gfx.fillStyle = '#f0f0f0';
-	gfx.drawImage(img_polyomino, gridOffsetX+4, 6);
+	gfx.drawImage(img_polyomino, gridOffsetX+4, 10);
 	drawText("score: ", 	gridOffsetX+gridPixelSize-130, 26, "small-caps bold 18px arial",false,true);
 	drawText("high: ",  	gridOffsetX+gridPixelSize-130, 46, "small-caps bold 18px arial",false,true);
 	drawText(score, 			gridOffsetX+gridPixelSize-130, 26, "small-caps bold 18px arial");
@@ -41,7 +41,6 @@ var img_tro2 = new Image();
 img_3x3.src  = "images/Instructions_3x3.png";
 img_tro1.src = "images/Instructions_Tro1.png";
 img_tro2.src = "images/Instructions_Tro2.png";
-
 function renderInstructionsOverlay(){
 	if(!(img_3x3.complete && img_tro1.complete && img_tro2.complete))
 		currentlyAnimating = true; //ensure images load
@@ -225,6 +224,7 @@ var trophiesButton = new CButton(function(){
 			setMenuDraw(false);
 			menuButton.enabled = false;
 			trophiesReturnToGameButton.enabled = true;
+			trophiesAnimating = true;
 			onresize();
 		}
 	);
@@ -246,4 +246,3 @@ var trophiesReturnToGameButton = new CButton(
 			onresize();
 		}
 	);
-trophiesReturnToGameButton.enabled = false;

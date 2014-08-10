@@ -1,7 +1,7 @@
 //==  GAME UTILS  ============================================================//
 
 var resetStorage = false;
-var version = "0.91"; //to be used to reset testing computers
+var version = "0.92"; //to be used to reset testing computers
 
 function initGame(){
 	dragging = snapping             = false;
@@ -12,7 +12,6 @@ function initGame(){
 	gameLost = gameLostOverlayShown = false;
 	comboActiveCtr                  = 0;
 	score                           = 0;
-	timeStarted                     = new Date().getTime();
 	maxCombo                        = parseInt(localStorage.getItem("maxCombo")) || 0;
 	maxComboScore                   = parseInt(localStorage.getItem("maxComboScore")) || 0;
 
@@ -37,6 +36,8 @@ function newGame(){
 	initGame();
 	placeStartingPolys();
 	saveGame();
+	timeStarted = new Date().getTime();
+	localStorage.setItem("time", timeStarted);
 }
 
 function loadGame(){
@@ -56,6 +57,7 @@ function loadGame(){
 			}
 			blockId   = parseInt(localStorage.getItem("blockId"));
 			goalScore = parseInt(localStorage.getItem("score"));
+			timeStarted = parseInt(localStorage.getItem("time"));
 			var testscoreFuncVersion = localStorage.getItem("scoreFuncVersion");
 			if(scoreFuncVersion === testscoreFuncVersion)
 				highScore = parseInt(localStorage.getItem("highScore"));
@@ -107,6 +109,7 @@ window.onload = function(){
 
 	// setup controls and canvas element
 	canvas = document.getElementById("canvas");
+	drawNames();
 	gfx = canvas.getContext("2d");
 	tick=new Date().getTime();
 	window.onresize();  // determine grid/cell size
@@ -121,14 +124,23 @@ window.onload = function(){
 
 		var versionNum = localStorage.getItem("version");
 		if(version !== versionNum){
-			localStorage.setItem("version",          version);
-			localStorage.setItem("scoreFuncVersion", scoreFuncVersion);
-			localStorage.setItem("highScore",        0);
-			localStorage.setItem("bestTime",         "N/A");
-			localStorage.setItem("totalScore",       0);
-			localStorage.setItem("highestOrder",     "N/A");
+			if(!localStorage.getItem("version"))
+				localStorage.setItem("version",          version);
+			if(!localStorage.getItem("scoreFuncVersion"))
+				localStorage.setItem("scoreFuncVersion", scoreFuncVersion);
+			if(!localStorage.getItem("highScore"))
+				localStorage.setItem("highScore",        0);
+			if(!localStorage.getItem("bestTime"))
+				localStorage.setItem("bestTime",         "N/A");
+			if(!localStorage.getItem("totalScore"))
+				localStorage.setItem("totalScore",       0);
+			if(!localStorage.getItem("highestOrder"))
+				localStorage.setItem("highestOrder",     "N/A");
+			if(!localStorage.getItem("totalMerges"))
+				localStorage.setItem("totalMerges",      0);
 			for(var i = 2; i < 9; i++)
-				localStorage.setItem("#of"+i,          0);
+				if(!localStorage.getItem("of"+i))
+					localStorage.setItem("#of"+i,          0);
 
 			drawInstructions = true;
 			newGame();

@@ -41,3 +41,15 @@ function renderRect(x0,y0,x1,y1){
 	gfx.lineTo(x1,y0);
 	gfx.fill();
 }
+
+function shuffle(a) {
+  var i = a.length, t, r;
+  while (0 !== i) {
+    r = Math.floor(Math.random() * i);
+    --i;
+    t = a[i];
+    a[i] = a[r];
+    a[r] = t;
+  }
+  return a;
+}

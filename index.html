@@ -1,6 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<!--<div id="fb-root"></div>
+
+<script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '{your-app-id}',
+          xfbml      : true,
+          version    : 'v2.0'
+        });
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script> -->
 	<title>Polyomino</title>
 	<meta charset="UTF-8">
 
@@ -30,19 +49,47 @@
 	  ga('create', 'UA-53291718-1', 'auto');
 	  ga('send', 'pageview');
 
-	</script> -->
+	</script>-->
 </head>
 
 
-<body>
+<body style="background:#a0a0a0">
 
 	<!-- Section main content -->
 	<div id="cvs_div">
-	<canvas class="cvs" id="canvas">
-		Sorry, your browser does not support HTML5 Canvas
-	</canvas>
-</div>
+		<canvas class="cvs" id="canvas">
+			Sorry, your browser does not support HTML5 Canvas
+		</canvas>
+	</div>
+	<div id="social_div">
+		<div style="position:relative; text-align:center">
+			<p style="position:relative; text-align:center" id="credits">Created by <b>Luke Balaoro</b>, <b>Ezra Stallings</b> and <b>Joel Castellanos </b></p>
 
+			<!-- Place this tag where you want the +1 button to render. -->
+			<br/>
+			<div style="display:inline-block; position:relative; width:33%">
+				<!--<a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>-->
+			</div>
+			<div style="display:inline-block; position:relative; width:33%">
+				<!--<div class="g-plusone"></div>-->
+			</div>
+			<div style="display:inline-block; position:relative; width:33%">
+				<!--<div class="fb-like" data-href="http://dndrbium.github.io/Polyomino/" data-layout="button_count" data-action:"like" data-show-faces="false" data-share="true"></div>-->
 
+			</div>
+
+		</div>
+	</div>
+
+<!--<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>-->
+
+<!-- Place this tag after the last +1 button tag. -->
+<!--<script type="text/javascript">
+  (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/platform.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>-->
 </body>
 </html>

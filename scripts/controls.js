@@ -259,9 +259,9 @@ function touchHandler(event){
 }
 
 function setupControls(){
-	canvas.addEventListener("touchstart" , touchHandler);
-	canvas.addEventListener("touchmove"  , touchHandler);
-	canvas.addEventListener("touchend"   , touchHandler);
+	document.addEventListener("touchstart" , touchHandler);
+	document.addEventListener("touchmove"  , touchHandler);
+	document.addEventListener("touchend"   , touchHandler);
 
 	document.addEventListener('keydown',function(e){
 		if(e.keyCode === 9){

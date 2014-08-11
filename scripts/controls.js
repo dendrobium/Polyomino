@@ -231,7 +231,7 @@ function cancelMove(){
 var gTouches = [null, null];
 function touchHandler(event){
 	var first   = event.changedTouches[0];
-	var id = null;
+	var id = 0;
 	if(gTouches[0] === null || gTouches[0] === first.identifier){
 		gTouches[0] = first.identifier;
 		id = 0;
@@ -240,6 +240,7 @@ function touchHandler(event){
 		gTouches[1] = first.identifier;
 		id = 1;
 	}
+	else return;
 
 	switch(event.type){
 		case "touchstart" :
@@ -252,17 +253,16 @@ function touchHandler(event){
 			break;
 	}
 
-	if(first.identifier == 0){
+	if(id == 0){
 		getMouseFromEvent(first);
 	}
 	event.preventDefault();
 }
+document.addEventListener("touchstart" , touchHandler);
+document.addEventListener("touchmove"  , touchHandler);
+document.addEventListener("touchend"   , touchHandler);
 
 function setupControls(){
-	document.addEventListener("touchstart" , touchHandler);
-	document.addEventListener("touchmove"  , touchHandler);
-	document.addEventListener("touchend"   , touchHandler);
-
 	document.addEventListener('keydown',function(e){
 		if(e.keyCode === 9){
 			e.preventDefault();

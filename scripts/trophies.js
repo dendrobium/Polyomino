@@ -98,12 +98,13 @@ function renderTrophies(){
 	}
 	var x = gridOffsetX + 10;
 	y+= 100;
-	var xoffset = 0;
+	var cs = 16;
+	var baseXOffset = Math.floor((gridPixelSize-Math.floor(gridPixelSize/(cs*6+2)) * (cs*6+2)-2)/2);
+	var xoffset = baseXOffset;
 	for(var ord = 2; ord < 7; ord++){
 		for(var id = 0; id < getPossibleOneSidedCount(ord); id++){
 			var poly = getMatrixWithShape(ord, id);
 			console.log(poly);
-			var cs = 16;
 
 			var renderPoly = function(xoff, o, color){
 				for(var i = 0; i < ord; i++){
@@ -117,13 +118,18 @@ function renderTrophies(){
 					}
 				}
 			}
-
-			renderPoly(xoffset, 1, polyColor[ord].secondary);
-			renderPoly(xoffset, 3, polyColor[ord].primary);
+			if(gameShapeCount[ord][id] > 0){
+				renderPoly(xoffset, 1, polyColor[ord].secondary);
+				renderPoly(xoffset, 3, polyColor[ord].primary);
+			}
+			else{
+				renderPoly(xoffset, 1, polyColor[1].secondary);
+				renderPoly(xoffset, 3, polyColor[1].primary);
+			}
 			xoffset += cs * 6 + 2;
 			if(xoffset >  (gridPixelSize - cs*6 - 10)){
 				y += 6 * cs + 2;
-				xoffset = 0;
+				xoffset = baseXOffset;
 			}
 		}
 	}

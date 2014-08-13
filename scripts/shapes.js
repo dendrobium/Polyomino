@@ -145,6 +145,7 @@ function identifyShape(myMatrix, order, id) {
   if (order < 2) return;
   if (order === 2) {
     gamePolyominoCount[DOMINO]++;
+    gameShapeCount[DOMINO][0]++;
     return;
   }
 

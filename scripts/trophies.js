@@ -59,8 +59,7 @@ function renderTrophies(){
 	gfx.fillStyle = '#424242';
 	gfx.fillRect(gridOffsetX, 4, gridPixelSize, gridOffsetY-8);
 	trophiesReturnToGameButton.render(); //render the back-to-game button instead
-	gfx.fillStyle = '#f0f0f0';
-	gfx.drawImage(img_polyomino, gridOffsetX+4, 6);
+	gfx.drawImage(img_polyomino, gridOffsetX+8, 12);
 
 
 	getTrophyData();
@@ -97,41 +96,56 @@ function renderTrophies(){
 		y += lineHeight;
 	}
 	var x = gridOffsetX + 10;
+	gfx.fillStyle = '#f0f0f0';
+	drawText("Shapes Acquired", canvasWidth/2, y+40, "40px Arial Bold", true, false)
 	y+= 100;
+
 	var cs = 16;
-	var baseXOffset = Math.floor((gridPixelSize-Math.floor(gridPixelSize/(cs*6+2)) * (cs*6+2)-2)/2);
+	var baseXOffset = Math.floor((gridPixelSize-Math.floor(gridPixelSize/(cs*6+2)) * (cs*6+6)-6)/2);
+	baseXOffset +=  ((gridPixelSize-20)%(cs*6+2)) / 2 
 	var xoffset = baseXOffset;
 	for(var ord = 2; ord < 7; ord++){
 		for(var id = 0; id < getPossibleOneSidedCount(ord); id++){
 			var poly = getMatrixWithShape(ord, id);
-			console.log(poly);
 
 			var renderPoly = function(xoff, o, color){
-				for(var i = 0; i < ord; i++){
-					for(var j = 0; j < ord; j++){
-						if(poly[i][j]){
-							rgb(color);
-							renderRect(xoff+x+i*cs+o, y+j*cs+o,xoff+x+(i+1)*cs-o, y+(j+1)*cs-o);
-							if(i < ord-1 && poly[i+1][j]) renderRect(xoff+x+(i+1)*cs-o, y+j*cs+o,xoff+x+(i+1)*cs+o, y+(j+1)*cs-o);
-							if(j < ord-1 && poly[i][j+1]) renderRect(xoff+x+i*cs+o, y+(j+1)*cs-o,xoff+x+(i+1)*cs-o, y+(j+1)*cs+o);
-						}
-					}
+				for(var i = 0; i < ord; i++)for(var j = 0; j < ord; j++)if(poly[i][j]){
+					rgb(color);
+					renderRect(xoff+x+i*cs+o, y+j*cs+o,xoff+x+(i+1)*cs-o, y+(j+1)*cs-o);
+					if(i < ord-1 && poly[i+1][j]) renderRect(xoff+x+(i+1)*cs-o, y+j*cs+o,xoff+x+(i+1)*cs+o, y+(j+1)*cs-o);
+					if(j < ord-1 && poly[i][j+1]) renderRect(xoff+x+i*cs+o, y+(j+1)*cs-o,xoff+x+(i+1)*cs-o, y+(j+1)*cs+o);
+					
 				}
+				
 			}
 			if(gameShapeCount[ord][id] > 0){
-				renderPoly(xoffset, 1, polyColor[ord].secondary);
-				renderPoly(xoffset, 3, polyColor[ord].primary);
+				gfx.fillStyle = '#808080';
+				renderRect(x+xoffset-2, y-4, x+xoffset+cs*6+2, y+cs*6+2);
+				gfx.fillStyle = '#e5e5e5';
+				renderRect(x+xoffset, y-2, x+xoffset+cs*6, y+cs*6);
+
+				renderPoly(xoffset+2, 1, polyColor[ord].secondary);
+				renderPoly(xoffset+2, 3, polyColor[ord].primary);
 			}
 			else{
+				gfx.fillStyle = '#808080';
+				renderRect(x+xoffset-2, y-4, x+xoffset+cs*6+2, y+cs*6+2);
+				gfx.fillStyle = '#a0a0a0';
+				renderRect(x+xoffset, y-2, x+xoffset+cs*6, y+cs*6);
 				renderPoly(xoffset, 1, polyColor[1].secondary);
 				renderPoly(xoffset, 3, polyColor[1].primary);
 			}
-			xoffset += cs * 6 + 2;
+			xoffset += cs * 6 + 6;
 			if(xoffset >  (gridPixelSize - cs*6 - 10)){
-				y += 6 * cs + 2;
+				y += 6 * cs + 8;
 				xoffset = baseXOffset;
 			}
 		}
+	}
+	if(y + cs*7 + 200 !== modeTrophiesHeight){
+		modeTrophiesHeight = y + cs*7 + 200;
+		onresize();
+		trophiesAnimating = true;
 	}
 }
 

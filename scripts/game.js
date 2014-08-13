@@ -14,12 +14,11 @@ function initGame(){
 	score                           = 0;
 	maxCombo                        = parseInt(localStorage.getItem("maxCombo")) || 0;
 	maxComboScore                   = parseInt(localStorage.getItem("maxComboScore")) || 0;
+	gameShapeCount                  = JSON.parse(localStorage.getItem("shapeCount")) || gameShapeCount;
 
 	selection = new grid(gridSize);
 	for(var i=0;i<selection.size;++i)for(var j=0;j<selection.size;++j)
 		selection.setCell(i,j,0);
-
-	initShapes();
 }
 
 function newGame(){
@@ -79,6 +78,7 @@ function saveGame(){
 		localStorage.setItem("highScore",        highScore);
 		localStorage.setItem("maxComboScore", maxComboScore);
 		localStorage.setItem("maxCombo", maxCombo);
+		localStorage.setItem("shapeCount", JSON.stringify(gameShapeCount));
 	}
 }
 

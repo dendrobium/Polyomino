@@ -3,7 +3,7 @@
 
 var modeTrophies = false;
 
-var modeTrophiesHeight = 2000;
+var modeTrophiesHeight = 5000;
 var trophiesAnimating = true;
 
 var saveTime = function(time){
@@ -42,7 +42,7 @@ var getTrophyData = function(){
 	_trophyData.push(m("Highest Order:", order))
 	_trophyData.push(m("Biggest Combo:", maxCombo));
 	_trophyData.push(m("Best Combo Score:", maxComboScore));
-	_trophyData.push(m("Polyominos Merged:", localStorage.getItem("totalMerges")));
+	_trophyData.push(m("Polyominos Produced:", localStorage.getItem("totalMerges")));
 
 	for(var o=2; o<9; o++){
 		var num = localStorage.getItem("#of"+o);
@@ -86,13 +86,45 @@ function renderTrophies(){
 		var value = _trophyData[i].value;
 		var color = _trophyData[i].color;
 		gfx.fillStyle = '#f0f0f0';
-		drawText(name, canvasWidth/2-rightBuffer+30,y+i*lineHeight, "22px Arial", false, false);
-		drawText(value, canvasWidth/2+rightBuffer/2,y+i*lineHeight, "22px Arial", false, false);
-		gfx.fillRect(gridOffsetX+20, y+i*lineHeight+10, gridPixelSize-40, 2);
+		drawText(name, canvasWidth/2-rightBuffer+30,y, "22px Arial", false, false);
+		drawText(value, canvasWidth/2+rightBuffer/2,y, "22px Arial", false, false);
+		gfx.fillRect(gridOffsetX+20, y+10, gridPixelSize-40, 2);
 
 		if(color){
 			rgb(polyColor[color].secondary.r,polyColor[color].secondary.g,polyColor[color].secondary.b);
-			gfx.fillRect(canvasWidth/2-rightBuffer+30, y+i*lineHeight-13, 10, 10);
+			gfx.fillRect(canvasWidth/2-rightBuffer+30, y-13, 10, 10);
+		}
+		y += lineHeight;
+	}
+	var x = gridOffsetX + 10;
+	y+= 100;
+	var xoffset = 0;
+	for(var ord = 2; ord < 7; ord++){
+		for(var id = 0; id < getPossibleOneSidedCount(ord); id++){
+			var poly = getMatrixWithShape(ord, id);
+			console.log(poly);
+			var cs = 16;
+
+			var renderPoly = function(xoff, o, color){
+				for(var i = 0; i < ord; i++){
+					for(var j = 0; j < ord; j++){
+						if(poly[i][j]){
+							rgb(color);
+							renderRect(xoff+x+i*cs+o, y+j*cs+o,xoff+x+(i+1)*cs-o, y+(j+1)*cs-o);
+							if(i < ord-1 && poly[i+1][j]) renderRect(xoff+x+(i+1)*cs-o, y+j*cs+o,xoff+x+(i+1)*cs+o, y+(j+1)*cs-o);
+							if(j < ord-1 && poly[i][j+1]) renderRect(xoff+x+i*cs+o, y+(j+1)*cs-o,xoff+x+(i+1)*cs-o, y+(j+1)*cs+o);
+						}
+					}
+				}
+			}
+
+			renderPoly(xoffset, 1, polyColor[ord].secondary);
+			renderPoly(xoffset, 3, polyColor[ord].primary);
+			xoffset += cs * 6 + 2;
+			if(xoffset >  (gridPixelSize - cs*6 - 10)){
+				y += 6 * cs + 2;
+				xoffset = 0;
+			}
 		}
 	}
 }

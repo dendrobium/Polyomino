@@ -1,18 +1,12 @@
-*{
+/**{
 	position:absolute;
 	padding:0;
 	margin:0;
 	font-family:Arial;
-}
+}*/
 
 b{
 	position:relative;
-}
-
-td {
-	position:static;
-	padding:1px;
-	margin:2px;
 }
 .cvs {
 	-moz-user-select:      none;

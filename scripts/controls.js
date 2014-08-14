@@ -230,7 +230,8 @@ function cancelMove(){
 //'g' for "global"
 var gTouches = [null, null];
 function touchHandler(event){
-	event.preventDefault();
+	if(!modeTrophies)
+		event.preventDefault(); //allow touch scrolling in trophy mode
 	var first   = event.changedTouches[0];
 	var id = 0;
 	if(gTouches[0] === null || gTouches[0] === first.identifier){

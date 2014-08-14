@@ -1,29 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<div id="fb-root"></div>
-
-<script>
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId      : '{your-app-id}',
-          xfbml      : true,
-          version    : 'v2.0'
-        });
-      };
-
-      (function(d, s, id){
-         var js, fjs = d.getElementsByTagName(s)[0];
-         if (d.getElementById(id)) {return;}
-         js = d.createElement(s); js.id = id;
-         js.src = "//connect.facebook.net/en_US/sdk.js";
-         fjs.parentNode.insertBefore(js, fjs);
-       }(document, 'script', 'facebook-jssdk'));
-    </script>
 	<title>Polyomino</title>
 	<meta charset="UTF-8">
+	<div id="fb-root"></div>
+	<style>
+		b{
+			position:relative;
+		}
+		.cvs {
+			-moz-user-select:      none;
+			-khtml-user-select:    none;
+			-webkit-user-select:   none;
+			-webkit-touch-callout: none;
+			-ms-user-select:       none;
+			user-select:           none;
+			top:0;
+			left:0;
+			bottom:0;
+			right:0;
+			margin:0px;
+			padding:0px;
+			background:#a0a0a0;
+			border-radius: 0px;
+			border:0px;
+			color:white
+			position:absolute;
+		}
+	</style>
+	<script>
+	window.fbAsyncInit = function() {
+	FB.init({
+		appId      : '{your-app-id}',
+		xfbml      : true,
+		version    : 'v2.0'
+	});
+	};
 
-	<link rel="stylesheet" type="text/css" href="styles.css">
+	(function(d, s, id){
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.id = id;
+		js.src = "//connect.facebook.net/en_US/sdk.js";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
+    </script>
+	
 
 	<script type="text/javascript" src="scripts/utils.js"       ></script>
 	<script type="text/javascript" src="scripts/matrix.js"      ></script>

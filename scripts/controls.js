@@ -230,6 +230,8 @@ function cancelMove(){
 //'g' for "global"
 var gTouches = [null, null];
 function touchHandler(event){
+	if(!modeTrophies)
+		event.preventDefault(); //allow touch scrolling in trophy mode
 	var first   = event.changedTouches[0];
 	var id = 0;
 	if(gTouches[0] === null || gTouches[0] === first.identifier){
@@ -253,16 +255,16 @@ function touchHandler(event){
 			break;
 	}
 
-	if(id == 0){
+	if(first.identifier == 0){
 		getMouseFromEvent(first);
 	}
-	event.preventDefault();
 }
-document.addEventListener("touchstart" , touchHandler);
-document.addEventListener("touchmove"  , touchHandler);
-document.addEventListener("touchend"   , touchHandler);
 
 function setupControls(){
+	canvas.addEventListener("touchstart" , touchHandler);
+	canvas.addEventListener("touchmove"  , touchHandler);
+	canvas.addEventListener("touchend"   , touchHandler);
+
 	document.addEventListener('keydown',function(e){
 		if(e.keyCode === 9){
 			e.preventDefault();

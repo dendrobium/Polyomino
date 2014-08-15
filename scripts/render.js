@@ -233,7 +233,7 @@ function drawNames(){
 //==== Resizing ====//
 
 var gridMarginY = 60;
-var gridPaddingY = 20;
+var gridPaddingY = 10;
 window.onresize = function(){
 	gridOffsetY   = 60;
 

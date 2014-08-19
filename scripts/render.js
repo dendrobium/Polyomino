@@ -226,13 +226,13 @@ function drawText(text, x, y, font, centered, rightAlign){
 function drawNames(){
 	var names = ["Luke Balaoro", "Joel Castellanos", "Ezra Stallings"];
 	shuffle(names);
-	var text = "Created by <b>" + names[0] + "</b>, <b>" + names[1] + "</b>, and <b>" + names[2] + "</b>.";
+	var text = "© 2014 <b>" + names[0] + "</b>, <b>" + names[1] + "</b>, and <b>" + names[2] + "</b>.";
 	document.getElementById("credits").innerHTML = text;
 }
 
 //==== Resizing ====//
 
-var gridMarginY = 60;
+var gridMarginY = 80;
 var gridPaddingY = 20;
 window.onresize = function(){
 	gridOffsetY   = 60;

@@ -43,55 +43,53 @@ var gamePolyominoCount = new Array(MAX_ORDER + 1);
 var gameShapeCount = new Array(MAX_ORDER_OF_SHAPE_IDENTIFICATION + 1);
 
 
-function initShapes() {
-
-  //One-Sided Polyominos
-	// Each SHAPE[order] is the list of One-Sided polyominos of that order.
-	// Each SHAPE[order][shapeNum] defines the cells of that shape.
-	// Each SHAPE[order][shapeNum][col] defines a column in the cell as a .
-	//    set of bit flags for each row: 1|2|4|8|16 for each row.
+//One-Sided Polyominos
+// Each SHAPE[order] is the list of One-Sided polyominos of that order.
+// Each SHAPE[order][shapeNum] defines the cells of that shape.
+// Each SHAPE[order][shapeNum][col] defines a column in the cell as a .
+//    set of bit flags for each row: 1|2|4|8|16 for each row.
 
 
 
-  SHAPE[MONOMINO] = [[1]];
+SHAPE[MONOMINO] = [[1]];
 
-  SHAPE[DOMINO] = [[1,1]];
+SHAPE[DOMINO] = [[1,1]];
 
-  SHAPE[TROMINO] = [[1,1,1], [3,1]];
+SHAPE[TROMINO] = [[1,1,1], [3,1]];
 
-  SHAPE[TETROMINO] = [[1,1,1,1],[1,1,3],[3,1,1],[1,3,2],[2,3,1],[3,3],[1,3,1]];
+SHAPE[TETROMINO] = [[1,1,1,1],[1,1,3],[3,1,1],[1,3,2],[2,3,1],[3,3],[1,3,1]];
 
-	SHAPE[PENTOMINO] = [
-		[1,1,1,1,1], [6,3,2],   [2,3,6],   [1,1,1,3], [3,1,1,1], [3,3,1], [1,3,3],
-		[1,1,3,2],   [2,3,1,1], [7,2,2],   [7,5],     [1,1,7],
-		[3,6,4],     [2,7,2],   [1,3,1,1], [1,1,3,1], [3,2,6], [6,2,3]
-	];
+SHAPE[PENTOMINO] = [
+	[1,1,1,1,1], [6,3,2],   [2,3,6],   [1,1,1,3], [3,1,1,1], [3,3,1], [1,3,3],
+	[1,1,3,2],   [2,3,1,1], [7,2,2],   [7,5],     [1,1,7],
+	[3,6,4],     [2,7,2],   [1,3,1,1], [1,1,3,1], [3,2,6], [6,2,3]
+];
 
-	SHAPE[HEXOMINO] = [
-		[1,1,1,1,1,1], [3,1,1,1,1], [1,1,1,1,3], [1,3,1,1,1], [1,1,1,3,1], [1,1,3,1,1], [3,1,1,3],
-		[3,3,1,1],     [1,1,3,3],   [3,1,3,1],   [1,3,1,3],   [1,3,3,1],   [1,7,5],     [5,7,1],
-    [7,1,1,1],     [1,1,1,7],   [1,7,1,1],   [1,1,7,1],   [6,3,2,2],   [2,2,3,6],   [2,7,2,2],
-    [6,2,2,3],     [3,2,2,6],   [6,2,3,2],   [2,3,2,6],   [2,6,3,2],   [2,3,6,2],   [3,3,3],
-    [2,7,1,1],     [1,1,7,2],   [2,3,1,3],   [3,1,3,2],   [2,2,3,1,1], [1,1,3,2,2], [5,7,2],
-    [2,3,3,1],     [1,3,3,2],   [4,7,2,2],   [2,2,7,4],   [7,6,2],     [2,6,7],     [1,3,7],
-    [4,6,3,2],     [2,3,6,4],   [4,7,1,1],   [1,1,7,4],   [6,3,1,1],   [1,1,3,6],
-    [7,5,1],       [1,5,7],     [6,2,3,1],   [1,3,2,6],   [3,7,2],     [7,2,2,2],
-    [4,6,3,1],     [1,3,6,4],   [2,3,1,1,1], [1,1,1,3,2], [3,7,4],     [4,7,3]
-	];
+SHAPE[HEXOMINO] = [
+	[1,1,1,1,1,1], [3,1,1,1,1], [1,1,1,1,3], [1,3,1,1,1], [1,1,1,3,1], [1,1,3,1,1], [3,1,1,3],
+	[3,3,1,1],     [1,1,3,3],   [3,1,3,1],   [1,3,1,3],   [1,3,3,1],   [1,7,5],     [5,7,1],
+  [7,1,1,1],     [1,1,1,7],   [1,7,1,1],   [1,1,7,1],   [6,3,2,2],   [2,2,3,6],   [2,7,2,2],
+  [6,2,2,3],     [3,2,2,6],   [6,2,3,2],   [2,3,2,6],   [2,6,3,2],   [2,3,6,2],   [3,3,3],
+  [2,7,1,1],     [1,1,7,2],   [2,3,1,3],   [3,1,3,2],   [2,2,3,1,1], [1,1,3,2,2], [5,7,2],
+  [2,3,3,1],     [1,3,3,2],   [4,7,2,2],   [2,2,7,4],   [7,6,2],     [2,6,7],     [1,3,7],
+  [4,6,3,2],     [2,3,6,4],   [4,7,1,1],   [1,1,7,4],   [6,3,1,1],   [1,1,3,6],
+  [7,5,1],       [1,5,7],     [6,2,3,1],   [1,3,2,6],   [3,7,2],     [7,2,2,2],
+  [4,6,3,1],     [1,3,6,4],   [2,3,1,1,1], [1,1,1,3,2], [3,7,4],     [4,7,3]
+];
 
 
-	//== POLYOMINO GAME COUNTS
-	for (var order = MONOMINO; order <= MAX_ORDER; order++) {
-    gamePolyominoCount[order] = 0;
-    if (order > MAX_ORDER_OF_SHAPE_IDENTIFICATION) break;
+//== POLYOMINO GAME COUNTS
+for (var order = MONOMINO; order <= MAX_ORDER; order++) {
+  gamePolyominoCount[order] = 0;
+  if (order > MAX_ORDER_OF_SHAPE_IDENTIFICATION) break;
 
-    //console.log("Shape: Possible one-sided " + POLYOMINO_NAME[order] + " = " + getPossibleOneSidedCount(order));
+  //console.log("Shape: Possible one-sided " + POLYOMINO_NAME[order] + " = " + getPossibleOneSidedCount(order));
 
-    gameShapeCount[order] = new Array(SHAPE[order].length);
-		for (var shapeNum = 0; shapeNum <SHAPE[order].length; shapeNum++) {
-			gameShapeCount[order][shapeNum] = 0;
-		}
-	}
+  gameShapeCount[order] = new Array(SHAPE[order].length);
+  for (var shapeNum = 0; shapeNum <SHAPE[order].length; shapeNum++) {
+    gameShapeCount[order][shapeNum] = 0;
+  }
+}
 
 //  var order = 6;
 //  for (var n=0; n<SHAPE[order].length; n++) {
@@ -106,7 +104,7 @@ function initShapes() {
 //      console.log(str);
 //    }
 //  }
-}
+
 
 
 //=======================================================================================
@@ -145,6 +143,7 @@ function identifyShape(myMatrix, order, id) {
   if (order < 2) return;
   if (order === 2) {
     gamePolyominoCount[DOMINO]++;
+    gameShapeCount[DOMINO][0]++;
     return;
   }
 

@@ -402,7 +402,7 @@ function spawnBlock(order, cement, delay, x0, y0) {
 function tryToFindGoodRandomSpawnPoint(spawnGrid, order) {
 //=======================================================================================
 
-  console.log("tryToFindGoodRandomSpawnPoint("+order+") ENTER");
+  //console.log("tryToFindGoodRandomSpawnPoint("+order+") ENTER");
   var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
   var filledCount = copyBoardToMatrix(spawnGrid, 0, 0, gridSize);
   var emptyCount = gridSize * gridSize - filledCount;
@@ -427,7 +427,7 @@ function tryToFindGoodRandomSpawnPoint(spawnGrid, order) {
       }
     }
 
-    console.log("   ...x0="+x0+", y0="+y0+", emptyCount="+emptyCount);
+    //console.log("   ...x0="+x0+", y0="+y0+", emptyCount="+emptyCount);
 
     if (emptyCount < 2) return {x: x0, y: y0};
 
@@ -443,7 +443,7 @@ function tryToFindGoodRandomSpawnPoint(spawnGrid, order) {
         x0 = x;
         y0 = y;
         tryCount++;
-        console.log("   ...trying ("+x+", "+y+")");
+        //console.log("   ...trying ("+x+", "+y+")");
         if (hasPersonalSpace(spawnGrid, x, y, personalSpace)) return {x: x0, y: y0};
       }
     }
@@ -472,7 +472,7 @@ function hasPersonalSpace(spawnGrid, x, y, personalSpace) {
       if ((xx >= gridSize) || (yy >= gridSize)) break;
 
       if ((spawnGrid[xx][yy] != CELL_EMPTY) && (spawnGrid[xx][yy] != CELL_VISITED)) {
-        console.log("   ...Found neighbor in space["+personalSpace+"] ("+xx+", "+yy+")");
+        //console.log("   ...Found neighbor in space["+personalSpace+"] ("+xx+", "+yy+")");
         return false;
       }
     }

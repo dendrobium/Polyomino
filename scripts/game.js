@@ -11,7 +11,7 @@ function initGame(){
 	gameWon  = gameWonOverlayShown  = false;
 	gameLost = gameLostOverlayShown = false;
 	comboActiveCtr                  = 0;
-	score                           = 0;
+	score                           = goalScore;
 	maxCombo                        = parseInt(localStorage.getItem("maxCombo")) || 0;
 	maxComboScore                   = parseInt(localStorage.getItem("maxComboScore")) || 0;
 	gameShapeCount                  = JSON.parse(localStorage.getItem("shapeCount")) || gameShapeCount;
@@ -89,7 +89,6 @@ function gameOver(){
 //==  SCORE RELATED  =========================================================//
 
 function addToScore(squareOrder,pieceOrder,combo){
-	console.log(combo);
 	var points = Math.floor(Math.pow(squareOrder*squareOrder*pieceOrder, combo*0.5+0.5));
 	goalScore += points;
 

@@ -175,7 +175,7 @@ function identifyShape(myMatrix, order, id) {
       if (isShape(tmpGrid, id, order, shape)) {
         gamePolyominoCount[order]++;
         gameShapeCount[order][shape]++;
-        console.log("shapes.identifyShape():	gamePolyominoCount[" + order + "][" + shape + "]=" + gameShapeCount[order][shape]);
+        // console.log("shapes.identifyShape():	gamePolyominoCount[" + order + "][" + shape + "]=" + gameShapeCount[order][shape]);
         return;
       }
       rotate90(tmpGrid, order);

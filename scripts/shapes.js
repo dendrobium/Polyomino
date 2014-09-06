@@ -41,6 +41,7 @@ var MAX_ORDER_OF_SHAPE_IDENTIFICATION = HEXOMINO;
 var SHAPE = new Array(MAX_ORDER_OF_SHAPE_IDENTIFICATION + 1);
 var gamePolyominoCount = new Array(MAX_ORDER + 1);
 var gameShapeCount = new Array(MAX_ORDER_OF_SHAPE_IDENTIFICATION + 1);
+var gameMaxShapeLevel = 2;
 
 
 //One-Sided Polyominos
@@ -147,6 +148,7 @@ function identifyShape(myMatrix, order, id) {
     return;
   }
 
+  if (order > gameMaxShapeLevel) gameMaxShapeLevel = order;
   if (order > MAX_ORDER_OF_SHAPE_IDENTIFICATION) return;
 
   var minX = myMatrix.length-1;

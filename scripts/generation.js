@@ -20,158 +20,167 @@ function placeStartingPolys() {
   var orderList;
   var delay = 0;
 
-  var catagory = Math.random();
-  if (catagory < .25) {
-    //Spawn 2 cemented Tetrominos and 3 cemented Trominos
-    var x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, bounds;
-    if (Math.random() < 0.5) {
-      x1 = rInt(3);
-      x2 = (gridSize - 3) + rInt(3);
-      y1 = rInt(gridSize);
-      y2 = rInt(gridSize);
+//  var catagory = Math.random();
+//  if (catagory < .25) {
+//    //Spawn 2 cemented Tetrominos and 3 cemented Trominos
+//    var x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, bounds;
+//    if (Math.random() < 0.5) {
+//      x1 = rInt(3);
+//      x2 = (gridSize - 3) + rInt(3);
+//      y1 = rInt(gridSize);
+//      y2 = rInt(gridSize);
+//
+//      bounds = spawnBlock(4, true, ++delay, x1, y1);
+//      //console.log("    spawned order 4: bounds= (" + bounds.minX + ", " + bounds.minY + ") - (" + bounds.maxX + ", " + bounds.maxY + ")");
+//
+//      if (bounds.minY < gridSize / 2) y3 = bounds.maxY + 1; else y3 = bounds.minY - 1;
+//      x3 = rInt(3);
+//
+//      bounds = spawnBlock(4, true, ++delay, x2, y2);
+//      //console.log("    spawned order 4: bounds= (" + bounds.minX + ", " + bounds.minY + ") - (" + bounds.maxX + ", " + bounds.maxY + ")");
+//
+//      if (bounds.minY < gridSize / 2) y4 = bounds.maxY + 1; else y4 = bounds.minY - 1;
+//      x4 = (gridSize - 3) + rInt(3);
+//    }
+//    else {
+//      y1 = rInt(3);
+//      y2 = (gridSize - 3) + rInt(3);
+//      x1 = rInt(gridSize);
+//      x2 = rInt(gridSize);
+//
+//      bounds = spawnBlock(4, true, ++delay, x1, y1);
+//      // console.log("    spawned order 4: bounds= (" + bounds.minX + ", " + bounds.minY + ") - (" + bounds.maxX + ", " + bounds.maxY + ")");
+//
+//
+//      if (bounds.minX < gridSize / 2) x3 = bounds.maxX + 1;
+//      else                            x3 = bounds.minX - 1;
+//      y3 = rInt(3);
+//
+//      bounds = spawnBlock(4, true, ++delay, x2, y2);
+//      //console.log("    spawned order 4: bounds= (" + bounds.minX + ", " + bounds.minY + ") - (" + bounds.maxX + ", " + bounds.maxY + ")");
+//
+//      if (bounds.minX < gridSize / 2) x4 = bounds.maxX + 1;
+//      else                            x4 = bounds.minX - 1;
+//      y4 = (gridSize - 3) + rInt(3);
+//    }
+//
+//    bounds = spawnBlock(4, true, ++delay, 5, 5);
+//    if (bounds.minX < gridSize / 2) x5 = bounds.maxX + 1;
+//    else                            x5 = bounds.minX - 1;
+//    y5 = 5 + rInt(3);
+//
+//    spawnBlock(3, true, ++delay, x3, y3);
+//    spawnBlock(3, true, ++delay, x4, y4);
+//    spawnBlock(3, true, ++delay, x5, y5);
+//  }
+//
+//
+//  else if (catagory < 0.5) {
+//    //Spawn 5 cemented Tetrominos
+//
+//    spawnBlock(4, true, ++delay, rInt(3), rInt(3));
+//    spawnBlock(4, true, ++delay, (gridSize - 3) + rInt(3), rInt(3));
+//    spawnBlock(4, true, ++delay, rInt(3), (gridSize - 3) + rInt(3));
+//    spawnBlock(4, true, ++delay, (gridSize - 3) + rInt(3), (gridSize - 3) + rInt(3));
+//    spawnBlock(4, true, ++delay, 5 + rInt(2), 5 + rInt(2));
+//  }
+//
+//  else if (catagory < .75) {
+//    //Spawn 10 cemented Trominos
+//
+//    var x = 0;
+//    var y = rInt(gridSize);
+//
+//    for (var i = 0; i < 10; i++) {
+//
+//      var bounds = spawnBlock(3, true, ++delay, x, y);
+//      if (bounds === false) {
+//        bounds = spawnBlock(3, true, ++delay);
+//      }
+//      x = bounds.maxX + 1;
+//      if (x > 9) {
+//        bounds = spawnBlock(3, true, ++delay);
+//      }
+//
+//      var goingUp = true;
+//      if (Math.random() < 0.5) goingUp = false;
+//
+//      if (bounds.minY - 1 < 0) goingUp = false;
+//      else if (bounds.maxY + 1 > 10) goingUp = true;
+//      y = bounds.maxY + 1;
+//      if (goingUp) y = bounds.minY - 1;
+//    }
+//  }
+//
+//  else if (catagory < .9) {
+//    //Spawn 1 cemented Pentomino + 2 random tris or teras
+//    spawnBlock(5, true, ++delay, 5, 5);
+//
+//    var x1, y1, x2, y2;
+//    if (Math.random() < 0.5) {
+//      x1 = 0;
+//      x2 = (gridSize - 1);
+//      y1 = rInt(gridSize);
+//      y2 = rInt(gridSize);
+//    }
+//    else {
+//      y1 = 0;
+//      y2 = (gridSize - 1);
+//      x1 = rInt(gridSize);
+//      x2 = rInt(gridSize);
+//    }
+//    var catagory2 = Math.random();
+//    if (catagory2 < .33) {
+//      spawnBlock(3, true, ++delay, x1, y1);
+//      spawnBlock(3, true, ++delay, x2, y2);
+//    }
+//    else if (catagory2 < .66) {
+//      spawnBlock(4, true, ++delay, x1, y1);
+//      spawnBlock(3, true, ++delay, x2, y2);
+//    }
+//    else {
+//      spawnBlock(4, true, ++delay, x1, y1);
+//      spawnBlock(4, true, ++delay, x2, y2);
+//    }
+//  }
+//  else {
+//    //Spawn 2 cemented Pentomino
+//    var x1, y1, x2, y2;
+//    if (Math.random() < 0.5) {
+//      x1 = 0;
+//      x2 = (gridSize - 1);
+//      y1 = rInt(gridSize);
+//      y2 = rInt(gridSize);
+//    }
+//    else {
+//      y1 = 0;
+//      y2 = (gridSize - 1);
+//      x1 = rInt(gridSize);
+//      x2 = rInt(gridSize);
+//    }
+//
+//    spawnBlock(5, true, ++delay, x1, y1);
+//    spawnBlock(5, true, ++delay, x2, y2);
+//  }
+//
+//
+//
 
-      bounds = spawnBlock(4, true, ++delay, x1, y1);
-      //console.log("    spawned order 4: bounds= (" + bounds.minX + ", " + bounds.minY + ") - (" + bounds.maxX + ", " + bounds.maxY + ")");
+  spawnBlock(1, false, delay, 4,4);
+  spawnBlock(1, false, delay, 5,4);
+  spawnBlock(1, false, delay, 6,4);
 
-      if (bounds.minY < gridSize / 2) y3 = bounds.maxY + 1; else y3 = bounds.minY - 1;
-      x3 = rInt(3);
+  spawnBlock(1, false, delay, 4,5);
+  spawnBlock(1, false, delay, 6,5);
 
-      bounds = spawnBlock(4, true, ++delay, x2, y2);
-      //console.log("    spawned order 4: bounds= (" + bounds.minX + ", " + bounds.minY + ") - (" + bounds.maxX + ", " + bounds.maxY + ")");
-
-      if (bounds.minY < gridSize / 2) y4 = bounds.maxY + 1; else y4 = bounds.minY - 1;
-      x4 = (gridSize - 3) + rInt(3);
-    }
-    else {
-      y1 = rInt(3);
-      y2 = (gridSize - 3) + rInt(3);
-      x1 = rInt(gridSize);
-      x2 = rInt(gridSize);
-
-      bounds = spawnBlock(4, true, ++delay, x1, y1);
-      // console.log("    spawned order 4: bounds= (" + bounds.minX + ", " + bounds.minY + ") - (" + bounds.maxX + ", " + bounds.maxY + ")");
+  spawnBlock(1, false, delay, 4,6);
+  spawnBlock(1, false, delay, 5,6);
+  spawnBlock(1, false, delay, 6,6);
 
 
-      if (bounds.minX < gridSize / 2) x3 = bounds.maxX + 1;
-      else                            x3 = bounds.minX - 1;
-      y3 = rInt(3);
-
-      bounds = spawnBlock(4, true, ++delay, x2, y2);
-      //console.log("    spawned order 4: bounds= (" + bounds.minX + ", " + bounds.minY + ") - (" + bounds.maxX + ", " + bounds.maxY + ")");
-
-      if (bounds.minX < gridSize / 2) x4 = bounds.maxX + 1;
-      else                            x4 = bounds.minX - 1;
-      y4 = (gridSize - 3) + rInt(3);
-    }
-
-    bounds = spawnBlock(4, true, ++delay, 5, 5);
-    if (bounds.minX < gridSize / 2) x5 = bounds.maxX + 1;
-    else                            x5 = bounds.minX - 1;
-    y5 = 5 + rInt(3);
-
-    spawnBlock(3, true, ++delay, x3, y3);
-    spawnBlock(3, true, ++delay, x4, y4);
-    spawnBlock(3, true, ++delay, x5, y5);
-  }
-
-
-  else if (catagory < 0.5) {
-    //Spawn 5 cemented Tetrominos
-
-    spawnBlock(4, true, ++delay, rInt(3), rInt(3));
-    spawnBlock(4, true, ++delay, (gridSize - 3) + rInt(3), rInt(3));
-    spawnBlock(4, true, ++delay, rInt(3), (gridSize - 3) + rInt(3));
-    spawnBlock(4, true, ++delay, (gridSize - 3) + rInt(3), (gridSize - 3) + rInt(3));
-    spawnBlock(4, true, ++delay, 5 + rInt(2), 5 + rInt(2));
-  }
-
-  else if (catagory < .75) {
-    //Spawn 10 cemented Trominos
-
-    var x = 0;
-    var y = rInt(gridSize);
-
-    for (var i = 0; i < 10; i++) {
-
-      var bounds = spawnBlock(3, true, ++delay, x, y);
-      if (bounds === false) {
-        bounds = spawnBlock(3, true, ++delay);
-      }
-      x = bounds.maxX + 1;
-      if (x > 9) {
-        bounds = spawnBlock(3, true, ++delay);
-      }
-
-      var goingUp = true;
-      if (Math.random() < 0.5) goingUp = false;
-
-      if (bounds.minY - 1 < 0) goingUp = false;
-      else if (bounds.maxY + 1 > 10) goingUp = true;
-      y = bounds.maxY + 1;
-      if (goingUp) y = bounds.minY - 1;
-    }
-  }
-
-  else if (catagory < .9) {
-    //Spawn 1 cemented Pentomino + 2 random tris or teras
-    spawnBlock(5, true, ++delay, 5, 5);
-
-    var x1, y1, x2, y2;
-    if (Math.random() < 0.5) {
-      x1 = 0;
-      x2 = (gridSize - 1);
-      y1 = rInt(gridSize);
-      y2 = rInt(gridSize);
-    }
-    else {
-      y1 = 0;
-      y2 = (gridSize - 1);
-      x1 = rInt(gridSize);
-      x2 = rInt(gridSize);
-    }
-    var catagory2 = Math.random();
-    if (catagory2 < .33) {
-      spawnBlock(3, true, ++delay, x1, y1);
-      spawnBlock(3, true, ++delay, x2, y2);
-    }
-    else if (catagory2 < .66) {
-      spawnBlock(4, true, ++delay, x1, y1);
-      spawnBlock(3, true, ++delay, x2, y2);
-    }
-    else {
-      spawnBlock(4, true, ++delay, x1, y1);
-      spawnBlock(4, true, ++delay, x2, y2);
-    }
-  }
-  else {
-    //Spawn 2 cemented Pentomino
-    var x1, y1, x2, y2;
-    if (Math.random() < 0.5) {
-      x1 = 0;
-      x2 = (gridSize - 1);
-      y1 = rInt(gridSize);
-      y2 = rInt(gridSize);
-    }
-    else {
-      y1 = 0;
-      y2 = (gridSize - 1);
-      x1 = rInt(gridSize);
-      x2 = rInt(gridSize);
-    }
-
-    spawnBlock(5, true, ++delay, x1, y1);
-    spawnBlock(5, true, ++delay, x2, y2);
-  }
-
-
-
-
-
-
-
-  for (var i=0; i<20; i++) {
-    if (Math.random() < .3) spawnBlock(2, false, ++delay);
-    else if (Math.random() < .5) spawnBlock(1, false, ++delay);
+  for (var i=0; i<6; i++) {
+    if (Math.random() < .5) spawnBlock(2, false, ++delay);
+    else spawnBlock(1, false, ++delay);
   }
   currentlyAnimating = true;
 }
@@ -289,14 +298,30 @@ function placeStartingPolys() {
 //=======================================================================================
 function spawnMonoOrDomino() {
 //=======================================================================================
-  if (Math.random() < 0.25) spawnBlock(1, false);
-  else {
 
-    //This will pick, with equal probability one empty space.
-    //Then, starting in a random direction, it will look in each
-    //   of the 4 directions until it can create a domino - or return false if it cannot.
-    var done = spawnBlock(2, false, 0);
-    if (!done) spawnBlock(1, false, 0);
+  var order = 1 + Math.floor((rInt(gameMaxShapeLevel) + rInt(gameMaxShapeLevel)) / 2);
+  if (order >= gameMaxShapeLevel) order = gameMaxShapeLevel -1;
+
+
+  var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
+  var filledCount = copyBoardToMatrix(spawnGrid, 0, 0, gridSize);
+  var emptyCount = gridSize*gridSize - filledCount;
+  if (emptyCount < 15) {
+    if (Math.random() < .8) order = 1; else order = 2;
+  }
+  while (order*order > emptyCount) {
+    order--;
+    if (order < 2) {
+      order = 1;
+      break;
+    }
+  }
+
+  var done = false;
+  while (!done)
+  { done = spawnBlock(order, false, 0);
+    order--;
+    if (order < 1) return;
   }
   currentlyAnimating = true;
   triggerDetectSquares = true;
@@ -319,21 +344,26 @@ function spawnBlock(order, cement, delay, x0, y0) {
   //console.log("spawnBlock(order="+order+", cement="+cement+", x0="+x0+", y0="+y0+"): id="+id);
 
 
-  var spawnGrid;
-  spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
+  var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
   copyBoardToMatrix(spawnGrid, 0, 0, gridSize);
+
+  //If (x0,y0) is undefined, then try to find a large empty area for spawning
+  if (x0 == undefined) {
+    var startCell = tryToFindGoodRandomSpawnPoint(spawnGrid, order);
+    x0 = startCell.x;
+    y0 = startCell.y;
+  }
 
   var cellsNeeded = order;
   var minX=99, maxX=0, minY=99, maxY=0;
-  if (x0 != undefined) {
-    //for robustness.....
-    if ((x0 >=0) && (y0 >= 0) && (x0 < gridSize) && (y0 < gridSize)) {
-      if (spawnGrid[x0][y0] === CELL_EMPTY) {
 
-        spawnGrid[x0][y0] = id;
-        cellsNeeded = order - 1;
-        minX = x0, maxX = x0, minY = y0, maxY = y0;
-      }
+  //for robustness.....
+  if ((x0 >=0) && (y0 >= 0) && (x0 < gridSize) && (y0 < gridSize)) {
+    if (spawnGrid[x0][y0] === CELL_EMPTY) {
+
+      spawnGrid[x0][y0] = id;
+      cellsNeeded = order - 1;
+      minX = x0, maxX = x0, minY = y0, maxY = y0;
     }
   }
 
@@ -367,6 +397,88 @@ function spawnBlock(order, cement, delay, x0, y0) {
   return { id:id, minX:minX, minY:minY, maxX:maxX, maxY:maxY};
 }
 
+
+//=======================================================================================
+function tryToFindGoodRandomSpawnPoint(spawnGrid, order) {
+//=======================================================================================
+
+  console.log("tryToFindGoodRandomSpawnPoint("+order+") ENTER");
+  var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
+  var filledCount = copyBoardToMatrix(spawnGrid, 0, 0, gridSize);
+  var emptyCount = gridSize * gridSize - filledCount;
+
+
+  var personalSpace = order + 2;
+  var maxTrys = 10, tryCount = 0;
+  var x0, y0;
+  while (personalSpace >= 0) {
+
+    var visitedCount = 0;
+    var emptyCount = 0;
+
+    for (var x = 0; x < spawnGrid.length; x++) {
+      for (var y = 0; y < spawnGrid.length; y++) {
+        if (spawnGrid[x][y] === CELL_VISITED) spawnGrid[x][y] = CELL_EMPTY;
+        if (spawnGrid[x][y] === CELL_EMPTY) {
+          emptyCount++;
+          x0 = x;
+          y0 = y;
+        }
+      }
+    }
+
+    console.log("   ...x0="+x0+", y0="+y0+", emptyCount="+emptyCount);
+
+    if (emptyCount < 2) return {x: x0, y: y0};
+
+    if (maxTrys > emptyCount) maxTrys = emptyCount;
+
+    while (tryCount < maxTrys) {
+
+      var x = rInt(spawnGrid.length);
+      var y = rInt(spawnGrid.length);
+
+      if (spawnGrid[x][y] === CELL_EMPTY) {
+        spawnGrid[x][y] = CELL_VISITED;
+        x0 = x;
+        y0 = y;
+        tryCount++;
+        console.log("   ...trying ("+x+", "+y+")");
+        if (hasPersonalSpace(spawnGrid, x, y, personalSpace)) return {x: x0, y: y0};
+      }
+    }
+
+    personalSpace--;
+  }
+}
+
+
+
+
+//=======================================================================================
+function hasPersonalSpace(spawnGrid, x, y, personalSpace) {
+//=======================================================================================
+
+  for (var dir = 0; dir < DIRECTION.length; dir++) {
+
+    var xx = x;
+    var yy = y;
+    for (var d = 0; d < personalSpace; d++) {
+
+      var xx = x + DIRECTION[dir].deltaX;
+      var yy = y + DIRECTION[dir].deltaY;
+
+      if ((xx < 0) || (yy < 0)) break;
+      if ((xx >= gridSize) || (yy >= gridSize)) break;
+
+      if ((spawnGrid[xx][yy] != CELL_EMPTY) && (spawnGrid[xx][yy] != CELL_VISITED)) {
+        console.log("   ...Found neighbor in space["+personalSpace+"] ("+xx+", "+yy+")");
+        return false;
+      }
+    }
+  }
+  return true;
+}
 
 
 
@@ -682,7 +794,6 @@ function doesPolyHaveHoles(spawnGrid, order, id) {
 //=======================================================================================
 function copyBoardToMatrix(myMatrix, left, top, size, onlyBlockId, childID) {
 //=======================================================================================
-
   var filledCount = 0;
   for (var x = left; x < left+size; x++) {
     for (var y = top; y < top+size; y++) {

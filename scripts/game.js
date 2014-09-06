@@ -31,6 +31,7 @@ function newGame(){
 
 	blockId   = 0;
 	goalScore = 0;
+  gameMaxShapeLevel = 2;
 
 	initGame();
 	placeStartingPolys();

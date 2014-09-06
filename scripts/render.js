@@ -192,6 +192,7 @@ function render(){
 			triggerDetectSquares = true;
 			if(polyMoved)spawnNewPoly = true;
 			polyMoved = false;
+			saveGame();
 		}
 	}
 

@@ -388,7 +388,6 @@ function squareToPoly(left,top,order) {
 	}
 
 	// calculate score, handle combos
-	comboActiveEvt(order*100+1000); // TODO: CHANGE TIMING WITH NEW ANIMATION
 	if(comboActiveCtr === 1)comboCtr = 1;
 	else comboCtr++;
 	var points = addToScore(order,parentOrder,comboCtr);
@@ -458,15 +457,11 @@ function squareToPoly(left,top,order) {
 	sideSurroundOut(   left,top,order,endKF-300,endKF-100);
 	topSurroundOut(    left,top,order,endKF-100,endKF-0);
 
-//	textInEvt(left,top,order,0,1000,"+"+points);
-//	textInEvt(left,top,order,0+   0,0+1000,comboCtr+"x Combo!");
-//	textInEvt(left,top,order,0+ 600,0+1600,"+"+points+" points");
-//	textInEvt(left,top,order,0+1200,0+2200,POLYOMINO_NAME[order]);
-
 	// check win condition, update stats
 	identifyShape(spawnGrid,order,childId);
 	savePolyominoStats(order,null); // TODO: need to tell it the shape later on... or make a new function for that
 	if(order >= goalOrder && !gameWon)gameWonEvt(endKF);
+	comboActiveEvt(endKF);
 	saveGameEvt(endKF);
 }
 

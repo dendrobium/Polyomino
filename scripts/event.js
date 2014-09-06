@@ -197,6 +197,26 @@ function boxSustainEvt(x,y,order,startTick,endTick,color){
 
 //============================================================================//
 
+function centeredText(string,x,y,size,spacing){
+	gfx.font = "800 "+size+"px arial";
+	var halfWidth = (gfx.measureText(string).width+(spacing*(string.length-1)))/2;
+	for(var i=0;i<string.length;++i){
+		gfx.fillText(string.charAt(i),x-halfWidth,y);
+		x += gfx.measureText(string.charAt(i)).width+spacing;
+	}
+}
+
+function textInEvt(x,y,order,startTick,endTick,text){
+	new_event(startTick,endTick,function(interp){
+		rgba(1,1,1,Math.sin(interp*Math.PI)*2-1);
+		var fontSize = 22;
+		var cellCenter = Math.floor((cellSize*order)/2);
+		centeredText(text,x*cellSize+cellCenter,y*cellSize+cellCenter+fontSize/2-5/Math.tan(Math.PI*(interp-0.5)+Math.PI/2),fontSize,-1);
+	},null);
+}
+
+//============================================================================//
+
 function bottomSurroundIn(x,y,order,startTick,endTick){
 	new_event(startTick,endTick,function(interp){
 		rgb(1,1,1);

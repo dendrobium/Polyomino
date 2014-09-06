@@ -1,3 +1,6 @@
+
+//==  EVENT HANDLER  =========================================================//
+
 function keyframe(x){return keyframeSpeed*x;}
 
 new_event = function(startTick,endTick,func,onEnd){
@@ -37,13 +40,6 @@ function processActiveEvents(){
 
 //==  EVENT TYPES  ===========================================================//
 
-function orderChangeEvt(cell,oldOrder,newOrder,startTick,endTick){
-	cell.locked = true;
-	new_event(startTick,endTick,function(interp){
-		cell.order = (newOrder-oldOrder)*interp+oldOrder;
-	},function(){cell.order = newOrder;});
-}
-
 function unlockEvt(cell,unlockTick){
 	cell.locked = true;
 	new_event(unlockTick,unlockTick,null,function(){
@@ -59,6 +55,13 @@ function quickSetEvt(cell,occupied,id,order,setTick){
 	});
 }
 
+function uncementEvt(cell,uncementTick){
+	new_event(uncementTick,uncementTick,null,function(){
+		cell.cemented = false;
+		triggerDetectSquares = true;
+	});
+}
+
 function saveGameEvt(saveTick){
 	new_event(saveTick,saveTick,null,saveGame);
 }
@@ -70,32 +73,14 @@ function comboActiveEvt(decTick){
 	});
 }
 
-//============================================================================//
-
-// TODO: what about adjacent surrounds?
-function beginSurroundEvt(x,y,order,startTick,endTick){
-	addEffect(new squareEffect(order,x*cellSize,y*cellSize,order*cellSize));
-	new_event(startTick,endTick,function(interp){
-		var len = interp*interp*interp*order*cellSize+6;
-		rgb(1,1,1);
-		renderRect(x*cellSize-3,(y+order)*cellSize+3-len,x*cellSize-1,(y+order)*cellSize+3);
-		renderRect(x*cellSize-3,y*cellSize-3,x*cellSize-3+len,y*cellSize-1);
-		renderRect((x+order)*cellSize+3,y*cellSize-3,(x+order)*cellSize+1,y*cellSize-3+len);
-		renderRect((x+order)*cellSize+3-len,(y+order)*cellSize+3,(x+order)*cellSize+3,(y+order)*cellSize+1);
-	},null);
+function gameWonEvt(){
+	new_event(0,10,null,function(){
+		gameWon = true;
+		saveTime(new Date().getTime() - timeStarted);
+	});
 }
 
-function surroundEvt(x,y,order,startTick,endTick){
-	new_event(startTick,endTick,function(interp){
-		rgb(1,1,1);
-		renderRect(x*cellSize-3,y*cellSize-3,x*cellSize-1,(y+order)*cellSize+3);
-		renderRect(x*cellSize-3,y*cellSize-3,(x+order)*cellSize+3,y*cellSize-1);
-		renderRect((x+order)*cellSize+3,y*cellSize-3,(x+order)*cellSize+1,(y+order)*cellSize+3);
-		renderRect(x*cellSize-3,(y+order)*cellSize+3,(x+order)*cellSize+3,(y+order)*cellSize+1);
-	},null);
-}
-
-//============================================================================//
+//==  SLIDE-IN EVENTS  =======================================================//
 
 var slideInEvt = new Array(4);
 
@@ -133,7 +118,45 @@ slideInEvt[EAST] = function(x,y,startTick,endTick,color){ // from left
 	},null);
 }
 
-//============================================================================//
+//==  SLIDE-OUT EVENTS  ======================================================//
+
+var slideOutEvt = new Array(4);
+
+slideOutEvt[NORTH] = function(x,y,startTick,endTick,color){ // from bottom
+	new_event(startTick,endTick,function(interp){
+		rgb(color);
+		renderRect(x*cellSize,(y+1)*cellSize-interp*cellSize,
+		           (x+1)*cellSize,y*cellSize);
+	},null);
+}
+
+
+slideOutEvt[SOUTH] = function(x,y,startTick,endTick,color){ // from top
+	new_event(startTick,endTick,function(interp){
+		rgb(color);
+		renderRect(x*cellSize,(y+1)*cellSize,
+		           (x+1)*cellSize,y*cellSize+interp*cellSize);
+	},null);
+}
+
+
+slideOutEvt[WEST] = function(x,y,startTick,endTick,color){ // from right
+	new_event(startTick,endTick,function(interp){
+		rgb(color);
+		renderRect((x+1)*cellSize-interp*cellSize,y*cellSize,
+		           x*cellSize,(y+1)*cellSize);
+	},null);
+}
+
+slideOutEvt[EAST] = function(x,y,startTick,endTick,color){ // from left
+	new_event(startTick,endTick,function(interp){
+		rgb(color);
+		renderRect((x+1)*cellSize,y*cellSize,
+		           x*cellSize+interp*cellSize,(y+1)*cellSize);
+	},null);
+}
+
+//==  MISC SLIDE EVENTS  =====================================================//
 
 function highlightEvt(x,y,startTick,endTick,color){
 	new_event(startTick,endTick,function(){
@@ -143,28 +166,124 @@ function highlightEvt(x,y,startTick,endTick,color){
 	},null);
 }
 
-function unhoverEvt(x,y,startTick,endTick,color){
-	new_event(startTick,endTick,function(interp){
-		rgb(color);
-		renderRect(Math.round(x*cellSize*(1-interp)),Math.round(y*cellSize*(1-interp)),
-		          Math.round((x+1)*cellSize*(1-interp)),Math.round((y+1)*cellSize*(1-interp)));
-	},null);
-}
-
 function fadeOutEvt(x,y,startTick,endTick,color){
 	new_event(startTick,endTick,function(interp){
-
 		gfx.fillStyle = "rgba("+Math.floor(255*color.r)+","+Math.floor(255*color.g)+","+Math.floor(255*color.b)+","+(1-interp)+")";
 		renderRect(x*cellSize,y*cellSize,
 		          (x+1)*cellSize,(y+1)*cellSize);
 	},null);
 }
 
+//==  SQUARE TO POLY EVENTS  =================================================//
+
+function bottomLineIn(x,y,order,startTick,endTick){
+	new_event(startTick,endTick,function(interp){
+	},null);
+}
+
+function boxInEvt(x,y,order,startTick,endTick,color){
+	new_event(startTick,endTick,function(interp){
+		rgb(color);
+		renderRect(x*cellSize,y*cellSize,(x+order)*cellSize,(y+order*interp)*cellSize);
+	},null);
+}
+
+function boxSustainEvt(x,y,order,startTick,endTick,color){
+	new_event(startTick,endTick,function(){
+		rgb(color);
+		renderRect(x*cellSize,y*cellSize,(x+order)*cellSize,(y+order)*cellSize);
+	},null);
+}
+
 //============================================================================//
 
-function gameWonEvt(){
-	new_event(0,10,null,function(){
-		gameWon = true;
-		saveTime(new Date().getTime() - timeStarted);
-	});
+function bottomSurroundIn(x,y,order,startTick,endTick){
+	new_event(startTick,endTick,function(interp){
+		rgb(1,1,1);
+		var amt = interp*(order*cellSize+8)/2;
+		var mid = x*cellSize+order*cellSize/2;
+		renderRect(mid-amt,(y+order)*cellSize+2,
+		           mid+amt,(y+order)*cellSize+4);
+	},null);
+}
+
+function sideSurroundIn(x,y,order,startTick,endTick){
+	new_event(startTick,endTick,function(interp){
+		rgb(1,1,1);
+		var amt = interp*(order*cellSize+8);
+		renderRect(x*cellSize-4,(y+order)*cellSize+4-amt,
+		           x*cellSize-2,(y+order)*cellSize+4);
+		renderRect((x+order)*cellSize+2,(y+order)*cellSize+4-amt,
+		           (x+order)*cellSize+4,(y+order)*cellSize+4);
+	},null);
+}
+
+function topSurroundIn(x,y,order,startTick,endTick){
+	new_event(startTick,endTick,function(interp){
+		rgb(1,1,1);
+		var amt = interp*(order*cellSize+8)/2;
+		renderRect(x*cellSize-4,y*cellSize-4,
+		           x*cellSize-4+amt,y*cellSize-2);
+		renderRect((x+order)*cellSize+4-amt,y*cellSize-4,
+		           (x+order)*cellSize+4,y*cellSize-2);
+	},null);
+}
+
+function bottomSurroundSustain(x,y,order,startTick,endTick){
+	new_event(startTick,endTick,function(){
+		rgb(1,1,1);
+		renderRect(x*cellSize-4,(y+order)*cellSize+2,
+		           (x+order)*cellSize+4,(y+order)*cellSize+4);
+	},null);
+}
+
+function sideSurroundSustain(x,y,order,startTick,endTick){
+	new_event(startTick,endTick,function(){
+		rgb(1,1,1);
+		renderRect(x*cellSize-4,y*cellSize-4,
+		           x*cellSize-2,(y+order)*cellSize+4);
+		renderRect((x+order)*cellSize+2,y*cellSize-4,
+		           (x+order)*cellSize+4,(y+order)*cellSize+4);
+	},null);
+}
+
+function topSurroundSustain(x,y,order,startTick,endTick){
+	new_event(startTick,endTick,function(){
+		rgb(1,1,1);
+		renderRect(x*cellSize-4,y*cellSize-4,
+		           (x+order)*cellSize+4,y*cellSize-2);
+	},null);
+}
+
+function bottomSurroundOut(x,y,order,startTick,endTick){
+	new_event(startTick,endTick,function(interp){
+		rgb(1,1,1);
+		var amt = interp*(order*cellSize+8)/2;
+		var mid = x*cellSize+order*cellSize/2;
+		renderRect(x*cellSize-4,(y+order)*cellSize+2,
+		           mid-amt,(y+order)*cellSize+4);
+		renderRect((x+order)*cellSize+4,(y+order)*cellSize+2,
+		           mid+amt,(y+order)*cellSize+4);
+	},null);
+}
+
+function sideSurroundOut(x,y,order,startTick,endTick){
+	new_event(startTick,endTick,function(interp){
+		rgb(1,1,1);
+		var amt = interp*(order*cellSize+8);
+		renderRect(x*cellSize-4,(y+order)*cellSize+4-amt,
+		           x*cellSize-2,y*cellSize-4);
+		renderRect((x+order)*cellSize+2,(y+order)*cellSize+4-amt,
+		           (x+order)*cellSize+4,y*cellSize-4);
+	},null);
+}
+
+function topSurroundOut(x,y,order,startTick,endTick){
+	new_event(startTick,endTick,function(interp){
+		rgb(1,1,1);
+		var amt = (1-interp)*(order*cellSize+8)/2;
+		var mid = x*cellSize+order*cellSize/2;
+		renderRect(mid-amt,y*cellSize-4,
+		           mid+amt,y*cellSize-2);
+	},null);
 }

@@ -387,11 +387,6 @@ function squareToPoly(left,top,order) {
 		if(!doesPolyHaveHoles(spawnGrid,order,childId))break;
 	}
 
-	// calculate score, handle combos
-	if(comboActiveCtr === 1)comboCtr = 1;
-	else comboCtr++;
-	var points = addToScore(order,parentOrder,comboCtr);
-
 	// init animation events
 	var dirGrid = new grid(order);
 	var depthGrid = new grid(order);
@@ -457,11 +452,14 @@ function squareToPoly(left,top,order) {
 	sideSurroundOut(   left,top,order,endKF-300,endKF-100);
 	topSurroundOut(    left,top,order,endKF-100,endKF-0);
 
-	// check win condition, update stats
+	// calculate score, handle combos, check win condition, update stats
+	comboActiveEvt(endKF);
+	if(comboActiveCtr === 1)comboCtr = 1;
+	else comboCtr++;
+	var points = addToScore(order,parentOrder,comboCtr);
+	if(order >= goalOrder && !gameWon)gameWonEvt(endKF);
 	identifyShape(spawnGrid,order,childId);
 	savePolyominoStats(order,null); // TODO: need to tell it the shape later on... or make a new function for that
-	if(order >= goalOrder && !gameWon)gameWonEvt(endKF);
-	comboActiveEvt(endKF);
 	saveGameEvt(endKF);
 }
 

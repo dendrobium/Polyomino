@@ -486,88 +486,93 @@ function hasPersonalSpace(spawnGrid, x, y, personalSpace) {
 //=======================================================================================
 function squareToPoly(left,top,order) {
 //=======================================================================================
-  //console.log("squareToPoly("+left+","+top+","+order+") blockIdOfLastBlockPlaced="+blockIdOfLastBlockPlaced);
-  if (blockIdOfLastBlockPlaced === undefined) blockIdOfLastBlockPlaced = CELL_NONEXISTANT_ID;
+	if(blockIdOfLastBlockPlaced === undefined) blockIdOfLastBlockPlaced = CELL_NONEXISTANT_ID;
+	var spawnGrid = matrix(order,order,CELL_EMPTY);
+	var parentOrder = board.getCell(left,top).order;
 
-  var spawnGrid = matrix(order, order, CELL_EMPTY);
-
-  var parentOrder = board.getCell(left,top).order;
-
-	// TODO: move these to the bottom of squareToPoly() vvvvvvvvvvvv
-	// calculate score, handle combos
-	comboActiveEvt(order*100+1000); // TODO: CHANGE TIMING WITH NEW ANIMATION
-	if(comboActiveCtr === 1) comboCtr = 1;
-	else comboCtr++;
-	addToScore(order, parentOrder, comboCtr);
-
-  //Track player progress
-  savePolyominoStats(order, null); //need to tell it the shape later on... or make a new function for that
-
-	// check win condition
-	if(order > goalOrder && !gameWon){
-		gameWonEvt(); // TODO: this needs to be scheduled with animations
+	// generate new poly
+	var childId = newId();
+	while(true){
+		var filledCellCount = copyBoardToMatrix(spawnGrid,left,top,order,blockIdOfLastBlockPlaced,childId);
+		var cellsNeeded = order-filledCellCount;
+		for(var i=0;i<cellsNeeded;++i)appendRandomCellToPoly(spawnGrid,childId,order);
+		if(!doesPolyHaveHoles(spawnGrid,order,childId))break;
 	}
-	// TODO ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-  var childId = newId();
-  var hasHoles = true;
+	// init animation events
+	var dirGrid = new grid(order);
+	var depthGrid = new grid(order);
+	var maxDepth = 0;
+	var count = order;
+	for(var x=0;x<order;++x)for(var y=0;y<order;++y){
+		if(spawnGrid[x][y] === childId)depthGrid.setCell(x,y,0);
+	}
 
-  var addedCoordinate;
+	// calculate animation events
+	while(count < order*order){
+		var x = rInt(order);
+		var y = rInt(order);
+		if(depthGrid.getCell(x,y) === null){
+			var dirChk = shuffle([NORTH,SOUTH,EAST,WEST]),depth;
+			for(var i in dirChk)if((depth=depthGrid.getCell(x+DIRECTION[dirChk[i]].deltaX,y+DIRECTION[dirChk[i]].deltaY))!==null){
+				++depth;
+				dirGrid.setCell(x,y,dirChk[i]);
+				depthGrid.setCell(x,y,depth);
+				if(depth > maxDepth)maxDepth = depth;
+				++count;
+				break;
+			}
+		}
+	}
 
-  while (hasHoles) {
-    var filledCellCount = copyBoardToMatrix(spawnGrid, left, top, order, blockIdOfLastBlockPlaced, childId);
-
-    var cellsNeeded = order - filledCellCount;
-    //console.log("   Finished Copying Starting Cells: cellsNeeded="+cellsNeeded);
-
-    for (var i = 0; i < cellsNeeded; i++) {
-      addedCoordinate = appendRandomCellToPoly(spawnGrid, childId, order);
-      //if (addedCoordinate) console.log("    Added Cell: " + addedCoordinate. x + ", "+ addedCoordinate.y);
-    }
-    hasHoles = doesPolyHaveHoles(spawnGrid, order, childId);
-  }
-
-  for (var x = 0; x < order; x++) {
-    for (var y = 0; y < order; y++) {
-
-      var i = x + left;
-      var j = y + top;
-
-      var myCell = board.getCell(i, j);
-      myCell.locked = true;
-      myCell.cemented = false;
-
-      unlockEvt(myCell,keyframe(3));
-
-      if (spawnGrid[x][y] === childId) {
-        //console.log("    copy matrix: (" + x + ", " + y + ") ==> board: (" + i + ", " + j+")");
-        myCell.quickSet(true, childId, order);
-      }
-      else {
-        myCell.occupied = false;
-      }
-    }
-  }
+	// create animation events
+	var boxInKF0 = 0;
+	var boxInKF1 = 200;
+	var boxInKF2 = boxInKF1 + 200;
+	var endKF = boxInKF2+keyframe(maxDepth+1);
+	boxInEvt(      left,top,order,boxInKF0,boxInKF1,polyColor[order].secondary);
+	boxSustainEvt( left,top,order,boxInKF1,boxInKF2,polyColor[order].secondary);
+	boxInEvt(      left,top,order,boxInKF1,boxInKF2,polyColor[order].primary);
 
 
-  for (var i = left; i < left + order; ++i)for (var j = top; j < top + order; ++j) {
-    if (!board.getCell(i, j).occupied) {
-      /* do stuff here (cells are at i*cellSize, j*cellSize) */
-      var color = polyColor[order].primary;
-      //x, y, startr, startg, startb, starta, startscale, endr, endg, endb, enda, endscale, border, gravity
-      var x = i * cellSize + cellSize / 2;
-      var y = j * cellSize + cellSize / 2;
+	for(var x=0;x<order;++x)for(var y=0;y<order;++y){
+		var depth = depthGrid.getCell(x,y);
+		highlightEvt(x+left,y+top,boxInKF2,boxInKF2+keyframe(maxDepth-depth),polyColor[order].primary);
+		if(depth !== 0){
+			slideOutEvt[dirGrid.getCell(x,y)](x+left,y+top,boxInKF2+keyframe(maxDepth-depth),
+			                                               boxInKF2+keyframe(maxDepth-depth+1),polyColor[order].primary);
+		}else{
+			fadeOutEvt(x+left,y+top,boxInKF2+keyframe(maxDepth),endKF,polyColor[order].primary);
+		}
 
-      //new particle(x, y, 0,  0,  750,      color.r * 255, color.g * 255, color.b * 255, 1,      cellSize,    255,   255, 255,   0,     cellSize / 10, 1,       0);
-      new particle(x, y, 0,  0,  750,      polyColor[order].primary, 1,      cellSize,    polyColor[order].secondary,   0,     cellSize / 10, 1,       0);
+		var boardCell = board.getCell(x+left,y+top);
+		if(spawnGrid[x][y] === childId)quickSetEvt(board.getCell(x+left,y+top),true,childId,order,boxInKF2);
+		else quickSetEvt(board.getCell(x+left,y+top),false,null,null,boxInKF2);
+		uncementEvt(boardCell,boxInKF2);
+		unlockEvt(boardCell,endKF);
+	}
 
-    }
-  }
-  beginSurroundEvt(left, top, order,0, order*100);
-  surroundEvt(left, top,order,order*100,order*100+1000);
+	bottomSurroundIn( left,top,order,0  ,100);
+	sideSurroundIn(   left,top,order,100,300);
+	topSurroundIn(    left,top,order,300,400);
 
-  identifyShape(spawnGrid, order, childId);
-  saveGame();
+	bottomSurroundSustain( left,top,order,100,endKF-400);
+	sideSurroundSustain(   left,top,order,300,endKF-300);
+	topSurroundSustain(    left,top,order,400,endKF-100);
+
+	bottomSurroundOut( left,top,order,endKF-400,endKF-300);
+	sideSurroundOut(   left,top,order,endKF-300,endKF-100);
+	topSurroundOut(    left,top,order,endKF-100,endKF-0);
+
+	// calculate score, handle combos, check win condition, update stats
+	comboActiveEvt(endKF);
+	if(comboActiveCtr === 1)comboCtr = 1;
+	else comboCtr++;
+	var points = addToScore(order,parentOrder,comboCtr);
+	if(order >= goalOrder && !gameWon)gameWonEvt(endKF);
+	identifyShape(spawnGrid,order,childId);
+	savePolyominoStats(order,null); // TODO: need to tell it the shape later on... or make a new function for that
+	saveGameEvt(endKF);
 }
 
 

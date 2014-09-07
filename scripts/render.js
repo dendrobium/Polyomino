@@ -96,7 +96,7 @@ function render(){
 
 	// place new poly
 	if(spawnNewPoly){
-		spawnMonoOrDomino();
+		spawnPoly();
 		currentlyAnimating = true;
 	}spawnNewPoly = false;
 

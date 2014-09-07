@@ -178,7 +178,7 @@ function placeStartingPolys() {
   spawnBlock(1, false, delay, 6,6);
 
 
-  for (var i=0; i<6; i++) {
+  for (var i=0; i<8; i++) {
     if (Math.random() < .5) spawnBlock(2, false, ++delay);
     else spawnBlock(1, false, ++delay);
   }
@@ -296,7 +296,7 @@ function placeStartingPolys() {
 
 
 //=======================================================================================
-function spawnMonoOrDomino() {
+function spawnPoly() {
 //=======================================================================================
   var order = 1 + Math.floor(Math.abs(rInt(gameMaxShapeLevel) - rInt(gameMaxShapeLevel)));
   if ((order === 1) && (Math.random() < .5)) order = 2;
@@ -338,7 +338,7 @@ function spawnBlock(order, cement, delay, x0, y0) {
 //=======================================================================================
   //This function is called when:
   //  1) spawning starting polys.
-  //  2) spawning mono or dominos when a block is moved.
+  //  2) spawning a poly when a block is moved.
 
   var id = newId();
   //console.log("spawnBlock(order="+order+", cement="+cement+", x0="+x0+", y0="+y0+"): id="+id);
@@ -400,6 +400,7 @@ function spawnBlock(order, cement, delay, x0, y0) {
   if (delay === undefined) delay = 0;
   delay *= 100;
   animateBlockAggregationInBreathFirstOrder(start.x,start.y, dir, spawnGrid, order, 0, id, cement, delay);
+  identifyShape(spawnGrid,order,id);
   return { id:id, minX:minX, minY:minY, maxX:maxX, maxY:maxY};
 }
 

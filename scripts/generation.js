@@ -16,8 +16,8 @@ var CELL_NONEXISTANT_ID = -3;
 //=======================================================================================
 function placeStartingPolys() {
 //=======================================================================================
-
-  var orderList;
+  //console.log("placeStartingPolys()");
+  //var orderList;
   var delay = 0;
 
 //  var catagory = Math.random();
@@ -347,26 +347,29 @@ function spawnBlock(order, cement, delay, x0, y0) {
   var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
   copyBoardToMatrix(spawnGrid, 0, 0, gridSize);
 
-  //If (x0,y0) is undefined, then try to find a large empty area for spawning
-  if (x0 == undefined) {
-    var startCell = tryToFindGoodRandomSpawnPoint(spawnGrid, order);
-    x0 = startCell.x;
-    y0 = startCell.y;
-    //x0 = rInt(spawnGrid.length);
-    //y0 = rInt(spawnGrid.length);
-  }
+//  //If (x0,y0) is undefined, then try to find a large empty area for spawning
+//  if (x0 == undefined) {
+//    var startCell = tryToFindGoodRandomSpawnPoint(spawnGrid, order);
+//    x0 = startCell.x;
+//    y0 = startCell.y;
+//    //x0 = rInt(spawnGrid.length);
+//    //y0 = rInt(spawnGrid.length);
+//  }
 
 
   var cellsNeeded = order;
   var minX=99, maxX=0, minY=99, maxY=0;
 
-  //for robustness.....
-  if ((x0 >=0) && (y0 >= 0) && (x0 < gridSize) && (y0 < gridSize)) {
-    if (spawnGrid[x0][y0] === CELL_EMPTY) {
 
-      spawnGrid[x0][y0] = id;
-      cellsNeeded = order - 1;
-      minX = x0, maxX = x0, minY = y0, maxY = y0;
+  if (x0 != undefined) {
+    //for robustness.....
+    if ((x0 >=0) && (y0 >= 0) && (x0 < gridSize) && (y0 < gridSize)) {
+      if (spawnGrid[x0][y0] === CELL_EMPTY) {
+
+        spawnGrid[x0][y0] = id;
+        cellsNeeded = order - 1;
+        minX = x0, maxX = x0, minY = y0, maxY = y0;
+      }
     }
   }
 

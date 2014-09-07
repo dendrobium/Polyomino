@@ -118,7 +118,7 @@ function renderTrophies(){
 				}
 				
 			}
-			if(gameShapeCount[ord][id] > 0){
+			if(shapeCountAllTime[ord][id] > 0){
 				gfx.fillStyle = '#808080';
 				renderRect(x+xoffset-2, y-4, x+xoffset+cs*6+2, y+cs*6+2);
 				gfx.fillStyle = '#e5e5e5';

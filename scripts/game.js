@@ -14,7 +14,7 @@ function initGame(){
 	score                           = goalScore;
 	maxCombo                        = parseInt(localStorage.getItem("maxCombo")) || 0;
 	maxComboScore                   = parseInt(localStorage.getItem("maxComboScore")) || 0;
-	gameShapeCount                  = JSON.parse(localStorage.getItem("shapeCount")) || gameShapeCount;
+	shapeCountAllTime               = JSON.parse(localStorage.getItem("shapeCount")) || shapeCountCurrentGame;
 
 	selection = new grid(gridSize);
 	for(var i=0;i<selection.size;++i)for(var j=0;j<selection.size;++j)
@@ -32,6 +32,7 @@ function newGame(){
 	blockId   = 0;
 	goalScore = 0;
   gameMaxShapeLevel = 2;
+  initGameShapeCounts();
 
 	initGame();
 	placeStartingPolys();
@@ -79,7 +80,7 @@ function saveGame(){
 		localStorage.setItem("highScore",        highScore);
 		localStorage.setItem("maxComboScore", maxComboScore);
 		localStorage.setItem("maxCombo", maxCombo);
-		localStorage.setItem("shapeCount", JSON.stringify(gameShapeCount));
+		localStorage.setItem("shapeCount", JSON.stringify(shapeCountCurrentGame));
 	}
 }
 

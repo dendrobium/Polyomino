@@ -298,16 +298,16 @@ function placeStartingPolys() {
 //=======================================================================================
 function spawnMonoOrDomino() {
 //=======================================================================================
+  var order = 1 + Math.floor(Math.abs(rInt(gameMaxShapeLevel) - rInt(gameMaxShapeLevel)));
+  if ((order === 1) && (Math.random() < .5)) order = 2;
 
-  var order = 1 + Math.floor((rInt(gameMaxShapeLevel) + rInt(gameMaxShapeLevel)) / 2);
-  if (order >= gameMaxShapeLevel) order = gameMaxShapeLevel -1;
-
+  if (order > gameMaxShapeLevel) order = gameMaxShapeLevel; //This should never be true.
 
   var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
   var filledCount = copyBoardToMatrix(spawnGrid, 0, 0, gridSize);
   var emptyCount = gridSize*gridSize - filledCount;
-  if (emptyCount < 15) {
-    if (Math.random() < .8) order = 1; else order = 2;
+  if (emptyCount < 10) {
+    if (Math.random() < .5) order = 1; else order = 2;
   }
   while (order*order > emptyCount) {
     order--;
@@ -349,11 +349,11 @@ function spawnBlock(order, cement, delay, x0, y0) {
 
   //If (x0,y0) is undefined, then try to find a large empty area for spawning
   if (x0 == undefined) {
-  //  var startCell = tryToFindGoodRandomSpawnPoint(spawnGrid, order);
-  //  x0 = startCell.x;
-  //  y0 = startCell.y;
-    x0 = rInt(spawnGrid.length);
-    y0 = rInt(spawnGrid.length);
+    var startCell = tryToFindGoodRandomSpawnPoint(spawnGrid, order);
+    x0 = startCell.x;
+    y0 = startCell.y;
+    //x0 = rInt(spawnGrid.length);
+    //y0 = rInt(spawnGrid.length);
   }
 
 
@@ -411,7 +411,7 @@ function tryToFindGoodRandomSpawnPoint(spawnGrid, order) {
   var emptyCount = gridSize * gridSize - filledCount;
 
 
-  var personalSpace = order + 2;
+  var personalSpace = order;
   var maxTrys = 10, tryCount = 0;
   var x0, y0;
   while (personalSpace >= 0) {
@@ -453,6 +453,7 @@ function tryToFindGoodRandomSpawnPoint(spawnGrid, order) {
 
     personalSpace--;
   }
+  return {x: x0, y: y0};
 }
 
 
@@ -462,20 +463,17 @@ function tryToFindGoodRandomSpawnPoint(spawnGrid, order) {
 function hasPersonalSpace(spawnGrid, x, y, personalSpace) {
 //=======================================================================================
 
-  for (var dir = 0; dir < DIRECTION.length; dir++) {
+  if (personalSpace === 0) return true;
+  var x1 = Math.max(x-personalSpace, 0);
+  var x2 = Math.min(x+personalSpace, gridSize-1);
+  var y1 = Math.max(y-personalSpace, 0);
+  var y2 = Math.min(x+personalSpace, gridSize-1);
 
-    var xx = x;
-    var yy = y;
-    for (var d = 0; d < personalSpace; d++) {
-      console.log("   ...looking dir="+dir+",  d="+d);
-      var xx = xx + DIRECTION[dir].deltaX;
-      var yy = yy + DIRECTION[dir].deltaY;
-
-      if ((xx < 0) || (yy < 0)) break;
-      if ((xx >= gridSize) || (yy >= gridSize)) break;
+  for (var xx = x1; xx <= x2; xx++) {
+    for (var yy = y1; yy <= y2; yy++) {
 
       if ((spawnGrid[xx][yy] != CELL_EMPTY) && (spawnGrid[xx][yy] != CELL_VISITED)) {
-        console.log("   ...Found neighbor in space["+personalSpace+"] ("+xx+", "+yy+")");
+        console.log("     ...Found neighbor in space["+personalSpace+"] ("+xx+", "+yy+")");
         return false;
       }
     }

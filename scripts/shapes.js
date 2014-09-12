@@ -40,7 +40,8 @@ var MAX_ORDER = OCTOMINO;
 var MAX_ORDER_OF_SHAPE_IDENTIFICATION = HEXOMINO;
 var SHAPE = new Array(MAX_ORDER_OF_SHAPE_IDENTIFICATION + 1);
 var gamePolyominoCount = new Array(MAX_ORDER + 1);
-var gameShapeCount = new Array(MAX_ORDER_OF_SHAPE_IDENTIFICATION + 1);
+var shapeCountCurrentGame = new Array(MAX_ORDER_OF_SHAPE_IDENTIFICATION + 1);
+var gameMaxShapeLevel = 2;
 
 
 //One-Sided Polyominos
@@ -78,16 +79,18 @@ SHAPE[HEXOMINO] = [
 ];
 
 
-//== POLYOMINO GAME COUNTS
-for (var order = MONOMINO; order <= MAX_ORDER; order++) {
-  gamePolyominoCount[order] = 0;
-  if (order > MAX_ORDER_OF_SHAPE_IDENTIFICATION) break;
+function initGameShapeCounts() {
+//=======================================================================================
+  for (var order = MONOMINO; order <= MAX_ORDER; order++) {
+    gamePolyominoCount[order] = 0;
+    if (order > MAX_ORDER_OF_SHAPE_IDENTIFICATION) break;
 
-  //console.log("Shape: Possible one-sided " + POLYOMINO_NAME[order] + " = " + getPossibleOneSidedCount(order));
+    //console.log("Shape: Possible one-sided " + POLYOMINO_NAME[order] + " = " + getPossibleOneSidedCount(order));
 
-  gameShapeCount[order] = new Array(SHAPE[order].length);
-  for (var shapeNum = 0; shapeNum <SHAPE[order].length; shapeNum++) {
-    gameShapeCount[order][shapeNum] = 0;
+    shapeCountCurrentGame[order] = new Array(SHAPE[order].length);
+    for (var shapeNum = 0; shapeNum < SHAPE[order].length; shapeNum++) {
+      shapeCountCurrentGame[order][shapeNum] = 0;
+    }
   }
 }
 
@@ -143,10 +146,12 @@ function identifyShape(myMatrix, order, id) {
   if (order < 2) return;
   if (order === 2) {
     gamePolyominoCount[DOMINO]++;
-    gameShapeCount[DOMINO][0]++;
+    shapeCountCurrentGame[DOMINO][0]++;
+    shapeCountAllTime[DOMINO][0]++;
     return;
   }
 
+  if (order > gameMaxShapeLevel) gameMaxShapeLevel = order;
   if (order > MAX_ORDER_OF_SHAPE_IDENTIFICATION) return;
 
   var minX = myMatrix.length-1;
@@ -174,8 +179,9 @@ function identifyShape(myMatrix, order, id) {
     for (var orientation = 0; orientation < 4; orientation++) {
       if (isShape(tmpGrid, id, order, shape)) {
         gamePolyominoCount[order]++;
-        gameShapeCount[order][shape]++;
-        console.log("shapes.identifyShape():	gamePolyominoCount[" + order + "][" + shape + "]=" + gameShapeCount[order][shape]);
+        shapeCountCurrentGame[order][shape]++;
+        shapeCountAllTime[order][shape]++;
+        //console.log("shapes.identifyShape():	gamePolyominoCount[" + order + "][" + shape + "]=" + shapeCountCurrentGame[order][shape]);
         return;
       }
       rotate90(tmpGrid, order);

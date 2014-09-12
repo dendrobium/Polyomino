@@ -44,10 +44,8 @@ function recalculateOrder(){
 		// if counted order doesnt match assigned order,reassign
 		if(count === c.order)continue;
 		recurse(new grid(board.size),i,j,c,function(e){
-      e.cemented = false;
-      orderChangeEvt(e,e.order,count,keyframe(0),keyframe(1));
-			unlockEvt(e,keyframe(1));
-			saveGameEvt(keyframe(1));
+			e.cemented = false;
+			e.order = count;
 		});
 	}
 }

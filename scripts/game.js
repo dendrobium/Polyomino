@@ -11,10 +11,10 @@ function initGame(){
 	gameWon  = gameWonOverlayShown  = false;
 	gameLost = gameLostOverlayShown = false;
 	comboActiveCtr                  = 0;
-	score                           = 0;
+	score                           = goalScore;
 	maxCombo                        = parseInt(localStorage.getItem("maxCombo")) || 0;
 	maxComboScore                   = parseInt(localStorage.getItem("maxComboScore")) || 0;
-	gameShapeCount                  = JSON.parse(localStorage.getItem("shapeCount")) || gameShapeCount;
+	shapeCountAllTime               = JSON.parse(localStorage.getItem("shapeCount")) || shapeCountCurrentGame;
 
 	selection = new grid(gridSize);
 	for(var i=0;i<selection.size;++i)for(var j=0;j<selection.size;++j)
@@ -31,6 +31,8 @@ function newGame(){
 
 	blockId   = 0;
 	goalScore = 0;
+  gameMaxShapeLevel = 2;
+  initGameShapeCounts();
 
 	initGame();
 	placeStartingPolys();
@@ -78,7 +80,7 @@ function saveGame(){
 		localStorage.setItem("highScore",        highScore);
 		localStorage.setItem("maxComboScore", maxComboScore);
 		localStorage.setItem("maxCombo", maxCombo);
-		localStorage.setItem("shapeCount", JSON.stringify(gameShapeCount));
+		localStorage.setItem("shapeCount", JSON.stringify(shapeCountCurrentGame));
 	}
 }
 
@@ -89,7 +91,6 @@ function gameOver(){
 //==  SCORE RELATED  =========================================================//
 
 function addToScore(squareOrder,pieceOrder,combo){
-	console.log(combo);
 	var points = Math.floor(Math.pow(squareOrder*squareOrder*pieceOrder, combo*0.5+0.5));
 	goalScore += points;
 

@@ -96,7 +96,7 @@ function render(){
 
 	// place new poly
 	if(spawnNewPoly){
-		spawnMonoOrDomino();
+		spawnPoly();
 		currentlyAnimating = true;
 	}spawnNewPoly = false;
 
@@ -192,6 +192,7 @@ function render(){
 			triggerDetectSquares = true;
 			if(polyMoved)spawnNewPoly = true;
 			polyMoved = false;
+			saveGame();
 		}
 	}
 

@@ -6,7 +6,7 @@ orderDecay         = true;
 allowRotations     = true;
 newPolyOnMerge     = false;
 paneThickness      = 2;
-gridSize           = 10;
+gridSize           = 11;
 largeGridSize      = gridSize;
 smallGridSize      = gridSize;
 cellSize           = 32; // may vary during runtime as the application SHOULD size grid cells according to window size.
@@ -14,7 +14,7 @@ initPieceCount     = 4;
 dragSpeed          = 0.3;
 hoverOffset        = 8;
 keyframeSpeed      = 100;
-goalOrder          = 5; //I think this is 0-indexed, hence the bugs
+goalOrder          = 6;
 selectionOpacity   = 0.25;
 
 //==  POLYOMINO COLORS  ======================================================//
@@ -30,7 +30,7 @@ var polyColor = [
 	{primary:{r:0.64784, g:0.24157, b:0.00000}, secondary:{r:0.9255, g:0.3451, b:0.0000}}, // heptomino
 	{primary:{r:0.57372, g:0.40628, b:0.03297}, secondary:{r:0.8196, g:0.5804, b:0.0471}}, // octomino
 	{primary:{r:0.50980, g:0.21180, b:0.20000}, secondary:{r:0.8706, g:0.3608, b:0.3412}}, // nonomino
-	{primary:{r:0.05490, g:0.61570, b:0.65100}, secondary:{r:0.0706, g:0.8157, b:0.8627}}, // decomino
+	{primary:{r:0.05490, g:0.61570, b:0.65100}, secondary:{r:0.0706, g:0.8157, b:0.8627}}  // decomino
 ];
 
 //==  GLOBAL VARS  ===========================================================//

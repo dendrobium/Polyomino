@@ -31,7 +31,8 @@ function newGame(){
 
 	blockId   = 0;
 	goalScore = 0;
-  gameMaxShapeLevel = 2;
+  gameMaxShapeLevel = 1; //I (Joel) set this to 1.
+  orderOfLastMerge = 1;
   initGameShapeCounts();
 
 	initGame();

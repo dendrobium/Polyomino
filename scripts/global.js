@@ -16,6 +16,7 @@ hoverOffset        = 8;
 keyframeSpeed      = 100;
 goalOrder          = 6;
 selectionOpacity   = 0.25;
+orderOfLastMerge   = 1;
 
 //==  POLYOMINO COLORS  ======================================================//
 

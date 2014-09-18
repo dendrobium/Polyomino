@@ -166,21 +166,33 @@ function placeStartingPolys() {
 //
 //
 
-//  spawnBlock(1, false, delay, 4,4);
-//  spawnBlock(1, false, delay, 5,4);
-//  spawnBlock(1, false, delay, 6,4);
-//
-//  spawnBlock(1, false, delay, 4,5);
-//  spawnBlock(1, false, delay, 6,5);
-//
-//  spawnBlock(1, false, delay, 4,6);
-//  spawnBlock(1, false, delay, 5,6);
-//  spawnBlock(1, false, delay, 6,6);
+  spawnBlock(1, false, delay, 3,3);
+  spawnBlock(1, false, delay, 4,3);
+  spawnBlock(1, false, delay, 5,3);
+
+  spawnBlock(1, false, delay, 3,4);
+  spawnBlock(1, false, delay, 5,4);
+
+  spawnBlock(1, false, delay, 3,5);
+  spawnBlock(1, false, delay, 4,5);
+  spawnBlock(1, false, delay, 5,5);
 
 
-  for (var i=0; i<8; i++) {
-    if (Math.random() < .5) spawnBlock(2, false, ++delay);
-    else spawnBlock(1, false, ++delay);
+  for (var i=0; i<12; i++) {
+
+    var x,y;
+    if (Math.random() < .5) {
+      x = rInt(gridSize);
+      y = rInt(3);
+      if (Math.random() < .5) y = y + 6;
+    }
+    else {
+      y = rInt(gridSize);
+      x = rInt(3);
+      if (Math.random() < .5) x = x + 6;
+    }
+
+    spawnBlock(1, false, ++delay, x,y);
   }
   currentlyAnimating = true;
 }
@@ -298,10 +310,20 @@ function placeStartingPolys() {
 //=======================================================================================
 function spawnPoly() {
 //=======================================================================================
-  var order = 1 + Math.floor(Math.abs(rInt(gameMaxShapeLevel) - rInt(gameMaxShapeLevel)));
-  if ((order === 1) && (Math.random() < .5)) order = 2;
 
-  if (order > gameMaxShapeLevel) order = gameMaxShapeLevel; //This should never be true.
+  //console.log("spawnPoly() orderOfLastMerge=" +orderOfLastMerge +", gameMaxShapeLevel="+gameMaxShapeLevel);
+  var order = 1;
+  var r = Math.random();
+  if (r < .3) order = 1;
+  else if (r < .8) order = 2;
+  else {
+    r = Math.random();
+    if (r < 0.05) order = 3;
+    else if (r < 0.08) order = 4;
+    else if (r < 0.7) order = orderOfLastMerge;
+    else order = gameMaxShapeLevel;
+  }
+  if (order > gameMaxShapeLevel) order = gameMaxShapeLevel;
 
   var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
   var filledCount = copyBoardToMatrix(spawnGrid, 0, 0, gridSize);
@@ -491,7 +513,10 @@ function hasPersonalSpace(spawnGrid, x, y, personalSpace) {
 //=======================================================================================
 function squareToPoly(left,top,order) {
 //=======================================================================================
-	if(blockIdOfLastBlockPlaced === undefined) blockIdOfLastBlockPlaced = CELL_NONEXISTANT_ID;
+  orderOfLastMerge = order;
+  if (order > gameMaxShapeLevel) gameMaxShapeLevel = order;
+
+  if(blockIdOfLastBlockPlaced === undefined) blockIdOfLastBlockPlaced = CELL_NONEXISTANT_ID;
 	var spawnGrid = matrix(order,order,CELL_EMPTY);
 	var parentOrder = board.getCell(left,top).order;
 

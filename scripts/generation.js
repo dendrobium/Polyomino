@@ -166,16 +166,16 @@ function placeStartingPolys() {
 //
 //
 
-  spawnBlock(1, false, delay, 4,4);
-  spawnBlock(1, false, delay, 5,4);
-  spawnBlock(1, false, delay, 6,4);
-
-  spawnBlock(1, false, delay, 4,5);
-  spawnBlock(1, false, delay, 6,5);
-
-  spawnBlock(1, false, delay, 4,6);
-  spawnBlock(1, false, delay, 5,6);
-  spawnBlock(1, false, delay, 6,6);
+//  spawnBlock(1, false, delay, 4,4);
+//  spawnBlock(1, false, delay, 5,4);
+//  spawnBlock(1, false, delay, 6,4);
+//
+//  spawnBlock(1, false, delay, 4,5);
+//  spawnBlock(1, false, delay, 6,5);
+//
+//  spawnBlock(1, false, delay, 4,6);
+//  spawnBlock(1, false, delay, 5,6);
+//  spawnBlock(1, false, delay, 6,6);
 
 
   for (var i=0; i<8; i++) {

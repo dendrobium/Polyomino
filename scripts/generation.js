@@ -166,6 +166,8 @@ function placeStartingPolys() {
 //
 //
 
+  var x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, r, bounds;
+
   spawnBlock(1, false, delay, 3,3);
   spawnBlock(1, false, delay, 4,3);
   spawnBlock(1, false, delay, 5,3);
@@ -178,21 +180,62 @@ function placeStartingPolys() {
   spawnBlock(1, false, delay, 5,5);
 
 
-  for (var i=0; i<12; i++) {
+  r = Math.random();
+  if (r < 0.25) {
+    x1 = rInt(2);
+    y1 = rInt(2);
+  }
+  else if (r < 0.5) {
+    x1 = x1 + (gridSize - 1);
+    y1 = rInt(2);
+  }
+  else if  (r < 0.75) {
+    x1 = rInt(2);
+    y1 = y1 + (gridSize - 1);
+  }
+  else {
+    x1 = x1 + (gridSize - 1);
+    y1 = y1 + (gridSize - 1);
+  }
 
-    var x,y;
-    if (Math.random() < .5) {
-      x = rInt(gridSize);
-      y = rInt(3);
-      if (Math.random() < .5) y = y + 6;
-    }
-    else {
-      y = rInt(gridSize);
-      x = rInt(3);
-      if (Math.random() < .5) x = x + 6;
-    }
 
-    spawnBlock(1, false, ++delay, x,y);
+  r = Math.random();
+  if (r < 0.25) {
+    x2 = rInt(3)+3; y2 = 2;
+  }
+  else if (r < 0.5) {
+    x2 = rInt(3)+3; y2 = 6;
+  }
+  else if  (r < 0.75) {
+    y2 = rInt(3)+3; x2 = 2;
+  }
+  else  {
+    y2 = rInt(3)+3; x2 = 6;
+  }
+
+  bounds=spawnBlock(4, true, ++delay, x1, y1);
+  bounds=spawnBlock(4, true, ++delay, x2, y2);
+
+
+  var numBlocks = rInt(4)+3;
+  var count = 0;
+  while (count < numBlocks)
+  {
+    x3 = rInt(gridSize);
+    y3 = rInt(gridSize);
+    if (x3 == 4 && y3 == 4) continue;
+    var myCell = board.getCell(x3, y3);
+    if (myCell.occupied || myCell.locked) continue;
+    count++;
+    spawnBlock(rInt(2) + 2, true, ++delay);
+  }
+
+  spawnBlock(1, false, ++delay);
+  spawnBlock(1, false, ++delay);
+  for (var i=0; i<6; i++) {
+    if (Math.random() > 0.5) {
+      spawnBlock(1, false, ++delay);
+    }
   }
   currentlyAnimating = true;
 }
@@ -427,85 +470,85 @@ function spawnBlock(order, cement, delay, x0, y0) {
 }
 
 
-//=======================================================================================
-function tryToFindGoodRandomSpawnPoint(spawnGrid, order) {
-//=======================================================================================
-
-  console.log("tryToFindGoodRandomSpawnPoint("+order+") ENTER");
-  var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
-  var filledCount = copyBoardToMatrix(spawnGrid, 0, 0, gridSize);
-  var emptyCount = gridSize * gridSize - filledCount;
-
-
-  var personalSpace = order;
-  var maxTrys = 10, tryCount = 0;
-  var x0, y0;
-  while (personalSpace >= 0) {
-
-    var visitedCount = 0;
-    var emptyCount = 0;
-
-    for (var x = 0; x < spawnGrid.length; x++) {
-      for (var y = 0; y < spawnGrid.length; y++) {
-        if (spawnGrid[x][y] === CELL_VISITED) spawnGrid[x][y] = CELL_EMPTY;
-        if (spawnGrid[x][y] === CELL_EMPTY) {
-          emptyCount++;
-          x0 = x;
-          y0 = y;
-        }
-      }
-    }
-
-    console.log("   ...x0="+x0+", y0="+y0+", emptyCount="+emptyCount);
-
-    if (emptyCount < 2) return {x: x0, y: y0};
-
-    if (maxTrys > emptyCount) maxTrys = emptyCount;
-
-    while (tryCount < maxTrys) {
-
-      var x = rInt(spawnGrid.length);
-      var y = rInt(spawnGrid.length);
-
-      if (spawnGrid[x][y] === CELL_EMPTY) {
-        spawnGrid[x][y] = CELL_VISITED;
-        x0 = x;
-        y0 = y;
-        tryCount++;
-        console.log("   ...trying ("+x+", "+y+") with personalSpace="+ personalSpace);
-        if (hasPersonalSpace(spawnGrid, x, y, personalSpace)) return {x: x0, y: y0};
-      }
-    }
-
-    personalSpace--;
-  }
-  return {x: x0, y: y0};
-}
-
-
+////=======================================================================================
+//function tryToFindGoodRandomSpawnPoint(spawnGrid, order) {
+////=======================================================================================
+//
+//  console.log("tryToFindGoodRandomSpawnPoint("+order+") ENTER");
+//  var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
+//  var filledCount = copyBoardToMatrix(spawnGrid, 0, 0, gridSize);
+//  var emptyCount = gridSize * gridSize - filledCount;
+//
+//
+//  var personalSpace = order;
+//  var maxTrys = 10, tryCount = 0;
+//  var x0, y0;
+//  while (personalSpace >= 0) {
+//
+//    var visitedCount = 0;
+//    var emptyCount = 0;
+//
+//    for (var x = 0; x < spawnGrid.length; x++) {
+//      for (var y = 0; y < spawnGrid.length; y++) {
+//        if (spawnGrid[x][y] === CELL_VISITED) spawnGrid[x][y] = CELL_EMPTY;
+//        if (spawnGrid[x][y] === CELL_EMPTY) {
+//          emptyCount++;
+//          x0 = x;
+//          y0 = y;
+//        }
+//      }
+//    }
+//
+//    console.log("   ...x0="+x0+", y0="+y0+", emptyCount="+emptyCount);
+//
+//    if (emptyCount < 2) return {x: x0, y: y0};
+//
+//    if (maxTrys > emptyCount) maxTrys = emptyCount;
+//
+//    while (tryCount < maxTrys) {
+//
+//      var x = rInt(spawnGrid.length);
+//      var y = rInt(spawnGrid.length);
+//
+//      if (spawnGrid[x][y] === CELL_EMPTY) {
+//        spawnGrid[x][y] = CELL_VISITED;
+//        x0 = x;
+//        y0 = y;
+//        tryCount++;
+//        console.log("   ...trying ("+x+", "+y+") with personalSpace="+ personalSpace);
+//        if (hasPersonalSpace(spawnGrid, x, y, personalSpace)) return {x: x0, y: y0};
+//      }
+//    }
+//
+//    personalSpace--;
+//  }
+//  return {x: x0, y: y0};
+//}
 
 
-//=======================================================================================
-function hasPersonalSpace(spawnGrid, x, y, personalSpace) {
-//=======================================================================================
 
-  if (personalSpace === 0) return true;
-  var x1 = Math.max(x-personalSpace, 0);
-  var x2 = Math.min(x+personalSpace, gridSize-1);
-  var y1 = Math.max(y-personalSpace, 0);
-  var y2 = Math.min(x+personalSpace, gridSize-1);
-
-  for (var xx = x1; xx <= x2; xx++) {
-    for (var yy = y1; yy <= y2; yy++) {
-
-      if ((spawnGrid[xx][yy] != CELL_EMPTY) && (spawnGrid[xx][yy] != CELL_VISITED)) {
-        console.log("     ...Found neighbor in space["+personalSpace+"] ("+xx+", "+yy+")");
-        return false;
-      }
-    }
-  }
-  return true;
-}
+//
+////=======================================================================================
+//function hasPersonalSpace(spawnGrid, x, y, personalSpace) {
+////=======================================================================================
+//
+//  if (personalSpace === 0) return true;
+//  var x1 = Math.max(x-personalSpace, 0);
+//  var x2 = Math.min(x+personalSpace, gridSize-1);
+//  var y1 = Math.max(y-personalSpace, 0);
+//  var y2 = Math.min(x+personalSpace, gridSize-1);
+//
+//  for (var xx = x1; xx <= x2; xx++) {
+//    for (var yy = y1; yy <= y2; yy++) {
+//
+//      if ((spawnGrid[xx][yy] != CELL_EMPTY) && (spawnGrid[xx][yy] != CELL_VISITED)) {
+//        console.log("     ...Found neighbor in space["+personalSpace+"] ("+xx+", "+yy+")");
+//        return false;
+//      }
+//    }
+//  }
+//  return true;
+//}
 
 
 

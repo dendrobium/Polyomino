@@ -43,9 +43,6 @@ function placeStartingPolys() {
     loc = getRandomCoordinatesInRegion(spawnGrid, NORTHWEST);
     if (loc != null) spawnStartingBlock(spawnGrid, 4, true, ++delay, loc.x, loc.y);
 
-    loc = getRandomCoordinatesInRegion(spawnGrid, NORTH);
-    if (loc != null) spawnStartingBlock(spawnGrid, 3, true, ++delay, loc.x, loc.y);
-
     loc = getRandomCoordinatesInRegion(spawnGrid, WEST);
     if (loc != null) spawnStartingBlock(spawnGrid, 3, true, ++delay, loc.x, loc.y);
 
@@ -59,8 +56,6 @@ function placeStartingPolys() {
     loc = getRandomCoordinatesInRegion(spawnGrid, SOUTHWEST);
     if (loc != null) spawnStartingBlock(spawnGrid, 4, true, ++delay, loc.x, loc.y);
 
-    loc = getRandomCoordinatesInRegion(spawnGrid, SOUTH);
-    if (loc != null) spawnStartingBlock(spawnGrid, 3, true, ++delay, loc.x, loc.y);
 
     loc = getRandomCoordinatesInRegion(spawnGrid, WEST);
     if (loc != null) spawnStartingBlock(spawnGrid, 3, true, ++delay, loc.x, loc.y);

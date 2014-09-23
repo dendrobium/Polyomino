@@ -13,339 +13,181 @@ var CELL_EMPTY = -1;
 var CELL_VISITED = -2;
 var CELL_NONEXISTANT_ID = -3;
 
+
 //=======================================================================================
 function placeStartingPolys() {
 //=======================================================================================
   //console.log("placeStartingPolys()");
-  //var orderList;
   var delay = 0;
 
-//  var catagory = Math.random();
-//  if (catagory < .25) {
-//    //Spawn 2 cemented Tetrominos and 3 cemented Trominos
-//    var x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, bounds;
-//    if (Math.random() < 0.5) {
-//      x1 = rInt(3);
-//      x2 = (gridSize - 3) + rInt(3);
-//      y1 = rInt(gridSize);
-//      y2 = rInt(gridSize);
-//
-//      bounds = spawnBlock(4, true, ++delay, x1, y1);
-//      //console.log("    spawned order 4: bounds= (" + bounds.minX + ", " + bounds.minY + ") - (" + bounds.maxX + ", " + bounds.maxY + ")");
-//
-//      if (bounds.minY < gridSize / 2) y3 = bounds.maxY + 1; else y3 = bounds.minY - 1;
-//      x3 = rInt(3);
-//
-//      bounds = spawnBlock(4, true, ++delay, x2, y2);
-//      //console.log("    spawned order 4: bounds= (" + bounds.minX + ", " + bounds.minY + ") - (" + bounds.maxX + ", " + bounds.maxY + ")");
-//
-//      if (bounds.minY < gridSize / 2) y4 = bounds.maxY + 1; else y4 = bounds.minY - 1;
-//      x4 = (gridSize - 3) + rInt(3);
-//    }
-//    else {
-//      y1 = rInt(3);
-//      y2 = (gridSize - 3) + rInt(3);
-//      x1 = rInt(gridSize);
-//      x2 = rInt(gridSize);
-//
-//      bounds = spawnBlock(4, true, ++delay, x1, y1);
-//      // console.log("    spawned order 4: bounds= (" + bounds.minX + ", " + bounds.minY + ") - (" + bounds.maxX + ", " + bounds.maxY + ")");
-//
-//
-//      if (bounds.minX < gridSize / 2) x3 = bounds.maxX + 1;
-//      else                            x3 = bounds.minX - 1;
-//      y3 = rInt(3);
-//
-//      bounds = spawnBlock(4, true, ++delay, x2, y2);
-//      //console.log("    spawned order 4: bounds= (" + bounds.minX + ", " + bounds.minY + ") - (" + bounds.maxX + ", " + bounds.maxY + ")");
-//
-//      if (bounds.minX < gridSize / 2) x4 = bounds.maxX + 1;
-//      else                            x4 = bounds.minX - 1;
-//      y4 = (gridSize - 3) + rInt(3);
-//    }
-//
-//    bounds = spawnBlock(4, true, ++delay, 5, 5);
-//    if (bounds.minX < gridSize / 2) x5 = bounds.maxX + 1;
-//    else                            x5 = bounds.minX - 1;
-//    y5 = 5 + rInt(3);
-//
-//    spawnBlock(3, true, ++delay, x3, y3);
-//    spawnBlock(3, true, ++delay, x4, y4);
-//    spawnBlock(3, true, ++delay, x5, y5);
-//  }
-//
-//
-//  else if (catagory < 0.5) {
-//    //Spawn 5 cemented Tetrominos
-//
-//    spawnBlock(4, true, ++delay, rInt(3), rInt(3));
-//    spawnBlock(4, true, ++delay, (gridSize - 3) + rInt(3), rInt(3));
-//    spawnBlock(4, true, ++delay, rInt(3), (gridSize - 3) + rInt(3));
-//    spawnBlock(4, true, ++delay, (gridSize - 3) + rInt(3), (gridSize - 3) + rInt(3));
-//    spawnBlock(4, true, ++delay, 5 + rInt(2), 5 + rInt(2));
-//  }
-//
-//  else if (catagory < .75) {
-//    //Spawn 10 cemented Trominos
-//
-//    var x = 0;
-//    var y = rInt(gridSize);
-//
-//    for (var i = 0; i < 10; i++) {
-//
-//      var bounds = spawnBlock(3, true, ++delay, x, y);
-//      if (bounds === false) {
-//        bounds = spawnBlock(3, true, ++delay);
-//      }
-//      x = bounds.maxX + 1;
-//      if (x > 9) {
-//        bounds = spawnBlock(3, true, ++delay);
-//      }
-//
-//      var goingUp = true;
-//      if (Math.random() < 0.5) goingUp = false;
-//
-//      if (bounds.minY - 1 < 0) goingUp = false;
-//      else if (bounds.maxY + 1 > 10) goingUp = true;
-//      y = bounds.maxY + 1;
-//      if (goingUp) y = bounds.minY - 1;
-//    }
-//  }
-//
-//  else if (catagory < .9) {
-//    //Spawn 1 cemented Pentomino + 2 random tris or teras
-//    spawnBlock(5, true, ++delay, 5, 5);
-//
-//    var x1, y1, x2, y2;
-//    if (Math.random() < 0.5) {
-//      x1 = 0;
-//      x2 = (gridSize - 1);
-//      y1 = rInt(gridSize);
-//      y2 = rInt(gridSize);
-//    }
-//    else {
-//      y1 = 0;
-//      y2 = (gridSize - 1);
-//      x1 = rInt(gridSize);
-//      x2 = rInt(gridSize);
-//    }
-//    var catagory2 = Math.random();
-//    if (catagory2 < .33) {
-//      spawnBlock(3, true, ++delay, x1, y1);
-//      spawnBlock(3, true, ++delay, x2, y2);
-//    }
-//    else if (catagory2 < .66) {
-//      spawnBlock(4, true, ++delay, x1, y1);
-//      spawnBlock(3, true, ++delay, x2, y2);
-//    }
-//    else {
-//      spawnBlock(4, true, ++delay, x1, y1);
-//      spawnBlock(4, true, ++delay, x2, y2);
-//    }
-//  }
-//  else {
-//    //Spawn 2 cemented Pentomino
-//    var x1, y1, x2, y2;
-//    if (Math.random() < 0.5) {
-//      x1 = 0;
-//      x2 = (gridSize - 1);
-//      y1 = rInt(gridSize);
-//      y2 = rInt(gridSize);
-//    }
-//    else {
-//      y1 = 0;
-//      y2 = (gridSize - 1);
-//      x1 = rInt(gridSize);
-//      x2 = rInt(gridSize);
-//    }
-//
-//    spawnBlock(5, true, ++delay, x1, y1);
-//    spawnBlock(5, true, ++delay, x2, y2);
-//  }
-//
-//
-//
+  var spawnGrid = matrix(gridSize,gridSize,CELL_EMPTY);
+  spawnStartingBlock(spawnGrid, 1, false, delay, 3,3);
+  spawnStartingBlock(spawnGrid, 1, false, delay, 4,3);
+  spawnStartingBlock(spawnGrid, 1, false, delay, 5,3);
 
-  var x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, r, bounds;
+  spawnStartingBlock(spawnGrid, 1, false, delay, 3,4);
+  spawnStartingBlock(spawnGrid, 1, false, delay, 5,4);
 
-  spawnBlock(1, false, delay, 3,3);
-  spawnBlock(1, false, delay, 4,3);
-  spawnBlock(1, false, delay, 5,3);
-
-  spawnBlock(1, false, delay, 3,4);
-  spawnBlock(1, false, delay, 5,4);
-
-  spawnBlock(1, false, delay, 3,5);
-  spawnBlock(1, false, delay, 4,5);
-  spawnBlock(1, false, delay, 5,5);
+  spawnStartingBlock(spawnGrid, 1, false, delay, 3,5);
+  spawnStartingBlock(spawnGrid, 1, false, delay, 4,5);
+  spawnStartingBlock(spawnGrid, 1, false, delay, 5,5);
 
 
-  r = Math.random();
-  if (r < 0.25) {
-    x1 = rInt(2);
-    y1 = rInt(2);
+
+  var r = Math.random();
+  var loc;
+  if (r < 0.5) {
+    loc = getRandomCoordinatesInRegion(spawnGrid, NORTHEAST);
+    if (loc != null) spawnStartingBlock(spawnGrid, 4, true, ++delay, loc.x, loc.y);
+
+    loc = getRandomCoordinatesInRegion(spawnGrid, NORTHWEST);
+    if (loc != null) spawnStartingBlock(spawnGrid, 4, true, ++delay, loc.x, loc.y);
+
+    loc = getRandomCoordinatesInRegion(spawnGrid, NORTH);
+    if (loc != null) spawnStartingBlock(spawnGrid, 3, true, ++delay, loc.x, loc.y);
+
+    loc = getRandomCoordinatesInRegion(spawnGrid, WEST);
+    if (loc != null) spawnStartingBlock(spawnGrid, 3, true, ++delay, loc.x, loc.y);
+
+    loc = getRandomCoordinatesInRegion(spawnGrid, EAST);
+    if (loc != null) spawnStartingBlock(spawnGrid, 3, true, ++delay, loc.x, loc.y);
   }
-  else if (r < 0.5) {
-    x1 = x1 + (gridSize - 1);
-    y1 = rInt(2);
-  }
-  else if  (r < 0.75) {
-    x1 = rInt(2);
-    y1 = y1 + (gridSize - 1);
-  }
-  else {
-    x1 = x1 + (gridSize - 1);
-    y1 = y1 + (gridSize - 1);
-  }
+  else if (r < 1.15) {
+    loc = getRandomCoordinatesInRegion(spawnGrid, SOUTHEAST);
+    if (loc != null) spawnStartingBlock(spawnGrid, 4, true, ++delay, loc.x, loc.y);
 
+    loc = getRandomCoordinatesInRegion(spawnGrid, SOUTHWEST);
+    if (loc != null) spawnStartingBlock(spawnGrid, 4, true, ++delay, loc.x, loc.y);
 
-  r = Math.random();
-  if (r < 0.25) {
-    x2 = rInt(3)+3; y2 = 2;
-  }
-  else if (r < 0.5) {
-    x2 = rInt(3)+3; y2 = 6;
-  }
-  else if  (r < 0.75) {
-    y2 = rInt(3)+3; x2 = 2;
-  }
-  else  {
-    y2 = rInt(3)+3; x2 = 6;
-  }
+    loc = getRandomCoordinatesInRegion(spawnGrid, SOUTH);
+    if (loc != null) spawnStartingBlock(spawnGrid, 3, true, ++delay, loc.x, loc.y);
 
-  bounds=spawnBlock(4, true, ++delay, x1, y1);
-  bounds=spawnBlock(4, true, ++delay, x2, y2);
+    loc = getRandomCoordinatesInRegion(spawnGrid, WEST);
+    if (loc != null) spawnStartingBlock(spawnGrid, 3, true, ++delay, loc.x, loc.y);
+
+    loc = getRandomCoordinatesInRegion(spawnGrid, EAST);
+    if (loc != null) spawnStartingBlock(spawnGrid, 3, true, ++delay, loc.x, loc.y);
+  }
 
 
   var numBlocks = rInt(4)+3;
   var count = 0;
+  var x, y;
   while (count < numBlocks)
   {
-    x3 = rInt(gridSize);
-    y3 = rInt(gridSize);
-    if (x3 == 4 && y3 == 4) continue;
-    var myCell = board.getCell(x3, y3);
-    if (myCell.occupied || myCell.locked) continue;
+    x = rInt(gridSize);
+    y = rInt(gridSize);
+    if (x == 4 && y == 4) continue;
+    if (spawnGrid[x][y] != CELL_EMPTY) continue;
     count++;
-    spawnBlock(rInt(2) + 2, true, ++delay);
+    spawnStartingBlock(spawnGrid, 2, true, ++delay, x, y);
   }
 
-  spawnBlock(1, false, ++delay);
-  spawnBlock(1, false, ++delay);
-  for (var i=0; i<6; i++) {
-    if (Math.random() > 0.5) {
-      spawnBlock(1, false, ++delay);
+  var singleBlockSpawnCount = 0;
+  for (var i=0; i<8; i++) {
+    if ((singleBlockSpawnCount < 2) || (Math.random() > 0.5)) {
+
+      loc = getRandomCoordinatesNearEdge(spawnGrid);
+      if (loc != null) {
+        spawnStartingBlock(spawnGrid, 1, false, ++delay, loc.x, loc.y);
+        singleBlockSpawnCount++;
+      }
     }
   }
   currentlyAnimating = true;
 }
 
-
-
-
-//=============For 10x10 ===========================================================
-//function placeStartingPolys() {
 //=======================================================================================
-//
-//  var orderList;
-//  var delay = 0;
-//
-//  if (Math.random() < 0.25) {
-//    //Spawn 2 cemented Tetrominos and 2 cemented Trominos
-//    var x1, y1, x2, y2, x3, y3, x4, y4;
-//    if (Math.random() < 0.5) {
-//      x1 = rInt(3);
-//      x2 = (gridSize - 3) + rInt(3);
-//      y1 = rInt(gridSize);
-//      y2 = rInt(gridSize);
-//
-//      var bounds = spawnBlock(4, true, ++delay, x1, y1);
-//      //console.log("    spawned order 4: bounds= (" + bounds.minX + ", " + bounds.minY + ") - (" + bounds.maxX + ", " + bounds.maxY + ")");
-//
-//      if (bounds.minY < gridSize / 2) y3 = bounds.maxY + 1; else y3 = bounds.minY - 1;
-//      x3 = rInt(3);
-//
-//      bounds = spawnBlock(4, true, ++delay, x2, y2);
-//      //console.log("    spawned order 4: bounds= (" + bounds.minX + ", " + bounds.minY + ") - (" + bounds.maxX + ", " + bounds.maxY + ")");
-//
-//      if (bounds.minY < gridSize / 2) y4 = bounds.maxY + 1; else y4 = bounds.minY - 1;
-//      x4 = (gridSize - 3) + rInt(3);
-//    }
-//    else {
-//      y1 = rInt(3);
-//      y2 = (gridSize - 3) + rInt(3);
-//      x1 = rInt(gridSize);
-//      x2 = rInt(gridSize);
-//
-//      var bounds = spawnBlock(4, true, ++delay, x1, y1);
-//      // console.log("    spawned order 4: bounds= (" + bounds.minX + ", " + bounds.minY + ") - (" + bounds.maxX + ", " + bounds.maxY + ")");
-//
-//
-//      if (bounds.minX < gridSize / 2) x3 = bounds.maxX + 1;
-//      else                          x3 = bounds.minX - 1;
-//      y3 = rInt(3);
-//
-//      bounds = spawnBlock(4, true, ++delay, x2, y2);
-//      //console.log("    spawned order 4: bounds= (" + bounds.minX + ", " + bounds.minY + ") - (" + bounds.maxX + ", " + bounds.maxY + ")");
-//
-//      if (bounds.minX < gridSize / 2) x4 = bounds.maxX + 1;
-//      else                          x4 = bounds.minX - 1;
-//      y4 = (gridSize - 3) + rInt(3);
-//    }
-//
-//    spawnBlock(3, true, ++delay, x3, y3);
-//    spawnBlock(3, true, ++delay, x4, y4);
-//  }
-//
-//
-//  else if (Math.random() < 0.5) {
-//    //Spawn 4 cemented Tetrominos
-//
-//    spawnBlock(4, true, ++delay, rInt(3), rInt(3));
-//    spawnBlock(4, true, ++delay, (gridSize - 3) + rInt(3), rInt(3));
-//    spawnBlock(4, true, ++delay, rInt(3), (gridSize - 3) + rInt(3));
-//    spawnBlock(4, true, ++delay, (gridSize - 3) + rInt(3), (gridSize - 3) + rInt(3));
-//  }
-//
-//  else if (Math.random() < .75) {
-//    //Spawn 8 cemented Trominos
-//
-//    var x = 0;
-//    var y = rInt(gridSize);
-//
-//    for (var i=0; i<8; i++) {
-//
-//      var bounds = spawnBlock(3, true, ++delay, x, y);
-//      if (bounds === false) {
-//        bounds = spawnBlock(3, true, ++delay);
-//      }
-//      x = bounds.maxX + 1;
-//      if (x > 9) {
-//        bounds = spawnBlock(3, true, ++delay);
-//      }
-//
-//      var goingUp = true;
-//      if (Math.random() < 0.5) goingUp = false;
-//
-//      if (bounds.minY - 1 < 0) goingUp = false;
-//      else if (bounds.maxY + 1 > 9) goingUp = true;
-//      y = bounds.maxY + 1;
-//      if (goingUp) y = bounds.minY - 1;
-//    }
-//  }
-//
-//  else {
-//    //Spawn 1 cemented Pentomino
-//    spawnBlock(5, true, ++delay, gridSize / 2, gridSize / 2);
-//  }
-//
-//
-//  for (var i=0; i<12; i++) {
-//    if (Math.random() < .3) spawnBlock(2, false, ++delay);
-//    else if (Math.random() < .5) spawnBlock(1, false, ++delay);
-//  }
-//  currentlyAnimating = true;
-//}
+function getRandomCoordinatesInRegion(spawnGrid, region) {
+//=======================================================================================
+
+  var x = rInt(3);
+  var y = rInt(3);
+  for (var i = 0; i < 9; i++) {
+
+    var xx = x;
+    var yy = y;
+    if (region === NORTH) xx = x + 3;
+    else if (region === NORTHEAST) xx = x + 6;
+    else if (region === EAST) {
+      xx = x + 6;
+      yy = y + 3;
+    }
+    else if (region === SOUTHEAST) {
+      xx = x + 6;
+      yy = y + 6;
+    }
+    else if (region === SOUTH) {
+      xx = x + 3;
+      yy = y + 6;
+    }
+    else if (region === SOUTHWEST) yy = y + 6;
+    else if (region === WEST) yy = y + 3;
+    if (spawnGrid[xx][yy] === CELL_EMPTY) return {x: xx, y: yy}
+
+    x++;
+    if (x >= 3) {
+      x = 0;
+      y++;
+      if (y >= 3) y = 0;
+    }
+  }
+
+  //console.log("generation.getRandomCoordinatesInRegion(region="+region+") could not find location");
+  return null;
+}
+
+//=======================================================================================
+function getRandomCoordinatesNearEdge(spawnGrid) {
+//=======================================================================================
+
+  for (var i = 0; i < 50; i++) {
+
+    var x = rInt(2);
+    var y = rInt(2);
+    var r = Math.random();
+    if (r < 0.25) x = x + 7;
+    else if (r < 0.5) y = y + 7;
+    else if (r < 0.75) {
+      x = x + 7;
+      y = y + 7;
+    }
+    if (spawnGrid[x][y] === CELL_EMPTY) return {x: x, y: y}
+  }
+  return null;
+}
+
+//=======================================================================================
+  function spawnStartingBlock(spawnGrid, order, cement, delay, x0, y0) {
+//=======================================================================================
+    var id = newId();
+
+    spawnGrid[x0][y0] = id;
+    //console.log("generation.spawnStartingBlock(order="+order+", x0="+x0+", y0="+y0+")");
+    //console.log("    spawnGrid="+ matrixToString(spawnGrid));
+
+    for (var i = 1; i < order; i++) {
+      var cellAdded = appendRandomCellToPoly(spawnGrid, id, order);
+
+      if (cellAdded === undefined) {
+        order = i;
+      }
+      else {
+        //spawnGrid[cellAdded.x][cellAdded.y] = id;
+        //console.log("    x="+cellAdded.x+", y="+cellAdded.y);
+      }
+    }
+
+
+    var animateGrid = matrixCopy(spawnGrid);
+    animateSpawn(order, animateGrid, id, cement, delay);
+    return id;
+  }
+
+
+
+
+
 
 
 
@@ -392,7 +234,6 @@ function spawnPoly() {
   triggerDetectSquares = true;
   saveGame();
 }
-
 
 
 
@@ -454,21 +295,29 @@ function spawnBlock(order, cement, delay, x0, y0) {
   if (doesPolyHaveHoles(spawnGrid, order, id)) return false;
 
 
-  //Animate random first block in direction of a block attached to it.
-  var dir = rInt(DIRECTION.length);
-  var start = matrixGetRandomCoordinateWithGivenValue(spawnGrid, id);
-  var next = getCoordinateOfCellInRandomDirectionWithGivenValue(spawnGrid, start.x,start.y, id);
 
-  //console.log("    start= ("+start.x+", "+start.y+"),  next=("+next.x+", "+next.y+"), next.dir="+next.dir);
-
-  if (next != undefined) dir =  next.dir;
-  if (delay === undefined) delay = 0;
-  delay *= 100;
-  animateBlockAggregationInBreathFirstOrder(start.x,start.y, dir, spawnGrid, order, 0, id, cement, delay);
-  identifyShape(spawnGrid,order,id);
+  animateSpawn(order, spawnGrid, id, cement, delay);
+  identifyShape(spawnGrid, order, id);
   return { id:id, minX:minX, minY:minY, maxX:maxX, maxY:maxY};
 }
 
+
+//=======================================================================================
+  function animateSpawn(order, spawnGrid, id, cement, delay) {
+//=======================================================================================
+
+
+    //Animate random first block in direction of a block attached to it.
+    var dir = rInt(DIRECTION.length);
+    var start = matrixGetRandomCoordinateWithGivenValue(spawnGrid, id);
+    var next = getCoordinateOfCellInRandomDirectionWithGivenValue(spawnGrid, start.x, start.y, id);
+
+    if (next != undefined) dir = next.dir;
+    if (delay === undefined) delay = 0;
+    delay *= 100;
+    animateBlockAggregationInBreathFirstOrder(start.x, start.y, dir, spawnGrid, order, 0, id, cement, delay);
+
+  }
 
 ////=======================================================================================
 //function tryToFindGoodRandomSpawnPoint(spawnGrid, order) {

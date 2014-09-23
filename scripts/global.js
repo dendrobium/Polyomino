@@ -58,6 +58,7 @@ var DIRECTION = new Array(4);
     DIRECTION[EAST]  = {deltaX: 1, deltaY: 0};
     DIRECTION[SOUTH] = {deltaX: 0, deltaY: 1};
     DIRECTION[WEST]  = {deltaX:-1, deltaY: 0};
+var NORTHEAST = 4, SOUTHEAST = 5, SOUTHWEST = 6, NORTHWEST = 7;
 
 //==  DEBUG VARS  ============================================================//
 

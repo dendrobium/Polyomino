@@ -1,6 +1,11 @@
 function rFloat(x){return Math.random()*x;}
 function rInt(x){return Math.floor(Math.random()*x);}
 
+function randomChoose(myList) {
+  var index = Math.floor(Math.random() * myList.length);
+  return myList[index];
+}
+
 function rgb(r,g,b) {
 	// Arguments can be: r, g, b [0, 1]
 	//               or: r {r:r, g:g, b:b}

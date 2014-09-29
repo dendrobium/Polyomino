@@ -1,29 +1,89 @@
 //=======================================================================================
-function level_1() {
-//=======================================================================================
+function spawnLevel() {
   var r = Math.random();
-  if (r < 0.9) level_1a();
-  else level_1b();
+
+  if (!(gameLevel) || gameLevel < 2) {
+    if (r < 0.5) delay = level_1a();
+    else if (r < 0.9) level_1b();
+    else level_1c();
+  }
+
+  else if (gameLevel === 2) {
+    if (r < 0.6) level_2a();
+    else if (r < 0.8) level_2b();
+    else level_2c();
+  }
+
+  else level_3();
+
+  currentlyAnimating = true;
+
 }
-
-//=======================================================================================
-function level_2() {
-//=======================================================================================
-  var r = Math.random();
-  if (r < 0.6) level_2a();
-  else if (r < 0.8) level_2b();
-  else level_2c();
-}
-
-
-
 
 
 
 //=======================================================================================
 function level_1a() {
 //=======================================================================================
-  console.log("level.level_1()");
+  //console.log("level.level_1a()");
+
+  var delay = 0;
+  var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
+
+
+  var domX = [[2, 3], [4,4], [3,4], [0,1], [1,2], [0,0], [2,2]];
+  var domY = [[0, 0], [0,1], [2,2], [1,1], [3,3], [2,3], [1,2]];
+
+  var dx = rInt(4);
+  var dy = rInt(5);
+  for (var i = 0; i < domX.length; i++) {
+      domX[i][0] += dx;  domX[i][1] += dx;
+      domY[i][0] += dy;  domY[i][1] += dy;
+  }
+
+
+  for (var i = 0; i < domX.length; i++) {
+    makeBlock(spawnGrid, 2, true, domX[i], domY[i]);
+  }
+
+  var x, y;
+  for (x = 0; x < gridSize; x++) {
+    delay++;
+    y = x;
+    for (var n=0; n<3; n++) {
+
+      y = (y + 3) % gridSize;
+      if (spawnGrid[x][y] != CELL_EMPTY) continue;
+
+      spawnStartingBlock(spawnGrid, 1, false, delay, x, y);
+    }
+  }
+
+
+  var numFreeDominos = 16;
+  count = 0;
+  while (count < numFreeDominos)
+  {
+    x = rInt(gridSize);
+    y = rInt(gridSize);
+    if (spawnGrid[x][y] != CELL_EMPTY) continue;
+
+    var id = spawnStartingBlock(spawnGrid, 2, false, ++delay, x, y);
+    if (id) count++;
+  }
+
+  playStartEvent(delay+1);
+
+
+}
+
+
+
+
+//=======================================================================================
+function level_1b() {
+//=======================================================================================
+  //console.log("level.level_1b()");
   var delay = 0;
 
   var spawnGrid = matrix(gridSize,gridSize,CELL_EMPTY);
@@ -50,14 +110,14 @@ function level_1a() {
 
     }
   }
-  currentlyAnimating = true;
+  playStartEvent(delay+1);
 }
 
 
 //=======================================================================================
-function level_1b() {
+function level_1c() {
 //=======================================================================================
-  console.log("level.level_1()");
+  //console.log("level.level_1()c");
   var delay = 0;
 
   var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
@@ -75,7 +135,7 @@ function level_1b() {
   for (var i = 0; i < domX.length; i++) {
     makeBlock(spawnGrid, 2, true, domX[i], domY[i]);
   }
-  currentlyAnimating = true;
+  playStartEvent(delay+1);
 }
 
 
@@ -83,7 +143,7 @@ function level_1b() {
 //=======================================================================================
 function level_2a() {
 //=======================================================================================
-    console.log("level.level_2()");
+    //console.log("level.level_2()");
     var delay = 0;
 
     var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
@@ -106,14 +166,14 @@ function level_2a() {
       spawnStartingBlock(spawnGrid, 1, false, ++delay, x, y);
       count++;
     }
-    currentlyAnimating = true;
+  playStartEvent(delay+1);
 }
 
 
 //=======================================================================================
   function level_2b() {
 //=======================================================================================
-    console.log("level.level_1()");
+    //console.log("level.level_1()");
     var delay = 0;
 
     var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
@@ -134,14 +194,14 @@ function level_2a() {
       spawnStartingBlock(spawnGrid, 1, false, ++delay, x, y);
       count++;
     }
-    currentlyAnimating = true;
+    playStartEvent(delay+1);
   }
 
 
 //=======================================================================================
 function level_2c() {
 //=======================================================================================
-  console.log("level.level_1()");
+  //console.log("level.level_1()");
   var delay = 0;
 
   var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
@@ -169,7 +229,7 @@ function level_2c() {
     spawnStartingBlock(spawnGrid, 1, false, ++delay, x, y);
     count++;
   }
-  currentlyAnimating = true;
+  playStartEvent(delay+1);
 }
 
 
@@ -177,7 +237,7 @@ function level_2c() {
 //=======================================================================================
 function level_3() {
 //=======================================================================================
-  console.log("level.level_3()");
+  //console.log("level.level_3()");
   var delay = 0;
 
   var spawnGrid = matrix(gridSize,gridSize,CELL_EMPTY);
@@ -244,7 +304,7 @@ function level_3() {
       }
     }
   }
-  currentlyAnimating = true;
+  playStartEvent(delay+1);
 }
 
 

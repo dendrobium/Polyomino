@@ -60,6 +60,13 @@ var DIRECTION = new Array(4);
     DIRECTION[WEST]  = {deltaX:-1, deltaY: 0};
 var NORTHEAST = 4, SOUTHEAST = 5, SOUTHWEST = 6, NORTHWEST = 7;
 
+
+// GAME STATE
+var GAME_STATE_SETUP = 0;
+var GAME_STATE_PLAYING = 1;
+var GAME_STATE_ROUND_OVER = 2;
+var gameState = GAME_STATE_SETUP;
+
 //==  DEBUG VARS  ============================================================//
 
 	/*+- DELETE on deployment version ------------------ DELETE -+*/

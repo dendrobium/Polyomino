@@ -22,6 +22,8 @@ function initGame(){
 }
 
 function newGame(){
+  gameState = GAME_STATE_SETUP;
+  console.log("game.newGame()  gameLevel="+gameLevel);
 	board = new grid(gridSize);
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
 		board.setCell(i,j,new cell());
@@ -31,15 +33,13 @@ function newGame(){
 
 	blockId   = 0;
 	goalScore = 0;
-  gameMaxShapeLevel = 1; //I (Joel) set this to 1.
+  gameMaxShapeLevel = 1;
   orderOfLastMerge = 1;
   initGameShapeCounts();
 
 	initGame();
-  if (!(gameLevel)) level_1();
-  else if (gameLevel === 1 ) level_1();
-  else if (gameLevel === 2 ) level_2();
-  else level_3();
+
+  spawnLevel();
 
 	saveGame();
 	timeStarted = new Date().getTime();
@@ -80,7 +80,10 @@ function loadGame(){
 }
 
 function saveGame(){
-	if ((score > 0) && (countCemented() <= 0)) gameWonEvt(0);
+	if ((gameState === GAME_STATE_PLAYING) && (!hasCemented())) {
+    gameState = GAME_STATE_ROUND_OVER;
+    gameWonEvt(0);
+  }
   if(typeof(Storage) !== "undefined") {
 		localStorage.setItem("board",            JSON.stringify(board));
 		localStorage.setItem("blockId",          blockId);

@@ -252,20 +252,17 @@ function squareToPoly(left,top,order) {
 
 
 //=======================================================================================
-function countCemented() {
+function hasCemented() {
 //=======================================================================================
-  var cementedCount = 0;
-
   for (var x = 0; x < gridSize; x++) {
     for (var y = 0; y < gridSize; y++) {
       var myCell = board.getCell(x, y);
       if (myCell.occupied) {
-        if (myCell.cemented) cementedCount++;
+        if (myCell.cemented) return true;
       }
     }
   }
-  //console.log("generation.countCemented() cementedCount="+cementedCount);
-  return cementedCount;
+  return false;
 }
 
 

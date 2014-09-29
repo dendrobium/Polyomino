@@ -79,9 +79,17 @@ function gameWonEvt(){
 	new_event(0,10,null,function(){
     gameWon = true;
 		gameLevel++;
+    gameState = GAME_STATE_ROUND_OVER;
 		saveTime(new Date().getTime() - timeStarted);
     //newGame();
 	});
+}
+
+function playStartEvent(myTick) {
+  new_event(0,myTick,null,function(){
+    gameState = GAME_STATE_PLAYING;
+  });
+
 }
 
 //==  SLIDE-IN EVENTS  =======================================================//

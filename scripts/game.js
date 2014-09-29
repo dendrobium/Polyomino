@@ -89,7 +89,7 @@ function saveGame(){
 		localStorage.setItem("maxComboScore", maxComboScore);
 		localStorage.setItem("maxCombo", maxCombo);
 		localStorage.setItem("gameMaxShapeLevel", gameMaxShapeLevel);
-    localStorage.setItem("gameMaxShapeLevel", gameLevel);
+    localStorage.setItem("gameLevel", gameLevel);
 	}
 }
 

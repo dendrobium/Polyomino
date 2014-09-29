@@ -55,6 +55,7 @@ function checkGameLost(){
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
 		if(!board[i][j].occupied || board[i][j].locked) return;
 	gameLost = true;
+  gameLevel = 1;
 }
 
 // TODO: detect endgame

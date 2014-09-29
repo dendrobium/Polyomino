@@ -36,7 +36,8 @@ function newGame(){
   initGameShapeCounts();
 
 	initGame();
-  if (gameLevel === 1 ) level_1();
+  if (!(gameLevel)) level_1();
+  else if (gameLevel === 1 ) level_1();
   else if (gameLevel === 2 ) level_2();
   else level_3();
 

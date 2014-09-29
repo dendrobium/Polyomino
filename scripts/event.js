@@ -8,7 +8,7 @@ new_event = function(startTick,endTick,func,onEnd){
 		startTick : tick+startTick,
 		endTick   : tick+endTick,
 		func      : func,
-		onEnd     : onEnd,
+		onEnd     : onEnd
 	});
 }
 
@@ -46,6 +46,7 @@ function unlockEvt(cell,unlockTick){
 		cell.locked = false;
 		triggerDetectSquares = true;
 	});
+
 }
 
 function quickSetEvt(cell,occupied,id,order,setTick){
@@ -73,10 +74,13 @@ function comboActiveEvt(decTick){
 	});
 }
 
+
 function gameWonEvt(){
 	new_event(0,10,null,function(){
-		gameWon = true;
+    gameWon = true;
+		gameLevel++;
 		saveTime(new Date().getTime() - timeStarted);
+    //newGame();
 	});
 }
 
@@ -186,6 +190,7 @@ function boxInEvt(x,y,order,startTick,endTick,color){
 		rgb(color);
 		renderRect(x*cellSize,y*cellSize,(x+order)*cellSize,(y+order*interp)*cellSize);
 	},null);
+
 }
 
 function boxSustainEvt(x,y,order,startTick,endTick,color){

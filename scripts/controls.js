@@ -37,11 +37,17 @@ function handle_lDown(){
 		currentlyAnimating = true;
 		return; //no game input after losing
 	}
-	if(gameWon && !gameWonOverlayShown){
-		//or while gameWon screen shows
-		gameWonOverlayShown = true;
-		currentlyAnimating = true;
-		return;
+	if(gameWon){
+    if( gameWonOverlayShown) {
+      newGame();
+    }
+    else {
+
+      //or while gameWon screen shows
+      gameWonOverlayShown = true;
+      currentlyAnimating = true;
+      return;
+    }
 	}
 	if(drawInstructions){
 		drawInstructions = false;

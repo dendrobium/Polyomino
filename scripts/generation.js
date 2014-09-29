@@ -14,171 +14,6 @@ var CELL_VISITED = -2;
 var CELL_NONEXISTANT_ID = -3;
 
 
-//=======================================================================================
-function placeStartingPolys() {
-//=======================================================================================
-  //console.log("placeStartingPolys()");
-  var delay = 0;
-
-  var spawnGrid = matrix(gridSize,gridSize,CELL_EMPTY);
-  spawnStartingBlock(spawnGrid, 1, false, delay, 3,3);
-  spawnStartingBlock(spawnGrid, 1, false, delay, 4,3);
-  spawnStartingBlock(spawnGrid, 1, false, delay, 5,3);
-
-  spawnStartingBlock(spawnGrid, 1, false, delay, 3,4);
-  spawnStartingBlock(spawnGrid, 1, false, delay, 5,4);
-
-  spawnStartingBlock(spawnGrid, 1, false, delay, 3,5);
-  spawnStartingBlock(spawnGrid, 1, false, delay, 4,5);
-  spawnStartingBlock(spawnGrid, 1, false, delay, 5,5);
-
-
-
-  var r = Math.random();
-  var loc;
-  if (r < 0.5) {
-    loc = getRandomCoordinatesInRegion(spawnGrid, NORTHEAST);
-    if (loc != null) spawnStartingBlock(spawnGrid, 4, true, ++delay, loc.x, loc.y);
-
-    loc = getRandomCoordinatesInRegion(spawnGrid, NORTHWEST);
-    if (loc != null) spawnStartingBlock(spawnGrid, 4, true, ++delay, loc.x, loc.y);
-
-    loc = getRandomCoordinatesInRegion(spawnGrid, WEST);
-    if (loc != null) spawnStartingBlock(spawnGrid, 3, true, ++delay, loc.x, loc.y);
-
-    loc = getRandomCoordinatesInRegion(spawnGrid, EAST);
-    if (loc != null) spawnStartingBlock(spawnGrid, 3, true, ++delay, loc.x, loc.y);
-  }
-  else if (r < 1.15) {
-    loc = getRandomCoordinatesInRegion(spawnGrid, SOUTHEAST);
-    if (loc != null) spawnStartingBlock(spawnGrid, 4, true, ++delay, loc.x, loc.y);
-
-    loc = getRandomCoordinatesInRegion(spawnGrid, SOUTHWEST);
-    if (loc != null) spawnStartingBlock(spawnGrid, 4, true, ++delay, loc.x, loc.y);
-
-
-    loc = getRandomCoordinatesInRegion(spawnGrid, WEST);
-    if (loc != null) spawnStartingBlock(spawnGrid, 3, true, ++delay, loc.x, loc.y);
-
-    loc = getRandomCoordinatesInRegion(spawnGrid, EAST);
-    if (loc != null) spawnStartingBlock(spawnGrid, 3, true, ++delay, loc.x, loc.y);
-  }
-
-
-  var numBlocks = rInt(4)+3;
-  var count = 0;
-  var x, y;
-  while (count < numBlocks)
-  {
-    x = rInt(gridSize);
-    y = rInt(gridSize);
-    if (x == 4 && y == 4) continue;
-    if (spawnGrid[x][y] != CELL_EMPTY) continue;
-    count++;
-    spawnStartingBlock(spawnGrid, 2, true, ++delay, x, y);
-  }
-
-  var singleBlockSpawnCount = 0;
-  for (var i=0; i<8; i++) {
-    if ((singleBlockSpawnCount < 2) || (Math.random() > 0.5)) {
-
-      loc = getRandomCoordinatesNearEdge(spawnGrid);
-      if (loc != null) {
-        spawnStartingBlock(spawnGrid, 1, false, ++delay, loc.x, loc.y);
-        singleBlockSpawnCount++;
-      }
-    }
-  }
-  currentlyAnimating = true;
-}
-
-//=======================================================================================
-function getRandomCoordinatesInRegion(spawnGrid, region) {
-//=======================================================================================
-
-  var x = rInt(3);
-  var y = rInt(3);
-  for (var i = 0; i < 9; i++) {
-
-    var xx = x;
-    var yy = y;
-    if (region === NORTH) xx = x + 3;
-    else if (region === NORTHEAST) xx = x + 6;
-    else if (region === EAST) {
-      xx = x + 6;
-      yy = y + 3;
-    }
-    else if (region === SOUTHEAST) {
-      xx = x + 6;
-      yy = y + 6;
-    }
-    else if (region === SOUTH) {
-      xx = x + 3;
-      yy = y + 6;
-    }
-    else if (region === SOUTHWEST) yy = y + 6;
-    else if (region === WEST) yy = y + 3;
-    if (spawnGrid[xx][yy] === CELL_EMPTY) return {x: xx, y: yy}
-
-    x++;
-    if (x >= 3) {
-      x = 0;
-      y++;
-      if (y >= 3) y = 0;
-    }
-  }
-
-  //console.log("generation.getRandomCoordinatesInRegion(region="+region+") could not find location");
-  return null;
-}
-
-//=======================================================================================
-function getRandomCoordinatesNearEdge(spawnGrid) {
-//=======================================================================================
-
-  for (var i = 0; i < 50; i++) {
-
-    var x = rInt(2);
-    var y = rInt(2);
-    var r = Math.random();
-    if (r < 0.25) x = x + 7;
-    else if (r < 0.5) y = y + 7;
-    else if (r < 0.75) {
-      x = x + 7;
-      y = y + 7;
-    }
-    if (spawnGrid[x][y] === CELL_EMPTY) return {x: x, y: y}
-  }
-  return null;
-}
-
-//=======================================================================================
-  function spawnStartingBlock(spawnGrid, order, cement, delay, x0, y0) {
-//=======================================================================================
-    var id = newId();
-
-    spawnGrid[x0][y0] = id;
-    //console.log("generation.spawnStartingBlock(order="+order+", x0="+x0+", y0="+y0+")");
-    //console.log("    spawnGrid="+ matrixToString(spawnGrid));
-
-    for (var i = 1; i < order; i++) {
-      var cellAdded = appendRandomCellToPoly(spawnGrid, id, order);
-
-      if (cellAdded === undefined) {
-        order = i;
-      }
-      else {
-        //spawnGrid[cellAdded.x][cellAdded.y] = id;
-        //console.log("    x="+cellAdded.x+", y="+cellAdded.y);
-      }
-    }
-
-
-    var animateGrid = matrixCopy(spawnGrid);
-    animateSpawn(order, animateGrid, id, cement, delay);
-    return id;
-  }
-
 
 
 
@@ -279,7 +114,7 @@ function spawnBlock(order, cement, delay, x0, y0) {
   for (var i = 0; i < cellsNeeded; i++) {
     var cellAdded = appendRandomCellToPoly(spawnGrid, id, order);
 
-    if (cellAdded === undefined) return false;
+    if (cellAdded === null) return false;
 
     if (cellAdded.x < minX) minX = cellAdded.x;
     if (cellAdded.y < minY) minY = cellAdded.y;
@@ -314,86 +149,6 @@ function spawnBlock(order, cement, delay, x0, y0) {
 
   }
 
-////=======================================================================================
-//function tryToFindGoodRandomSpawnPoint(spawnGrid, order) {
-////=======================================================================================
-//
-//  console.log("tryToFindGoodRandomSpawnPoint("+order+") ENTER");
-//  var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
-//  var filledCount = copyBoardToMatrix(spawnGrid, 0, 0, gridSize);
-//  var emptyCount = gridSize * gridSize - filledCount;
-//
-//
-//  var personalSpace = order;
-//  var maxTrys = 10, tryCount = 0;
-//  var x0, y0;
-//  while (personalSpace >= 0) {
-//
-//    var visitedCount = 0;
-//    var emptyCount = 0;
-//
-//    for (var x = 0; x < spawnGrid.length; x++) {
-//      for (var y = 0; y < spawnGrid.length; y++) {
-//        if (spawnGrid[x][y] === CELL_VISITED) spawnGrid[x][y] = CELL_EMPTY;
-//        if (spawnGrid[x][y] === CELL_EMPTY) {
-//          emptyCount++;
-//          x0 = x;
-//          y0 = y;
-//        }
-//      }
-//    }
-//
-//    console.log("   ...x0="+x0+", y0="+y0+", emptyCount="+emptyCount);
-//
-//    if (emptyCount < 2) return {x: x0, y: y0};
-//
-//    if (maxTrys > emptyCount) maxTrys = emptyCount;
-//
-//    while (tryCount < maxTrys) {
-//
-//      var x = rInt(spawnGrid.length);
-//      var y = rInt(spawnGrid.length);
-//
-//      if (spawnGrid[x][y] === CELL_EMPTY) {
-//        spawnGrid[x][y] = CELL_VISITED;
-//        x0 = x;
-//        y0 = y;
-//        tryCount++;
-//        console.log("   ...trying ("+x+", "+y+") with personalSpace="+ personalSpace);
-//        if (hasPersonalSpace(spawnGrid, x, y, personalSpace)) return {x: x0, y: y0};
-//      }
-//    }
-//
-//    personalSpace--;
-//  }
-//  return {x: x0, y: y0};
-//}
-
-
-
-//
-////=======================================================================================
-//function hasPersonalSpace(spawnGrid, x, y, personalSpace) {
-////=======================================================================================
-//
-//  if (personalSpace === 0) return true;
-//  var x1 = Math.max(x-personalSpace, 0);
-//  var x2 = Math.min(x+personalSpace, gridSize-1);
-//  var y1 = Math.max(y-personalSpace, 0);
-//  var y2 = Math.min(x+personalSpace, gridSize-1);
-//
-//  for (var xx = x1; xx <= x2; xx++) {
-//    for (var yy = y1; yy <= y2; yy++) {
-//
-//      if ((spawnGrid[xx][yy] != CELL_EMPTY) && (spawnGrid[xx][yy] != CELL_VISITED)) {
-//        console.log("     ...Found neighbor in space["+personalSpace+"] ("+xx+", "+yy+")");
-//        return false;
-//      }
-//    }
-//  }
-//  return true;
-//}
-
 
 
 
@@ -404,6 +159,8 @@ function squareToPoly(left,top,order) {
   if (order > gameMaxShapeLevel) gameMaxShapeLevel = order;
 
   if(blockIdOfLastBlockPlaced === undefined) blockIdOfLastBlockPlaced = CELL_NONEXISTANT_ID;
+
+
 	var spawnGrid = matrix(order,order,CELL_EMPTY);
 	var parentOrder = board.getCell(left,top).order;
 
@@ -486,7 +243,7 @@ function squareToPoly(left,top,order) {
 	if(comboActiveCtr === 1)comboCtr = 1;
 	else comboCtr++;
 	var points = addToScore(order,parentOrder,comboCtr);
-	if(order >= goalOrder && !gameWon)gameWonEvt(endKF);
+
 	identifyShape(spawnGrid,order,childId);
 	savePolyominoStats(order,null); // TODO: need to tell it the shape later on... or make a new function for that
 	saveGameEvt(endKF);
@@ -494,6 +251,22 @@ function squareToPoly(left,top,order) {
 
 
 
+//=======================================================================================
+function countCemented() {
+//=======================================================================================
+  var cementedCount = 0;
+
+  for (var x = 0; x < gridSize; x++) {
+    for (var y = 0; y < gridSize; y++) {
+      var myCell = board.getCell(x, y);
+      if (myCell.occupied) {
+        if (myCell.cemented) cementedCount++;
+      }
+    }
+  }
+  //console.log("generation.countCemented() cementedCount="+cementedCount);
+  return cementedCount;
+}
 
 
 //=======================================================================================
@@ -513,20 +286,13 @@ function appendRandomCellToPoly(spawnGrid, id, order) {
     }
   }
 
-  var skipWhen2NeighborsProbability = 0;
-  if (order === 4) skipWhen2NeighborsProbability = 0.1;
-  else if (order >= 5) skipWhen2NeighborsProbability = 0.5;
-
   while (visitedCount < totalEmptyCells) {
     var x = rInt(spawnGrid.length);
     var y = rInt(spawnGrid.length);
+    //console.log("generation.appendRandomCellToPoly() x="+x+", y="+y);
 
-    var skipForMoreEvenShapeDistribution = false;
     if (spawnGrid[x][y] === CELL_EMPTY) {
 
-      //If (numCellsInPoly === 0), then this is the first cell of the poly
-      //   so okay to spawn in any empty cell. Otherwise, only spawn if cell
-      //   is connected to a cell of the correct id.
       if (numCellsInPoly === 0) {
         spawnGrid[x][y] = id;
         return {x:x,y:y};
@@ -535,21 +301,15 @@ function appendRandomCellToPoly(spawnGrid, id, order) {
       var neighborCount = countNeighbor4WithID(spawnGrid, x, y, id);
 
       if (neighborCount > 0) {
-        if ((neighborCount === 2) && (Math.random() < skipWhen2NeighborsProbability)) skipForMoreEvenShapeDistribution = true;
-        //else if ((neighborCount === 3) && (Math.random() < 0.5)) skipForMoreEvenShapeDistribution = true;
-        else {
           spawnGrid[x][y] = id;
           return {x: x, y: y};
-        }
       }
 
-      if (!skipForMoreEvenShapeDistribution) {
-        spawnGrid[x][y] = CELL_VISITED;
-        visitedCount++;
-      }
+      spawnGrid[x][y] = CELL_VISITED;
+      visitedCount++;
     }
   }
-  return undefined;
+  return null;
 }
 
 

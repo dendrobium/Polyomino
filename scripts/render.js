@@ -205,7 +205,6 @@ function render(){
 		renderGameLostOverlay();
 	else if(gameWon && !gameWonOverlayShown){
 		renderGameWonOverlay();
-		drawGameWonOverlay = true;
 	}
 }
 

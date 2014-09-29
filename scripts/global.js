@@ -13,10 +13,10 @@ cellSize           = 32; // may vary during runtime as the application SHOULD si
 initPieceCount     = 4;
 dragSpeed          = 0.3;
 hoverOffset        = 8;
-keyframeSpeed      = 100;
-goalOrder          = 6;
+keyframeSpeed      = 100;//100;
 selectionOpacity   = 0.25;
 orderOfLastMerge   = 1;
+gameLevel          = 1;
 
 //==  POLYOMINO COLORS  ======================================================//
 

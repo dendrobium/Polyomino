@@ -15,7 +15,8 @@ function spawnLevel() {
     else level_2c();
   }
 
-  else level_3();
+  else if (gameLevel === 3) level_3();
+  else level_4();
 
   currentlyAnimating = true;
 
@@ -271,53 +272,44 @@ function level_3() {
     spawnStartingBlock(spawnGrid, 1, false, delay,  monoX[i],monoY[i]);
   }
 
-  var r = Math.random();
-  var loc;
-  if (r < 0.5) {
-    loc = getRandomCoordinatesInRegion(spawnGrid, NORTHEAST);
+  if ( Math.random() < 0.5) {
+    var dir = 4 + rInt(4)
+    var loc = getRandomCoordinatesInRegion(spawnGrid, dir);
     if (loc != null) spawnStartingBlock(spawnGrid, 4, true, ++delay, loc.x, loc.y);
-
-    loc = getRandomCoordinatesInRegion(spawnGrid, NORTHWEST);
-    if (loc != null) spawnStartingBlock(spawnGrid, 4, true, ++delay, loc.x, loc.y);
-
-    loc = getRandomCoordinatesInRegion(spawnGrid, WEST);
+    loc = getRandomCoordinatesInRegion(spawnGrid, dir);
     if (loc != null) spawnStartingBlock(spawnGrid, 3, true, ++delay, loc.x, loc.y);
 
-    loc = getRandomCoordinatesInRegion(spawnGrid, EAST);
-    if (loc != null) spawnStartingBlock(spawnGrid, 3, true, ++delay, loc.x, loc.y);
-  }
-  else if (r < 1.15) {
-    loc = getRandomCoordinatesInRegion(spawnGrid, SOUTHEAST);
+    loc = getRandomCoordinatesInRegion(spawnGrid, dir - 4);
+    if (loc != null) spawnStartingBlock(spawnGrid, 2, true, ++delay, loc.x, loc.y);
+    loc = getRandomCoordinatesInRegion(spawnGrid, dir - 4);
+    if (loc != null) spawnStartingBlock(spawnGrid, 2, true, ++delay, loc.x, loc.y);
+
+    dir = dir + 1;
+    if (dir > 7) dir = 4;
+    loc = getRandomCoordinatesInRegion(spawnGrid, dir);
     if (loc != null) spawnStartingBlock(spawnGrid, 4, true, ++delay, loc.x, loc.y);
-
-    loc = getRandomCoordinatesInRegion(spawnGrid, SOUTHWEST);
-    if (loc != null) spawnStartingBlock(spawnGrid, 4, true, ++delay, loc.x, loc.y);
-
-
-    loc = getRandomCoordinatesInRegion(spawnGrid, WEST);
-    if (loc != null) spawnStartingBlock(spawnGrid, 3, true, ++delay, loc.x, loc.y);
-
-    loc = getRandomCoordinatesInRegion(spawnGrid, EAST);
+    loc = getRandomCoordinatesInRegion(spawnGrid, dir);
     if (loc != null) spawnStartingBlock(spawnGrid, 3, true, ++delay, loc.x, loc.y);
   }
+  else {
 
+    var x = rInt(2);
+    var y = rInt(2);
+    spawnStartingBlock(spawnGrid, 4, true, ++delay, x, y);
 
-  var numBlocks = rInt(4)+3;
-  var count = 0;
-  var x, y;
-  while (count < numBlocks)
-  {
-    x = rInt(gridSize);
-    y = rInt(gridSize);
-    if (x == 4 && y == 4) continue;
-    if (spawnGrid[x][y] != CELL_EMPTY) continue;
-    count++;
-    spawnStartingBlock(spawnGrid, 2, true, ++delay, x, y);
+    x = rInt(2)+7;   y = rInt(2);
+    spawnStartingBlock(spawnGrid, 4, true, ++delay, x, y);
+
+    x = rInt(2);   y = rInt(2)+7;
+    spawnStartingBlock(spawnGrid, 4, true, ++delay, x, y);
+
+    x = rInt(2)+7;   y = rInt(2)+7;
+    spawnStartingBlock(spawnGrid, 4, true, ++delay, x, y);
   }
 
   var singleBlockSpawnCount = 0;
-  for (var i=0; i<8; i++) {
-    if ((singleBlockSpawnCount < 2) || (Math.random() > 0.5)) {
+  for (var i=0; i<10; i++) {
+    if ((singleBlockSpawnCount < 4) || (Math.random() > 0.5)) {
 
       loc = getRandomCoordinatesNearEdge(spawnGrid);
       if (loc != null) {
@@ -327,6 +319,60 @@ function level_3() {
     }
   }
 }
+
+
+
+//=======================================================================================
+function level_4() {
+//=======================================================================================
+  //console.log("level.level_1a()");
+
+  var delay = 0;
+  var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
+
+
+  var pentX, pentY;
+  var r = Math.random();
+  if (r < 0.25) {
+    pentX = [[0,0,1,1,1], [1,2,3,4,2], [0,0,0,1,2], [3,4,2,3,4],  [5,2,3,4,5]];
+    pentY = [[0,1,1,2,3], [0,0,0,0,1], [2,3,4,4,4], [1,1,2,2,2],  [2,3,3,3,3]];
+  }
+  else if (r < 0.5) {
+    pentX = [[0,1,2,3,3],[0,0,0,0,0],[1,1,1,1,2],[2,2,2,3,4],[3,4,4,4,5]];
+    pentY = [[0,0,0,0,1],[1,2,3,4,5],[1,2,3,4,4],[1,2,3,3,3],[2,2,1,0,0]];
+  }
+  else if (r < 0.75){
+    pentX = [[0,0,1,2,2], [0,1,1,1,2], [2,3,3,3,4], [5,6,6,7,7], [7,8,8,8,8]];
+    pentY = [[7,8,8,8,7], [6,6,7,5,5], [6,6,7,8,8], [8,8,7,7,6], [8,8,7,6,5]];
+  }
+  else {
+    pentX = [[5,6,6,7,8], [6,6,7,7,8], [7,7,8,8,8], [8,7,7,7,6], [8,8,8,7,6]];
+    pentY = [[0,0,1,0,0], [3,2,2,1,1], [3,4,2,3,4], [5,5,6,7,6], [6,7,8,8,8]];
+  }
+  var cementedOneBlock = false;
+  var cementThis = false;
+  for (var i = 0; i < pentX.length; i++) {
+    if (cementedOneBlock) cementThis = false;
+    else if ((Math.random() < 0.2) || (i >= (pentX.length -1))) {
+      cementThis = true;
+      cementedOneBlock = true;
+    }
+    makeBlock(spawnGrid, 5, cementThis, pentX[i], pentY[i]);
+  }
+
+  var count=0;
+  while (count < 10)
+  {
+    x = rInt(gridSize);
+    y = rInt(gridSize);
+    if (spawnGrid[x][y] != CELL_EMPTY) continue;
+
+    var id = spawnStartingBlock(spawnGrid, 1, false, ++delay, x, y);
+    if (id) count++;
+  }
+}
+
+
 
 
 

@@ -3,9 +3,10 @@ function spawnLevel() {
   var r = Math.random();
 
   if (!(gameLevel) || gameLevel < 2) {
-    if (r < 0.5) delay = level_1a();
-    else if (r < 0.9) level_1b();
-    else level_1c();
+    if (r < 0.4) delay = level_1a();
+    else if (r < 0.8) level_1b();
+    else if (r < 0.9) level_1c();
+    else level_1d();
   }
 
   else if (gameLevel === 2) {
@@ -135,6 +136,33 @@ function level_1c() {
   }
 }
 
+
+
+//=======================================================================================
+function level_1d() {
+//=======================================================================================
+  //console.log("level.level_1()c");
+  var delay = 0;
+
+  var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
+
+  var monoX = [2, 6,  4,4,4,4,  3,5,  0,2,6,8,1,7,    0,1,7,8,   3,4,5];
+  var monoY = [1, 1,  0,1,2,3,  5,5,  8,8,8,8,7,7,    4,4,4,4,   7,7,7];
+
+  var locked = true;
+  for (var i = 0; i < monoX.length; i++) {
+    if (i>17) locked = false;
+    spawnStartingBlock(spawnGrid, 1, locked, delay++, monoX[i], monoY[i]);
+  }
+
+
+  var domX = [[3,3],[5,5],[3,3],[5,5],  [1,2],[6,7],    [0,1],[0,1],[7,8],[7,8], [2,3],[5,6],[2,2],[6,6]];
+  var domY = [[0,1],[0,1],[2,3],[2,3],  [2,2],[2,2],    [3,3],[5,5],[3,3],[5,5], [4,4],[4,4],[5,6],[5,6]];
+
+  for (var i = 0; i < domX.length; i++) {
+    makeBlock(spawnGrid, 2, true, domX[i], domY[i]);
+  }
+}
 
 
 //=======================================================================================

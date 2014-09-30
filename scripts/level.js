@@ -61,7 +61,7 @@ function level_1a() {
 
 
   var numFreeDominos = 16;
-  count = 0;
+  var count = 0;
   while (count < numFreeDominos)
   {
     x = rInt(gridSize);
@@ -71,10 +71,6 @@ function level_1a() {
     var id = spawnStartingBlock(spawnGrid, 2, false, ++delay, x, y);
     if (id) count++;
   }
-
-  playStartEvent(delay+1);
-
-
 }
 
 
@@ -84,34 +80,36 @@ function level_1a() {
 function level_1b() {
 //=======================================================================================
   //console.log("level.level_1b()");
+
   var delay = 0;
+  var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
 
-  var spawnGrid = matrix(gridSize,gridSize,CELL_EMPTY);
-
-  var monoX = [0,0,0,0,8,8,8,8,1,3,5,7,1,3,5,7, 2,4,6,2,4,6,2,4,6];
-  var monoY = [1,3,5,7,1,3,5,7,0,0,0,0,8,8,8,8, 2,2,2,4,4,4,6,6,6];
-
-  for (var i=0; i<monoX.length; i++) {
-    spawnStartingBlock(spawnGrid, 1, false, delay,  monoX[i],monoY[i]);
-  }
-
-  var count = 0;
-  var x, y;
-  while (count < 16)
-  {
-    //console.log("   " + count + ", x="+x+", y="+y);
-    x = rInt(gridSize);
-    y = rInt(gridSize);
-    if (spawnGrid[x][y] != CELL_EMPTY) continue;
-
-    var id = spawnStartingBlock(spawnGrid, 2, true, ++delay, x, y);
-    if (id != null) {
-      count++;
+  var x=0;  var y=0; var x2= 0;
+  for (var i = 0; i < 16; i++) {
+    spawnStartingBlock(spawnGrid, 1, false, delay, x, y);
+    var x2 = (x + 1) % gridSize;
+    spawnStartingBlock(spawnGrid, 2, false, delay, x2, y);
+    delay++;
+    x = x + 5;
+    if (x >= gridSize) {
+      x = x + 2 - gridSize;
+      if (x > 4) x = x - 5;
+      y++;
 
     }
   }
-  playStartEvent(delay+1);
+
+  var count = 0;
+  while (count < 9)
+  {
+    x = rInt(gridSize);
+    y = rInt(gridSize);
+    if (spawnGrid[x][y] != CELL_EMPTY) continue;
+    var id = spawnStartingBlock(spawnGrid, 2, true, delay, x, y);
+    if (id) count++;
+  }
 }
+
 
 
 //=======================================================================================
@@ -135,7 +133,6 @@ function level_1c() {
   for (var i = 0; i < domX.length; i++) {
     makeBlock(spawnGrid, 2, true, domX[i], domY[i]);
   }
-  playStartEvent(delay+1);
 }
 
 
@@ -166,7 +163,6 @@ function level_2a() {
       spawnStartingBlock(spawnGrid, 1, false, ++delay, x, y);
       count++;
     }
-  playStartEvent(delay+1);
 }
 
 
@@ -194,7 +190,6 @@ function level_2a() {
       spawnStartingBlock(spawnGrid, 1, false, ++delay, x, y);
       count++;
     }
-    playStartEvent(delay+1);
   }
 
 
@@ -229,7 +224,6 @@ function level_2c() {
     spawnStartingBlock(spawnGrid, 1, false, ++delay, x, y);
     count++;
   }
-  playStartEvent(delay+1);
 }
 
 
@@ -304,7 +298,6 @@ function level_3() {
       }
     }
   }
-  playStartEvent(delay+1);
 }
 
 

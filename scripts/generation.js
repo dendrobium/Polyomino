@@ -247,6 +247,7 @@ function squareToPoly(left,top,order) {
 	identifyShape(spawnGrid,order,childId);
 	savePolyominoStats(order,null); // TODO: need to tell it the shape later on... or make a new function for that
 	saveGameEvt(endKF);
+  checkEndGameEvt(endKF+1);
 }
 
 

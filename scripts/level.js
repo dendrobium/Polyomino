@@ -320,8 +320,6 @@ function level_3() {
   }
 }
 
-
-
 //=======================================================================================
 function level_4() {
 //=======================================================================================
@@ -331,34 +329,48 @@ function level_4() {
   var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
 
 
-  var pentX, pentY;
+  var x1, x2, x3, y1, y2, y3;
+
   var r = Math.random();
-  if (r < 0.25) {
-    pentX = [[0,0,1,1,1], [1,2,3,4,2], [0,0,0,1,2], [3,4,2,3,4],  [5,2,3,4,5]];
-    pentY = [[0,1,1,2,3], [0,0,0,0,1], [2,3,4,4,4], [1,1,2,2,2],  [2,3,3,3,3]];
-  }
-  else if (r < 0.5) {
-    pentX = [[0,1,2,3,3],[0,0,0,0,0],[1,1,1,1,2],[2,2,2,3,4],[3,4,4,4,5]];
-    pentY = [[0,0,0,0,1],[1,2,3,4,5],[1,2,3,4,4],[1,2,3,3,3],[2,2,1,0,0]];
-  }
-  else if (r < 0.75){
-    pentX = [[0,0,1,2,2], [0,1,1,1,2], [2,3,3,3,4], [5,6,6,7,7], [7,8,8,8,8]];
-    pentY = [[7,8,8,8,7], [6,6,7,5,5], [6,6,7,8,8], [8,8,7,7,6], [8,8,7,6,5]];
+  x1 = rInt(gridSize);
+  if (x1 < gridSize / 2) {
+    x2 = x1 + 1;
+    x3 = x1 + 2;
   }
   else {
-    pentX = [[5,6,6,7,8], [6,6,7,7,8], [7,7,8,8,8], [8,7,7,7,6], [8,8,8,7,6]];
-    pentY = [[0,0,1,0,0], [3,2,2,1,1], [3,4,2,3,4], [5,5,6,7,6], [6,7,8,8,8]];
+    x2 = x1 - 1;
+    x3 = x1 - 2;
   }
-  var cementedOneBlock = false;
-  var cementThis = false;
-  for (var i = 0; i < pentX.length; i++) {
-    if (cementedOneBlock) cementThis = false;
-    else if ((Math.random() < 0.2) || (i >= (pentX.length -1))) {
-      cementThis = true;
-      cementedOneBlock = true;
+
+  if (r < 0.25) {
+    y1 = y2 = y3 = 0;
+  }
+  else if (r < 0.5) {
+    y1 = y2 = y3 = gridSize-1;
+  }
+  else {
+    y1 = x1;
+    y2 = x2;
+    y3 = x3;
+    if (r < 0.5) {
+      x1 = x2 = x3 = 0;
     }
-    makeBlock(spawnGrid, 5, cementThis, pentX[i], pentY[i]);
+    else {
+      x1 = x2 = x3 = gridSize-1;
+    }
   }
+
+  //console.log("level.level_4(): x=["+x1+", "+x2+", "+x3+"]  y=[" +y1+", "+y2+", "+y3+"]");
+
+  var id = newId();
+  spawnGrid[x1][y1] = id;
+  spawnGrid[x2][y2] = id;
+  addCellAlongPathDepthFirst(spawnGrid, id, x3, y3, 3);
+
+
+
+  var animateGrid = matrixCopy(spawnGrid);
+  animateSpawn(5, animateGrid, id, true, delay);
 
   var count=0;
   while (count < 10)
@@ -371,6 +383,56 @@ function level_4() {
     if (id) count++;
   }
 }
+
+////=======================================================================================
+//function level_4() {
+////=======================================================================================
+//  //console.log("level.level_1a()");
+//
+//  var delay = 0;
+//  var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
+//
+//
+//  var pentX, pentY;
+//  var r = Math.random();
+//  if (r < 0.25) {
+//    pentX = [[0,0,1,1,1], [1,2,3,4,2], [0,0,0,1,2], [3,4,2,3,4],  [5,2,3,4,5]];
+//    pentY = [[0,1,1,2,3], [0,0,0,0,1], [2,3,4,4,4], [1,1,2,2,2],  [2,3,3,3,3]];
+//  }
+//  else if (r < 0.5) {
+//    pentX = [[0,1,2,3,3],[0,0,0,0,0],[1,1,1,1,2],[2,2,2,3,4],[3,4,4,4,5]];
+//    pentY = [[0,0,0,0,1],[1,2,3,4,5],[1,2,3,4,4],[1,2,3,3,3],[2,2,1,0,0]];
+//  }
+//  else if (r < 0.75){
+//    pentX = [[0,0,1,2,2], [0,1,1,1,2], [2,3,3,3,4], [5,6,6,7,7], [7,8,8,8,8]];
+//    pentY = [[7,8,8,8,7], [6,6,7,5,5], [6,6,7,8,8], [8,8,7,7,6], [8,8,7,6,5]];
+//  }
+//  else {
+//    pentX = [[5,6,6,7,8], [6,6,7,7,8], [7,7,8,8,8], [8,7,7,7,6], [8,8,8,7,6]];
+//    pentY = [[0,0,1,0,0], [3,2,2,1,1], [3,4,2,3,4], [5,5,6,7,6], [6,7,8,8,8]];
+//  }
+//  var cementedOneBlock = false;
+//  var cementThis = false;
+//  for (var i = 0; i < pentX.length; i++) {
+//    if (cementedOneBlock) cementThis = false;
+//    else if ((Math.random() < 0.2) || (i >= (pentX.length -1))) {
+//      cementThis = true;
+//      cementedOneBlock = true;
+//    }
+//    makeBlock(spawnGrid, 5, cementThis, pentX[i], pentY[i]);
+//  }
+//
+//  var count=0;
+//  while (count < 10)
+//  {
+//    x = rInt(gridSize);
+//    y = rInt(gridSize);
+//    if (spawnGrid[x][y] != CELL_EMPTY) continue;
+//
+//    var id = spawnStartingBlock(spawnGrid, 1, false, ++delay, x, y);
+//    if (id) count++;
+//  }
+//}
 
 
 

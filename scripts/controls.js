@@ -22,6 +22,7 @@ function processInputs(){
 function handle_lDown(){
 	//check for lmb press
 	if(!evts.lDown) return;
+  //console.log("controls.handle_lDown()::  gameWon="+gameWon);
 	evts.lDown = false;
 	//check buttons
 	for(var b in buttons){
@@ -38,16 +39,18 @@ function handle_lDown(){
 		return; //no game input after losing
 	}
 	if(gameWon){
-    if( gameWonOverlayShown) {
-      newGame();
-    }
-    else {
+    //console.log("     controls.handle_lDown()::  gameWonOverlayShown="+gameWonOverlayShown);
+    //if( gameWonOverlayShown) {
 
-      //or while gameWon screen shows
-      gameWonOverlayShown = true;
-      currentlyAnimating = true;
-      return;
-    }
+      newGame();
+//    }
+//    else {
+//
+//      //or while gameWon screen shows
+//      gameWonOverlayShown = true;
+//      currentlyAnimating = true;
+//      return;
+//    }
 	}
 	if(drawInstructions){
 		drawInstructions = false;

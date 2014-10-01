@@ -75,23 +75,27 @@ function comboActiveEvt(decTick){
 }
 
 
-function gameWonEvt(){
-	new_event(0,10,null,function(){
-    gameWon = true;
-		gameLevel++;
-    if (gameLevel > GAME_LEVEL_MAX) gameLevel = GAME_LEVEL_MAX;
-    gameState = GAME_STATE_ROUND_OVER;
-		saveTime(new Date().getTime() - timeStarted);
-    //newGame();
-	});
-}
+//function gameWonEvt(){
+//	new_event(0,10,null,function(){
+//    gameWon = true;
+//		gameLevel++;
+//    if (gameLevel > GAME_LEVEL_MAX) gameLevel = GAME_LEVEL_MAX;
+//    gameState = GAME_STATE_ROUND_OVER;
+//		saveTime(new Date().getTime() - timeStarted);
+//    //newGame();
+//	});
+//}
 
 function checkEndGameEvt(myTick) {
   new_event(0, myTick, null, function(){
     if (gameState === GAME_STATE_PLAYING) {
       if (!hasCemented()) {
         gameState = GAME_STATE_ROUND_OVER;
-        gameWonEvt(0);
+        //gameWonEvt(0);
+        gameWon = true;
+        gameLevel++;
+        if (gameLevel > GAME_LEVEL_MAX) gameLevel = GAME_LEVEL_MAX;
+        saveTime(new Date().getTime() - timeStarted);
       }
     }
   });

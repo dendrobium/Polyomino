@@ -16,7 +16,8 @@ hoverOffset        = 8;
 keyframeSpeed      = 100;//100;
 selectionOpacity   = 0.25;
 orderOfLastMerge   = 1;
-gameLevel          = 1;
+userLevel          = 1;
+currentBoardLevel  = 1;
 GAME_LEVEL_MAX     = 4;
 
 //==  POLYOMINO COLORS  ======================================================//

@@ -2,21 +2,29 @@
 function spawnLevel() {
   var r = Math.random();
 
-  if (!(gameLevel) || gameLevel < 2 || Math.random() < (0.5/gameLevel)) {
+  if (!(userLevel) || userLevel < 2 || Math.random() < (0.5/userLevel)) {
+    currentBoardLevel = 1;
     if (r < 0.4) delay = level_1a();
     else if (r < 0.8) level_1b();
     else if (r < 0.9) level_1c();
     else level_1d();
   }
 
-  else if (gameLevel === 2 || Math.random() < (1.0/gameLevel)) {
+  else if (userLevel === 2 || Math.random() < (1.0/userLevel)) {
+    currentBoardLevel = 2;
     if (r < 0.6) level_2a();
     else if (r < 0.8) level_2b();
     else level_2c();
   }
 
-  else if (gameLevel === 3 || Math.random() < (1.0/gameLevel)) level_3();
-  else level_4();
+  else if (userLevel === 3 || Math.random() < (1.0/userLevel)) {
+    currentBoardLevel = 3;
+    level_3();
+  }
+  else {
+    currentBoardLevel = 4;
+    level_4();
+  }
 
   currentlyAnimating = true;
 

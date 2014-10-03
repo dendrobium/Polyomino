@@ -93,8 +93,8 @@ function checkEndGameEvt(myTick) {
         gameState = GAME_STATE_ROUND_OVER;
         //gameWonEvt(0);
         gameWon = true;
-        gameLevel++;
-        if (gameLevel > GAME_LEVEL_MAX) gameLevel = GAME_LEVEL_MAX;
+        if (currentBoardLevel >= userLevel) userLevel++;
+        if (userLevel > GAME_LEVEL_MAX) userLevel = GAME_LEVEL_MAX;
         saveTime(new Date().getTime() - timeStarted);
       }
     }

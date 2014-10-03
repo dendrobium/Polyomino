@@ -67,7 +67,7 @@ function loadGame(){
 			timeStarted = parseInt(localStorage.getItem("time"));
 			var testscoreFuncVersion = localStorage.getItem("scoreFuncVersion");
       gameMaxShapeLevel = localStorage.getItem("gameMaxShapeLevel");
-      gameLevel = localStorage.getItem("gameLevel");
+      userLevel = localStorage.getItem("userLevel");
 
 			if(scoreFuncVersion === testscoreFuncVersion)
 				highScore = parseInt(localStorage.getItem("highScore"));
@@ -91,7 +91,7 @@ function saveGame(){
 		localStorage.setItem("maxComboScore", maxComboScore);
 		localStorage.setItem("maxCombo", maxCombo);
 		localStorage.setItem("gameMaxShapeLevel", gameMaxShapeLevel);
-    localStorage.setItem("gameLevel", gameLevel);
+    localStorage.setItem("userLevel", userLevel);
 	}
 }
 

@@ -4,7 +4,7 @@ function spawnLevel() {
 
   if (!(userLevel) || userLevel < 2 || Math.random() < (0.5/userLevel)) {
     currentBoardLevel = 1;
-    if (r < 0.4) delay = level_1a();
+    if (r < 0.4) level_1a();
     else if (r < 0.8) level_1b();
     else if (r < 0.9) level_1c();
     else level_1d();
@@ -40,12 +40,23 @@ function level_1a() {
   var delay = 0;
   var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
 
+  var domX, domY, dx, dy
+  if (Math.random() < 0.5) {
+    domX = [[2, 3], [4,4], [3,4], [0,1], [1,2], [0,0], [2,2]];
+    domY = [[0, 0], [0,1], [2,2], [1,1], [3,3], [2,3], [1,2]];
 
-  var domX = [[2, 3], [4,4], [3,4], [0,1], [1,2], [0,0], [2,2]];
-  var domY = [[0, 0], [0,1], [2,2], [1,1], [3,3], [2,3], [1,2]];
+    dx = rInt(4);
+    dy = rInt(5);
+  }
+  else {
+    domX = [[3,3], [3,3], [1,2], [1,2], [4,5], [4,5], [0,1], [5,6]];
+    domY = [[0,1], [5,6], [2,2], [4,4], [2,2], [4,4], [3,3], [3,3]];
 
-  var dx = rInt(4);
-  var dy = rInt(5);
+    dx = rInt(3);
+    dy = rInt(3);
+    spawnStartingBlock(spawnGrid, 1, true, delay, 3+dx, 3+dy);
+  }
+
   for (var i = 0; i < domX.length; i++) {
       domX[i][0] += dx;  domX[i][1] += dx;
       domY[i][0] += dy;  domY[i][1] += dy;
@@ -70,7 +81,7 @@ function level_1a() {
   }
 
 
-  var numFreeDominos = 16;
+  var numFreeDominos = 21 - domX.length;
   var count = 0;
   while (count < numFreeDominos)
   {

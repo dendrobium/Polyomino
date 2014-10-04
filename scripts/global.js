@@ -6,16 +6,19 @@ orderDecay         = true;
 allowRotations     = true;
 newPolyOnMerge     = false;
 paneThickness      = 2;
-gridSize           = 11;
+gridSize           = 9;
 largeGridSize      = gridSize;
 smallGridSize      = gridSize;
 cellSize           = 32; // may vary during runtime as the application SHOULD size grid cells according to window size.
 initPieceCount     = 4;
 dragSpeed          = 0.3;
 hoverOffset        = 8;
-keyframeSpeed      = 100;
-goalOrder          = 6;
+keyframeSpeed      = 100;//100;
 selectionOpacity   = 0.25;
+orderOfLastMerge   = 1;
+userLevel          = 1;
+currentBoardLevel  = 1;
+GAME_LEVEL_MAX     = 4;
 
 //==  POLYOMINO COLORS  ======================================================//
 
@@ -57,6 +60,14 @@ var DIRECTION = new Array(4);
     DIRECTION[EAST]  = {deltaX: 1, deltaY: 0};
     DIRECTION[SOUTH] = {deltaX: 0, deltaY: 1};
     DIRECTION[WEST]  = {deltaX:-1, deltaY: 0};
+var NORTHEAST = 4, SOUTHEAST = 5, SOUTHWEST = 6, NORTHWEST = 7;
+
+
+//// GAME STATE
+var GAME_STATE_SETUP = 0;
+var GAME_STATE_PLAYING = 1;
+var GAME_STATE_ROUND_OVER = 2;
+var gameState = GAME_STATE_SETUP;
 
 //==  DEBUG VARS  ============================================================//
 

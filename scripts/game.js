@@ -22,6 +22,8 @@ function initGame(){
 }
 
 function newGame(){
+  gameState = GAME_STATE_SETUP;
+  //console.log("game.newGame()  gameLevel="+gameLevel);
 	board = new grid(gridSize);
 	for(var i=0;i<board.size;++i)for(var j=0;j<board.size;++j)
 		board.setCell(i,j,new cell());
@@ -31,14 +33,18 @@ function newGame(){
 
 	blockId   = 0;
 	goalScore = 0;
-  gameMaxShapeLevel = 2;
+  gameMaxShapeLevel = 1;
+  orderOfLastMerge = 1;
   initGameShapeCounts();
 
 	initGame();
-	placeStartingPolys();
+
+  spawnLevel();
+
 	saveGame();
 	timeStarted = new Date().getTime();
 	localStorage.setItem("time", timeStarted);
+  gameState = GAME_STATE_PLAYING;
 }
 
 function loadGame(){
@@ -60,6 +66,9 @@ function loadGame(){
 			goalScore = parseInt(localStorage.getItem("score"));
 			timeStarted = parseInt(localStorage.getItem("time"));
 			var testscoreFuncVersion = localStorage.getItem("scoreFuncVersion");
+      gameMaxShapeLevel = localStorage.getItem("gameMaxShapeLevel");
+      userLevel = localStorage.getItem("userLevel");
+
 			if(scoreFuncVersion === testscoreFuncVersion)
 				highScore = parseInt(localStorage.getItem("highScore"));
 			else
@@ -72,7 +81,8 @@ function loadGame(){
 }
 
 function saveGame(){
-	if(typeof(Storage) !== "undefined") {
+
+  if(typeof(Storage) !== "undefined") {
 		localStorage.setItem("board",            JSON.stringify(board));
 		localStorage.setItem("blockId",          blockId);
 		localStorage.setItem("score",            goalScore);
@@ -80,7 +90,8 @@ function saveGame(){
 		localStorage.setItem("highScore",        highScore);
 		localStorage.setItem("maxComboScore", maxComboScore);
 		localStorage.setItem("maxCombo", maxCombo);
-		localStorage.setItem("shapeCount", JSON.stringify(shapeCountCurrentGame));
+		localStorage.setItem("gameMaxShapeLevel", gameMaxShapeLevel);
+    localStorage.setItem("userLevel", userLevel);
 	}
 }
 

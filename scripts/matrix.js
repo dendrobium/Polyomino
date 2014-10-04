@@ -38,7 +38,7 @@ function matrixToString(myMatrix){
   for (var y=0; y<myMatrix.length; y++) {
     str += "[";
     for (var x=0; x<myMatrix[y].length; x++) {
-      if (myMatrix[x][y]) str += "1 ";  else str += "0 ";
+      str += myMatrix[x][y] + " ";
     }
     str += "]";
   }

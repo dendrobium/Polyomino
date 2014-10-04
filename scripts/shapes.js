@@ -41,7 +41,6 @@ var MAX_ORDER_OF_SHAPE_IDENTIFICATION = HEXOMINO;
 var SHAPE = new Array(MAX_ORDER_OF_SHAPE_IDENTIFICATION + 1);
 var gamePolyominoCount = new Array(MAX_ORDER + 1);
 var shapeCountCurrentGame = new Array(MAX_ORDER_OF_SHAPE_IDENTIFICATION + 1);
-var gameMaxShapeLevel = 2;
 
 
 //One-Sided Polyominos
@@ -81,6 +80,7 @@ SHAPE[HEXOMINO] = [
 
 function initGameShapeCounts() {
 //=======================================================================================
+
   for (var order = MONOMINO; order <= MAX_ORDER; order++) {
     gamePolyominoCount[order] = 0;
     if (order > MAX_ORDER_OF_SHAPE_IDENTIFICATION) break;
@@ -144,6 +144,7 @@ function getMatrixWithShape(order, shapeIdx) {
 function identifyShape(myMatrix, order, id) {
 //=======================================================================================
   if (order < 2) return;
+
   if (order === 2) {
     gamePolyominoCount[DOMINO]++;
     shapeCountCurrentGame[DOMINO][0]++;
@@ -151,7 +152,6 @@ function identifyShape(myMatrix, order, id) {
     return;
   }
 
-  if (order > gameMaxShapeLevel) gameMaxShapeLevel = order;
   if (order > MAX_ORDER_OF_SHAPE_IDENTIFICATION) return;
 
   var minX = myMatrix.length-1;

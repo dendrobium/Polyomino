@@ -8,7 +8,7 @@ new_event = function(startTick,endTick,func,onEnd){
 		startTick : tick+startTick,
 		endTick   : tick+endTick,
 		func      : func,
-		onEnd     : onEnd,
+		onEnd     : onEnd
 	});
 }
 
@@ -46,6 +46,7 @@ function unlockEvt(cell,unlockTick){
 		cell.locked = false;
 		triggerDetectSquares = true;
 	});
+
 }
 
 function quickSetEvt(cell,occupied,id,order,setTick){
@@ -73,11 +74,31 @@ function comboActiveEvt(decTick){
 	});
 }
 
-function gameWonEvt(){
-	new_event(0,10,null,function(){
-		gameWon = true;
-		saveTime(new Date().getTime() - timeStarted);
-	});
+
+//function gameWonEvt(){
+//	new_event(0,10,null,function(){
+//    gameWon = true;
+//		gameLevel++;
+//    if (gameLevel > GAME_LEVEL_MAX) gameLevel = GAME_LEVEL_MAX;
+//    gameState = GAME_STATE_ROUND_OVER;
+//		saveTime(new Date().getTime() - timeStarted);
+//    //newGame();
+//	});
+//}
+
+function checkEndGameEvt(myTick) {
+  new_event(0, myTick, null, function(){
+    if (gameState === GAME_STATE_PLAYING) {
+      if (!hasCemented()) {
+        gameState = GAME_STATE_ROUND_OVER;
+        //gameWonEvt(0);
+        gameWon = true;
+        if (currentBoardLevel >= userLevel) userLevel++;
+        if (userLevel > GAME_LEVEL_MAX) userLevel = GAME_LEVEL_MAX;
+        saveTime(new Date().getTime() - timeStarted);
+      }
+    }
+  });
 }
 
 //==  SLIDE-IN EVENTS  =======================================================//
@@ -186,6 +207,7 @@ function boxInEvt(x,y,order,startTick,endTick,color){
 		rgb(color);
 		renderRect(x*cellSize,y*cellSize,(x+order)*cellSize,(y+order*interp)*cellSize);
 	},null);
+
 }
 
 function boxSustainEvt(x,y,order,startTick,endTick,color){

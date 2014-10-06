@@ -1,7 +1,8 @@
 //=======================================================================================
 function spawnLevel() {
-  console.log("level.spawnLevel() userLevel="+userLevel);
+
   var r = Math.random();
+  var lv2 = userLevel * userLevel;
 
   if (!(userLevel) || userLevel < 1)
   {
@@ -9,63 +10,57 @@ function spawnLevel() {
     level_0();
   }
 
-  else if ((userLevel < 2) || (Math.random() < (0.5/userLevel))) {
+  else if ((userLevel < 2) || (r < (2.0/lv2))) {
     currentBoardLevel = 1;
     level_1();
   }
 
-  else if ((userLevel < 3) || (Math.random() < (1.0/userLevel))) {
+  else if ((userLevel < 3) || (r < (4.0/lv2))) {
     currentBoardLevel = 2;
     level_2();
   }
 
-  else if (userLevel < 4 || Math.random() < (1.0/userLevel)) {
+  else if (userLevel < 4 || (r < (9.0/lv2))) {
     currentBoardLevel = 3;
     level_3();
   }
 
-  else if (userLevel < 5 || Math.random() < (1.0/userLevel)) {
+  else if (userLevel < 5 || (r < (16.0/lv2))) {
     currentBoardLevel = 4;
     if (r < 0.5) level_4a();
     else level_4b();
   }
 
-  else if (userLevel < 6 || Math.random() < (1.0/userLevel)) {
+  else if (userLevel < 6 || (r < (25.0/lv2))) {
     currentBoardLevel = 5;
     level_5();
   }
 
 
-  else if (userLevel < 6 || Math.random() < (1.0/userLevel)) {
-    currentBoardLevel = 5;
-    level_5();
-  }
-
-
-  else if (userLevel < 7 || Math.random() < (1.0/userLevel)) {
+  else if (userLevel < 7 || (r < (36.0/lv2))) {
     currentBoardLevel = 6;
     level_6();
   }
 
 
-  else if (userLevel < 8 || Math.random() < (1.0/userLevel)) {
+  else if (userLevel < 8 || (r < (49.0/lv2))) {
     currentBoardLevel = 7;
     level_7();
   }
 
 
-  else if (userLevel < 9 || Math.random() < (1.0/userLevel)) {
+  else if (userLevel < 9 || (r < (64.0/lv2))) {
     currentBoardLevel = 8;
     level_8();
   }
 
-  else if (userLevel < 10 || Math.random() < (1.0/userLevel)) {
+  else if (userLevel < 10 || (r < (81.0/lv2))) {
     currentBoardLevel = 9;
     level_9();
   }
 
   else {
-    currentBoardLevel = 4;
+    currentBoardLevel = 10;
     level_10();
   }
 
@@ -80,24 +75,28 @@ function level_0() {
 //=======================================================================================
   //Two locked blocks (a mono and a domino) in a mostly empty field
 
-  console.log("level.level_0()");
+  console.log("level.level_0(userLevel="+userLevel+")");
 
   var delay = 0;
   var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
 
   var domX, domY
-  domX = [[7, 8], [7,8], [6,7], [2,3], [2,3]];
-  domY = [[7, 7], [8,8], [3,3], [5,5], [6,6]];
+  domX = [[7, 8], [7,8], [5,6], [6,7], [6,7]];
+  domY = [[7, 7], [8,8], [8,8], [3,3], [4,4]];
 
   for (var i = 0; i < domX.length; i++) {
     var cemented = true
-    if (i >= 2) cemented = false;
+    if (i > 2) cemented = false;
     makeBlock(spawnGrid, 2, cemented, domX[i], domY[i]);
   }
 
   spawnStartingBlock(spawnGrid, 1, true, delay++, 0, 0);
   spawnStartingBlock(spawnGrid, 1, true, delay++, 1, 0);
   spawnStartingBlock(spawnGrid, 1, true, delay++, 0, 1);
+
+  spawnStartingBlock(spawnGrid, 1, true, delay++, 4, 7);
+  spawnStartingBlock(spawnGrid, 1, true, delay++, 5, 7);
+  spawnStartingBlock(spawnGrid, 1, true, delay++, 4, 8);
 
   spawnStartingBlock(spawnGrid, 1, false, delay++, 4, 1);
 }
@@ -110,7 +109,7 @@ function level_0() {
 function level_1() {
 //=======================================================================================
   //Pattern with mid density dominos and moninos
-  console.log("level.level_1()");
+  console.log("level.level_1(userLevel="+userLevel+")");
 
   var delay = 0;
   var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
@@ -180,7 +179,7 @@ function level_1() {
 function level_2() {
 //=======================================================================================
   //Single, random cemented trimonino.
-  console.log("level.level_2()");
+  console.log("level.level_2(userLevel="+userLevel+")");
 
   var delay = 0;
   var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
@@ -215,7 +214,7 @@ function level_3() {
   // ** **               * ***
   //                     ***
 
-  console.log("level.level_3()");
+  console.log("level.level_3(userLevel="+userLevel+")");
 
   var delay = 0;
   var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
@@ -281,7 +280,7 @@ function level_3() {
 function level_4a() {
 //=======================================================================================
   //Face
-  console.log("level.level_4a");
+  console.log("level.level_4a(userLevel="+userLevel+")");
   var delay = 0;
 
   var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
@@ -312,7 +311,7 @@ function level_4a() {
 function level_4b() {
 //=======================================================================================
   //Space Invader
-  console.log("level.level_4b");
+  console.log("level.level_4b(userLevel="+userLevel+")");
   var delay = 0;
 
   var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
@@ -339,7 +338,7 @@ function level_4b() {
 //=======================================================================================
 function level_5() {
 //=======================================================================================
-  console.log("level.level_5()");
+  console.log("level.level_5(userLevel="+userLevel+")");
   var delay = 0;
 
   var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
@@ -368,63 +367,35 @@ function level_5() {
 //=======================================================================================
 function level_6() {
 //=======================================================================================
-    console.log("level.level_6()");
-    var delay = 0;
+  console.log("level.level_6(userLevel="+userLevel+")");
+  var delay = 0;
 
-    var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
+  var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
 
+  var triX = [[4, 4, 4], [4, 4, 4], [1, 2, 3], [5, 6, 7], [2, 3, 2], [5, 6, 6], [2, 3, 2], [5, 6, 6] ];
+  var triY = [[0, 1, 2], [4, 5, 6], [3, 3, 3], [3, 3, 3], [1, 1, 2], [1, 1, 2], [4, 5, 5], [5, 5, 4] ];
 
-    for (var dir = 0; dir < 8; dir++) {
-      var loc = getRandomCoordinatesInRegion(spawnGrid, dir);
-      if (loc != null) spawnStartingBlock(spawnGrid, 3, true, ++delay, loc.x, loc.y);
+  for (var i = 0; i < triX.length; i++) {
+    makeBlock(spawnGrid, 3, true, triX[i], triY[i]);
+  }
 
-      loc = getRandomCoordinatesInRegion(spawnGrid, dir);
-      if (loc != null) spawnStartingBlock(spawnGrid, 2, true, ++delay, loc.x, loc.y);
-    }
-
-    var monoCount = 6 + rInt(6)
-    var count = 0;
-    while (count < monoCount) {
-      var x = rInt(gridSize);
-      var y = rInt(gridSize);
-      if (spawnGrid[x][y] != CELL_EMPTY) continue;
-      spawnStartingBlock(spawnGrid, 1, false, ++delay, x, y);
-      count++;
-    }
+  var monoCount = 6 + rInt(6)
+  var count = 0;
+  while (count < monoCount) {
+    var x = rInt(gridSize);
+    var y = rInt(gridSize);
+    if (spawnGrid[x][y] != CELL_EMPTY) continue;
+    spawnStartingBlock(spawnGrid, 1, false, ++delay, x, y);
+    count++;
+  }
 }
 
 
-//=======================================================================================
-  function level_7() {
-//=======================================================================================
-    //console.log("level.level_7()");
-    var delay = 0;
-
-    var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
-
-    var triX = [[4, 4, 4], [4, 4, 4], [1, 2, 3], [5, 6, 7], [2, 3, 2], [5, 6, 6], [2, 3, 2], [5, 6, 6] ];
-    var triY = [[0, 1, 2], [4, 5, 6], [3, 3, 3], [3, 3, 3], [1, 1, 2], [1, 1, 2], [4, 5, 5], [5, 5, 4] ];
-
-    for (var i = 0; i < triX.length; i++) {
-      makeBlock(spawnGrid, 3, true, triX[i], triY[i]);
-    }
-
-    var monoCount = 6 + rInt(6)
-    var count = 0;
-    while (count < monoCount) {
-      var x = rInt(gridSize);
-      var y = rInt(gridSize);
-      if (spawnGrid[x][y] != CELL_EMPTY) continue;
-      spawnStartingBlock(spawnGrid, 1, false, ++delay, x, y);
-      count++;
-    }
-  }
-
 
 //=======================================================================================
-function level_8() {
+function level_7() {
 //=======================================================================================
-  //console.log("level.level_8()");
+  console.log("level.level_7(userLevel="+userLevel+")");
   var delay = 0;
 
   var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
@@ -456,10 +427,47 @@ function level_8() {
 
 
 
+
+//=======================================================================================
+function level_8() {
+//=======================================================================================
+    console.log("level.level_8(userLevel="+userLevel+")");
+    var delay = 0;
+
+    var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
+
+
+    for (var dir = 0; dir < 8; dir++) {
+
+      if (dir < 7) {
+        var loc = getRandomCoordinatesInRegion(spawnGrid, dir);
+        if (loc != null) spawnStartingBlock(spawnGrid, 3, true, ++delay, loc.x, loc.y);
+      }
+
+      loc = getRandomCoordinatesInRegion(spawnGrid, dir);
+      if (loc != null) spawnStartingBlock(spawnGrid, 2, true, ++delay, loc.x, loc.y);
+    }
+
+    var monoCount = 6 + rInt(6)
+    var count = 0;
+    while (count < monoCount) {
+      var x = rInt(gridSize);
+      var y = rInt(gridSize);
+      if (spawnGrid[x][y] != CELL_EMPTY) continue;
+      spawnStartingBlock(spawnGrid, 1, false, ++delay, x, y);
+      count++;
+    }
+}
+
+
+
+
+
+
 //=======================================================================================
 function level_9() {
 //=======================================================================================
-  //console.log("level.level_9()");
+  console.log("level.level_9(userLevel="+userLevel+")");
   var delay = 0;
 9
   var spawnGrid = matrix(gridSize,gridSize,CELL_EMPTY);
@@ -522,7 +530,7 @@ function level_9() {
 //=======================================================================================
 function level_10() {
 //=======================================================================================
-  //console.log("level.level_10()");
+  console.log("level.level_10(userLevel="+userLevel+")");
 
   var delay = 0;
   var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);

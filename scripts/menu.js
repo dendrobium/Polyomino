@@ -36,13 +36,9 @@ function renderMenu(){
 var overlayRect = {x:0,y:0,w:0,h:0};
 
 var img_3x3  = new Image();
-var img_tro1 = new Image();
-var img_tro2 = new Image();
 img_3x3.src  = "images/Instructions_3x3.png";
-img_tro1.src = "images/Instructions_Tro1.png";
-img_tro2.src = "images/Instructions_Tro2.png";
 function renderInstructionsOverlay(){
-	if(!(img_3x3.complete && img_tro1.complete && img_tro2.complete))
+	if(!img_3x3.complete)
 		currentlyAnimating = true; //ensure images load
 	var x = overlayRect.x;
 	var y = overlayRect.y;
@@ -52,44 +48,42 @@ function renderInstructionsOverlay(){
 	var scale2 = h/750;
 	var fontSize = 18 * scale;
 	var leftMargin = fontSize/2;
-	var lineHeight = scale2*20;
+	var lineHeight = scale2*25;
 	gfx.fillStyle = "rgba(0,0,0,0.7)";
 	gfx.fillRect(x, y, w, h);
 
 	gfx.fillStyle = "#f0f0f0";
-	gfx.fillRect(x+leftMargin, y+3*lineHeight-(fontSize/4),fontSize/4,fontSize/4);
-	gfx.fillRect(x+leftMargin, y+4*lineHeight-(fontSize/4),fontSize/4,fontSize/4);
-	gfx.fillRect(x+leftMargin, y+5*lineHeight-(fontSize/4),fontSize/4,fontSize/4);
+	//gfx.fillRect(x+leftMargin, y+3*lineHeight-(fontSize/4),fontSize/4,fontSize/4);
+	//gfx.fillRect(x+leftMargin, y+4*lineHeight-(fontSize/4),fontSize/4,fontSize/4);
+	//gfx.fillRect(x+leftMargin, y+5*lineHeight-(fontSize/4),fontSize/4,fontSize/4);
 
 
-	drawText("Instructions",                                             x+w/2,        y+2*lineHeight, (fontSize*1.7) + "px Arial Bold", true);
-	drawText("Merge polyominos into larger ones by forming squares",     x+leftMargin*2, y+3*lineHeight, (fontSize*0.9)+"px Arial");
-	drawText("Bigger squares = bigger polyominos!",                      x+leftMargin*2, y+4*lineHeight, (fontSize*0.9)+"px Arial");
-	drawText("You cannot merge polyominos into ones of the same size or smaller", x+leftMargin*2, y+5*lineHeight, (fontSize*0.9)+"px Arial");
+	drawText("Instructions",                           x+w/2, y+2*lineHeight, (fontSize*1.8) + "px Arial Bold", true);
+	drawText("Merge shapes OF THE SAME COLOR by covering",     x+leftMargin*2, y+3*lineHeight, fontSize+"px Arial");
+  drawText("  a square of grid spaces LONGER and WIDER ",     x+leftMargin*2, y+4*lineHeight, fontSize+"px Arial");
+  drawText("  than the shapes used to cover that square.", x+leftMargin*2, y+5*lineHeight, fontSize+"px Arial");
 
-	drawText("Example Merge: Dominos into Tromino", x+w/2, y+7*lineHeight, fontSize+"px Arial Bold", true);
-
-	//todo merge these images into one.
-	gfx.drawImage(img_3x3, x+leftMargin, y+8*lineHeight, img_3x3.width*scale, img_3x3.height*scale);
-	gfx.drawImage(img_tro1, x+leftMargin+2*fontSize+(img_3x3.width*scale), y+8*lineHeight, img_tro1.width*scale, img_tro1.height*scale);
-	gfx.drawImage(img_tro2, x+leftMargin+4*fontSize+(img_3x3.width*scale)+(img_tro1.width*scale), y+8*lineHeight, img_tro2.width*scale, img_tro2.height*scale);
+  var imgWidth = img_3x3.width*scale;
+  var imgHeight = img_3x3.height*scale;
+  var left = w*scale-imgWidth
+	gfx.drawImage(img_3x3, x+left, y+6*lineHeight, imgWidth, imgHeight);
 
 	y += img_3x3.height;
 
-	gfx.fillRect(x+leftMargin, y+12*lineHeight-(fontSize*1.6),w-leftMargin*2, 1);
-	gfx.fillRect(x+leftMargin, y+12*lineHeight+(fontSize*0.6),w-leftMargin*2, 1);
-	drawText("Can you build a Hexomino? (6 squares)", x+w/2, y+12*lineHeight, (fontSize*1.3)+"px Arial bold italic", true);
+	gfx.fillRect(x+leftMargin, y+9*lineHeight-(fontSize*1.6),w-leftMargin*2, 1);
+	gfx.fillRect(x+leftMargin, y+9*lineHeight+(fontSize*0.6),w-leftMargin*2, 1);
+	drawText("GOAL: Merge ALL BOLTED shapes on board.", x+w/2, y+9*lineHeight, (fontSize*1.3)+"px Arial bold italic", true);
 
-	drawText("Controls",                                             		 x+w/2,        y+15*lineHeight, (fontSize*1.7) + "px Arial Bold", true);
-	drawText("Mouse:",                                                   x+leftMargin, y+16*lineHeight, (fontSize*1.3) + "px Arial Bold");
-	drawText("Left Click & Drag to pick up and move pieces",             x+leftMargin, y+17*lineHeight, fontSize+"px Arial");
-	drawText("Right Click to rotate picked up piece",                    x+leftMargin, y+18*lineHeight, fontSize+"px Arial");
+	drawText("Controls",                                             		 x+w/2,        y+12*lineHeight, (fontSize*1.7) + "px Arial Bold", true);
+	drawText("Mouse:",                                                   x+leftMargin, y+13*lineHeight, (fontSize*1.3) + "px Arial Bold");
+	drawText("   Left Click & Drag to lift and move pieces.",             x+leftMargin, y+14*lineHeight, fontSize+"px Arial");
+	drawText("   Right Click (or spacebar) to rotate a lifted piece.",      x+leftMargin, y+15*lineHeight, fontSize+"px Arial");
 
-	drawText("Touch:",                                                   x+leftMargin, y+20*lineHeight, (fontSize*1.3) + "px Arial Bold");
-	drawText("Tap & Drag to pick up and move pieces",          			     x+leftMargin, y+21*lineHeight, fontSize+"px Arial");
-	drawText("Tap with a second finger to rotate picked up piece",       x+leftMargin, y+22*lineHeight, fontSize+"px Arial");
+	drawText("Touch:",                                                   x+leftMargin, y+17*lineHeight, (fontSize*1.3) + "px Arial Bold");
+	drawText("   Tap & Drag to pick up and move pieces",          			     x+leftMargin, y+18*lineHeight, fontSize+"px Arial");
+	drawText("   Tap with a second finger to rotate picked up piece",       x+leftMargin, y+19*lineHeight, fontSize+"px Arial");
 
-	drawText("Click or tap to close",                                    x+w/2, y+24*lineHeight, (0.8*fontSize)+"px Arial", true);
+	drawText("Click or tap to close",                                    x+w/2, y+21*lineHeight, (0.8*fontSize)+"px Arial", true);
 }
 
 function renderGameLostOverlay(){

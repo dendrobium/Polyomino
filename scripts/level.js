@@ -81,8 +81,8 @@ function level_0() {
   var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
 
   var domX, domY
-  domX = [[7, 8], [7,8], [5,6], [6,7], [6,7]];
-  domY = [[7, 7], [8,8], [8,8], [3,3], [4,4]];
+  domX = [[7, 8], [7,8], [5,6], [6,7]];
+  domY = [[7, 7], [8,8], [8,8], [4,4]];
 
   for (var i = 0; i < domX.length; i++) {
     var cemented = true

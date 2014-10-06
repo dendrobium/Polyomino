@@ -72,18 +72,17 @@ function renderInstructionsOverlay(){
 
 	gfx.fillRect(x+leftMargin, y+8*lineHeight-(fontSize*1.6),w-leftMargin*2, 1);
 	gfx.fillRect(x+leftMargin, y+8*lineHeight+(fontSize*0.6),w-leftMargin*2, 1);
-	drawText("GOAL: Merge ALL BOLTED shapes on board.", x+w/2, y+8*lineHeight, (fontSize*1.3)+"px Arial bold italic", true);
+	drawText("TO WIN: Merge ALL BOLTED shapes on board.", x+w/2, y+8*lineHeight, (fontSize*1.3)+"px Arial bold italic", true);
 
-	drawText("Controls",                                             		 x+w/2,        y+11*lineHeight, (fontSize*1.7) + "px Arial Bold", true);
-	drawText("Mouse:",                                                   x+leftMargin, y+12*lineHeight, (fontSize*1.3) + "px Arial Bold");
-	drawText("   Left Click & Drag to lift and move pieces.",            x+leftMargin, y+13*lineHeight, fontSize+"px Arial");
-	drawText("   Right Click (or spacebar) to rotate a lifted piece.",   x+leftMargin, y+14*lineHeight, fontSize+"px Arial");
+	drawText("Mouse Controls:",                                          x+leftMargin, y+11*lineHeight, (fontSize*1.3) + "px Arial Bold");
+	drawText("   Left Click & Drag to lift and move pieces.",            x+leftMargin, y+12*lineHeight, fontSize+"px Arial");
+	drawText("   Right Click (or spacebar) to rotate a lifted piece.",   x+leftMargin, y+13*lineHeight, fontSize+"px Arial");
 
-	drawText("Touch:",                                                   x+leftMargin, y+16*lineHeight, (fontSize*1.3) + "px Arial Bold");
-	drawText("   Tap & Drag to pick up and move pieces",          			 x+leftMargin, y+17*lineHeight, fontSize+"px Arial");
-	drawText("   Tap with a second finger to rotate picked up piece",    x+leftMargin, y+18*lineHeight, fontSize+"px Arial");
+	drawText("Touch Controls:",                                          x+leftMargin, y+15*lineHeight, (fontSize*1.3) + "px Arial Bold");
+	drawText("   Tap & Drag to pick up and move pieces",          			 x+leftMargin, y+16*lineHeight, fontSize+"px Arial");
+	drawText("   Tap with a second finger to rotate picked up piece",    x+leftMargin, y+17*lineHeight, fontSize+"px Arial");
 
-	drawText("Click or tap to close",                                    x+w/2, y+19.5*lineHeight, (0.8*fontSize)+"px Arial", true);
+	drawText("Click or tap to close",                                    x+w/2, y+19*lineHeight, (0.8*fontSize)+"px Arial", true);
 }
 
 function renderGameLostOverlay(){

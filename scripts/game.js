@@ -1,7 +1,7 @@
 //==  GAME UTILS  ============================================================//
 
 var resetStorage = false;
-var version = "0.93"; //to be used to reset testing computers
+var version = "0.94"; //to be used to reset testing computers
 
 function initGame(){
 	dragging = snapping             = false;

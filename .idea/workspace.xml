@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="30923e38-9626-43f3-a42a-7cb760d4e35d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/images/Instructions_3x3.png" afterPath="$PROJECT_DIR$/images/Instructions_3x3.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scripts/game.js" afterPath="$PROJECT_DIR$/scripts/game.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scripts/level.js" afterPath="$PROJECT_DIR$/scripts/level.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scripts/menu.js" afterPath="$PROJECT_DIR$/scripts/menu.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scripts/generation.js" afterPath="$PROJECT_DIR$/scripts/generation.js" />
     </list>
     <ignored path="Polyomino.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -39,11 +35,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="generation.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="generation.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/scripts/generation.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="5694" max-vertical-offset="11132">
-              <caret line="429" column="7" selection-start-line="429" selection-start-column="7" selection-end-line="429" selection-end-column="7" />
+            <state vertical-scroll-proportion="0.33785823" vertical-offset="1404" max-vertical-offset="11176">
+              <caret line="74" column="33" selection-start-line="74" selection-start-column="33" selection-end-line="74" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -89,11 +85,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="level.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="level.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scripts/level.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.46907994" vertical-offset="1537" max-vertical-offset="17490">
-              <caret line="84" column="43" selection-start-line="84" selection-start-column="43" selection-end-line="84" selection-end-column="43" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="17490">
+              <caret line="8" column="26" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -146,7 +142,6 @@
         <option value="$PROJECT_DIR$/scripts/shapes.js" />
         <option value="$PROJECT_DIR$/scripts/utils.js" />
         <option value="$PROJECT_DIR$/scripts/matrix.js" />
-        <option value="$PROJECT_DIR$/scripts/generation.js" />
         <option value="$PROJECT_DIR$/scripts/verification.js" />
         <option value="$PROJECT_DIR$/scripts/event.js" />
         <option value="$PROJECT_DIR$/scripts/render.js" />
@@ -155,6 +150,7 @@
         <option value="$PROJECT_DIR$/scripts/menu.js" />
         <option value="$PROJECT_DIR$/scripts/global.js" />
         <option value="$PROJECT_DIR$/scripts/level.js" />
+        <option value="$PROJECT_DIR$/scripts/generation.js" />
       </list>
     </option>
   </component>
@@ -669,14 +665,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/generation.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="5694" max-vertical-offset="11132">
-          <caret line="429" column="7" selection-start-line="429" selection-start-column="7" selection-end-line="429" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/scripts/verification.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2706">
@@ -735,8 +723,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/scripts/level.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.46907994" vertical-offset="1537" max-vertical-offset="17490">
-          <caret line="84" column="43" selection-start-line="84" selection-start-column="43" selection-end-line="84" selection-end-column="43" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="17490">
+          <caret line="8" column="26" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/generation.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33785823" vertical-offset="1404" max-vertical-offset="11176">
+          <caret line="74" column="33" selection-start-line="74" selection-start-column="33" selection-end-line="74" selection-end-column="33" />
           <folding />
         </state>
       </provider>

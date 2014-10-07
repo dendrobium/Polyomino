@@ -1,7 +1,7 @@
 //==  GAME UTILS  ============================================================//
 
 var resetStorage = false;
-var version = "0.94"; //to be used to reset testing computers
+var version = "0.96"; //to be used to reset testing computers
 
 function initGame(){
 	dragging = snapping             = false;
@@ -68,6 +68,7 @@ function loadGame(){
 			var testscoreFuncVersion = localStorage.getItem("scoreFuncVersion");
       gameMaxShapeLevel = localStorage.getItem("gameMaxShapeLevel");
       userLevel = localStorage.getItem("userLevel");
+      currentBoardLevel = localStorage.getItem("currentBoardLevel");
 
 			if(scoreFuncVersion === testscoreFuncVersion)
 				highScore = parseInt(localStorage.getItem("highScore"));
@@ -92,6 +93,7 @@ function saveGame(){
 		localStorage.setItem("maxCombo", maxCombo);
 		localStorage.setItem("gameMaxShapeLevel", gameMaxShapeLevel);
     localStorage.setItem("userLevel", userLevel);
+    localStorage.setItem("currentBoardLevel", currentBoardLevel);
 	}
 }
 

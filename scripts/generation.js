@@ -68,7 +68,7 @@ function spawnBlock(order, cement, delay, x0, y0) {
   //  1) spawning starting polys.
   //  2) spawning a poly when a block is moved.
 
-  if (currentBoardLevel < 1) return;
+  if (currentBoardLevel === 0) return;
 
   var id = newId();
   //console.log("spawnBlock(order="+order+", cement="+cement+", x0="+x0+", y0="+y0+"): id="+id);

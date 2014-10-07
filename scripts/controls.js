@@ -1,3 +1,8 @@
+var KEYCODE_TAB = 9
+var KEYCODE_SPACE = 32
+var KEYCODE_ENTER = 13
+
+
 var mouse = {
 	x:0,
 	y:0,
@@ -275,7 +280,17 @@ function setupControls(){
 	canvas.addEventListener("touchend"   , touchHandler);
 
 	document.addEventListener('keydown',function(e){
-		if(e.keyCode === 9){
+
+    console.log("controls.keydown() charCode="+ e.charCode + ", keyCode="+ e.keyCode);
+
+    //Stackoverflow says space keycode is not 32 on all systems and in all browsers and that some use the
+    // usual enter key code (13).
+    if((e.keyCode === KEYCODE_SPACE) ||  (e.keyCode === KEYCODE_ENTER))  {
+      if(!dragging||snapping)return;
+      ++goalRot;
+    }
+
+		else if(e.keyCode === KEYCODE_TAB){
 			e.preventDefault();
 			if(debugMode){
 				debugMouseDown = false;

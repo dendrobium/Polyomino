@@ -114,20 +114,47 @@ function level_1() {
   var delay = 0;
   var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
 
-
-  if (Math.random() < 0.5) {
+  var r = Math.random();
+  if (r < 0.25) {
     domX = [[2,2], [2,2], [0,1], [3,4]];
     domY = [[0,1], [3,4], [2,2], [2,2]];
 
     dx = rInt(4);
     dy = rInt(4);
   }
-  else {
+  else if (r < 0.5) {
     domX = [[0,1], [2,2], [2,1], [0,0]];
     domY = [[0,0], [0,1], [2,2], [2,1]];
 
     dx = rInt(6);
     dy = rInt(6);
+  }
+
+  else if (r < 0.75) {
+    domX = [[1,2], [1,2], [0,0], [3,3]];
+    domY = [[0,0], [3,3], [1,2], [1,2]];
+
+    dx = rInt(5);
+    dy = rInt(5);
+
+    spawnStartingBlock(spawnGrid, 1, true, ++delay, 0+dx, 0+dy);
+    spawnStartingBlock(spawnGrid, 1, true, ++delay, 3+dx, 0+dy);
+    spawnStartingBlock(spawnGrid, 1, true, ++delay, 0+dx, 3+dy);
+    spawnStartingBlock(spawnGrid, 1, true, ++delay, 3+dx, 3+dy);
+  }
+
+
+  else {
+    domX = [[1,1], [2,3], [2,2], [0,1]];
+    domY = [[0,1], [1,1], [2,3], [2,2]];
+
+    dx = rInt(5);
+    dy = rInt(5);
+
+    spawnStartingBlock(spawnGrid, 1, true, ++delay, 0+dx, 1+dy);
+    spawnStartingBlock(spawnGrid, 1, true, ++delay, 2+dx, 0+dy);
+    spawnStartingBlock(spawnGrid, 1, true, ++delay, 3+dx, 2+dy);
+    spawnStartingBlock(spawnGrid, 1, true, ++delay, 1+dx, 3+dy);
   }
 
   for (var i = 0; i < domX.length; i++) {

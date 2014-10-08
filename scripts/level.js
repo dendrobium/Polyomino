@@ -27,8 +27,10 @@ function spawnLevel() {
 
   else if (userLevel < 5 || (r < (16.0/lv2))) {
     currentBoardLevel = 4;
-    if (r < 0.5) level_4a();
-    else level_4b();
+    r = Math.random();
+    if (r < 0.33) level_4a();
+    else if (r < 0.66) level_4b();
+    else level_4c();
   }
 
   else if (userLevel < 6 || (r < (25.0/lv2))) {
@@ -45,7 +47,10 @@ function spawnLevel() {
 
   else if (userLevel < 8 || (r < (49.0/lv2))) {
     currentBoardLevel = 7;
-    level_7();
+    level_7a();
+    //r = Math.random();
+    //if (r < 0.5) level_7a();
+    //else level_7b();
   }
 
 
@@ -362,6 +367,36 @@ function level_4b() {
 }
 
 
+
+
+//=======================================================================================
+function level_4c() {
+//=======================================================================================
+  //Single cemented Tetramino in center
+  console.log("level.level_4c(userLevel="+userLevel+")");
+  var delay = 0;
+
+  var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
+
+  var x = rInt(3) + 3;
+  var y = rInt(3) + 3;
+  spawnStartingBlock(spawnGrid, 4, true, ++delay, x, y);
+
+
+  var monoCount = 6 + rInt(6)
+  var count = 0;
+  while (count < monoCount) {
+    x = rInt(gridSize);
+    y = rInt(gridSize);
+    if (spawnGrid[x][y] != CELL_EMPTY) continue;
+    spawnStartingBlock(spawnGrid, 1, false, ++delay, x, y);
+    count++;
+  }
+}
+
+
+
+
 //=======================================================================================
 function level_5() {
 //=======================================================================================
@@ -420,9 +455,9 @@ function level_6() {
 
 
 //=======================================================================================
-function level_7() {
+function level_7a() {
 //=======================================================================================
-  console.log("level.level_7(userLevel="+userLevel+")");
+  console.log("level.level_7a(userLevel="+userLevel+")");
   var delay = 0;
 
   var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
@@ -452,8 +487,44 @@ function level_7() {
   }
 }
 
-
-
+//
+////=======================================================================================
+//function level_7b() {
+////=======================================================================================
+//  console.log("level.level_7b(userLevel="+userLevel+")");
+//  var delay = 0;
+//
+//  var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
+//
+//  var tetraX = [1,1,1,0];
+//  var tetraY = [0,1,2,1];
+//
+//  var triX = [[5,6,7], [5,6,7]];
+//  var triY = [[2,2,2], [6,6,6]];
+//
+//  var domX = [[6,7], [8,8], [8,8], [6,7], [6,6]];
+//  var domY = [[1,1], [1,2], [3,4], [3,3], [7,8]];
+//
+//  makeBlock(spawnGrid, 4, true, tetraX, tetraY);
+//
+//  for (var i = 0; i < triX.length; i++) {
+//    makeBlock(spawnGrid, 3, true, triX[i], triY[i]);
+//  }
+//  for (var i = 0; i < domX.length; i++) {
+//    makeBlock(spawnGrid, 2, true, domX[i],domY[i]);
+//  }
+//
+//
+//  var monoCount = 6 + rInt(6)
+//  var count = 0;
+//  while (count < monoCount) {
+//    var x = rInt(gridSize);
+//    var y = rInt(gridSize);
+//    if (spawnGrid[x][y] != CELL_EMPTY) continue;
+//    spawnStartingBlock(spawnGrid, 1, false, ++delay, x, y);
+//    count++;
+//  }
+//}
 
 //=======================================================================================
 function level_8() {

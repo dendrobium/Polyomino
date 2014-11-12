@@ -72,7 +72,7 @@ function renderInstructionsOverlay(){
 
 	gfx.fillRect(x+leftMargin, y+8*lineHeight-(fontSize*1.6),w-leftMargin*2, 1);
 	gfx.fillRect(x+leftMargin, y+8*lineHeight+(fontSize*0.6),w-leftMargin*2, 1);
-	drawText("TO WIN: Merge ALL BOLTED shapes on board.", x+w/2, y+8*lineHeight, (fontSize*1.3)+"px Arial bold italic", true);
+	drawText("TO WIN: make a Hexomino or larger!", x+w/2, y+8*lineHeight, (fontSize*1.3)+"px Arial bold italic", true);
 
 	drawText("Mouse Controls:",                                          x+leftMargin, y+11*lineHeight, (fontSize*1.3) + "px Arial Bold");
 	drawText("   Left Click & Drag to lift and move pieces.",            x+leftMargin, y+12*lineHeight, fontSize+"px Arial");

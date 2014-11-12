@@ -117,16 +117,20 @@ function renderGameWonOverlay(){
 	gfx.fillStyle = "rgba(0,0,0,0.7)";
 	gfx.fillRect(x, y, w, h);
 
-  var msg = "You have cleared a level "+currentBoardLevel+" board!"
-  if (currentBoardLevel < 1) {
-    msg = "You have finished the tutorial."
-  }
+  var msg = "You have made a "+ POLYOMINO_NAME[gameMaxShapeLevel]+"!"
+  //if (currentBoardLevel < 1) {
+  //  msg = "You have finished the tutorial."
+  //}
 
 	gfx.fillStyle = "rgba(255,255,255,1)";
-	drawText("Congratulations!",            x+w/2, y+12*lineHeight, (fontSize*1.7) + "px Arial Bold", true);
+	//drawText("Congratulations!",            x+w/2, y+12*lineHeight, (fontSize*1.7) + "px Arial Bold", true);
+  //drawText(msg,            x+w/2, y+17*lineHeight, (fontSize) + "px Arial Bold", true);
+  //drawText("Your Score: " + score, x+w/2, y+20*lineHeight, (fontSize)+"px Arial Bold", true);
+  //drawText("Click or tap to close",x+w/2, y+30*lineHeight, (0.8*fontSize)+"px Arial", true);
+  drawText("Congratulations!",            x+w/2, y+12*lineHeight, (fontSize*1.7) + "px Arial Bold", true);
   drawText(msg,            x+w/2, y+17*lineHeight, (fontSize) + "px Arial Bold", true);
   drawText("Your Score: " + score, x+w/2, y+20*lineHeight, (fontSize)+"px Arial Bold", true);
-	drawText("Click or tap to close",x+w/2, y+30*lineHeight, (0.8*fontSize)+"px Arial", true);
+  drawText("Click or tap to close",x+w/2, y+30*lineHeight, (0.8*fontSize)+"px Arial", true);
 }
 
 //==== Button Class ====//

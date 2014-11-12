@@ -46,14 +46,14 @@ function handle_lDown(){
 	if(gameWon){
     //console.log("     controls.handle_lDown()::  gameWonOverlayShown="+gameWonOverlayShown);
     //if( gameWonOverlayShown) {
-
-      newGame();
+    gameWon = false;
+      //newGame();
 //    }
 //    else {
 //
 //      //or while gameWon screen shows
 //      gameWonOverlayShown = true;
-//      currentlyAnimating = true;
+      currentlyAnimating = true;
 //      return;
 //    }
 	}

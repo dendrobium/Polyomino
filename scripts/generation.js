@@ -68,8 +68,6 @@ function spawnBlock(order, cement, delay, x0, y0) {
   //  1) spawning starting polys.
   //  2) spawning a poly when a block is moved.
 
-  if (currentBoardLevel === 0) return;
-
   var id = newId();
   //console.log("spawnBlock(order="+order+", cement="+cement+", x0="+x0+", y0="+y0+"): id="+id);
 
@@ -150,7 +148,7 @@ function spawnBlock(order, cement, delay, x0, y0) {
 function squareToPoly(left,top,order) {
 //=======================================================================================
   orderOfLastMerge = order;
-  if (order > gameMaxShapeLevel) gameMaxShapeLevel = order;
+
 
   if(blockIdOfLastBlockPlaced === undefined) blockIdOfLastBlockPlaced = CELL_NONEXISTANT_ID;
 
@@ -193,14 +191,15 @@ function squareToPoly(left,top,order) {
 		}
 	}
 
-	// create animation events
-	var boxInKF0 = 0;
-	var boxInKF1 = 200;
-	var boxInKF2 = boxInKF1 + 200;
-	var endKF = boxInKF2+keyframe(maxDepth+1);
-	boxInEvt(      left,top,order,boxInKF0,boxInKF1,polyColor[order].secondary);
-	boxSustainEvt( left,top,order,boxInKF1,boxInKF2,polyColor[order].secondary);
-	boxInEvt(      left,top,order,boxInKF1,boxInKF2,polyColor[order].primary);
+  // create animation events
+  var boxInKF0 = 0;
+  var boxInKF1 = 200;
+  var boxInKF2 = boxInKF1 + 200;
+  var endKF = boxInKF2+keyframe(maxDepth+1);
+  boxInEvt(      left,top,order,boxInKF0,boxInKF1,polyColor[order].secondary);
+  boxSustainEvt( left,top,order,boxInKF1,boxInKF2,polyColor[order].secondary);
+  boxInEvt(      left,top,order,boxInKF1,boxInKF2,polyColor[order].primary);
+
 
 
 	for(var x=0;x<order;++x)for(var y=0;y<order;++y){
@@ -238,10 +237,20 @@ function squareToPoly(left,top,order) {
 	else comboCtr++;
 	var points = addToScore(order,parentOrder,comboCtr);
 
+
+  textInEvt(     left,top,order,boxInKF0,boxInKF1+1500,String(points));
+
 	identifyShape(spawnGrid,order,childId);
 	savePolyominoStats(order,null); // TODO: need to tell it the shape later on... or make a new function for that
 	saveGameEvt(endKF);
-  checkEndGameEvt(endKF+1);
+
+  if (order > gameMaxShapeLevel) {
+    if ((gameMaxShapeLevel < 6) && (order >= 6)) {
+      wonGameEvt(endKF + 1);
+    }
+    gameMaxShapeLevel = order;
+  }
+
 }
 
 

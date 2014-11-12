@@ -1,73 +1,77 @@
 //=======================================================================================
 function spawnLevel() {
 
-  var r = Math.random();
-  var lv2 = userLevel * userLevel;
+  //var r = Math.random();
+  //var lv2 = userLevel * userLevel;
 
-  if (!(userLevel) || userLevel < 1)
-  {
-    currentBoardLevel = 0;
-    level_0();
-  }
+  //if (!(userLevel) || userLevel < 1)
+  //{
+  //  currentBoardLevel = 0;
+  //  level_0();
+  //}
+  //else {
+    var spawnGrid = matrix(gridSize, gridSize, CELL_EMPTY);
+    addMonominos(spawnGrid, 15, 0);
+  //}
 
-  else if ((userLevel < 2) || (r < (2.0/lv2))) {
-    currentBoardLevel = 1;
-    level_1();
-  }
-
-  else if ((userLevel < 3) || (r < (4.0/lv2))) {
-    currentBoardLevel = 2;
-    level_2();
-  }
-
-  else if (userLevel < 4 || (r < (9.0/lv2))) {
-    currentBoardLevel = 3;
-    level_3();
-  }
-
-  else if (userLevel < 5 || (r < (16.0/lv2))) {
-    currentBoardLevel = 4;
-    r = Math.random();
-    if (r < 0.33) level_4a();
-    else if (r < 0.66) level_4b();
-    else level_4c();
-  }
-
-  else if (userLevel < 6 || (r < (25.0/lv2))) {
-    currentBoardLevel = 5;
-    level_5();
-  }
-
-
-  else if (userLevel < 7 || (r < (36.0/lv2))) {
-    currentBoardLevel = 6;
-    level_6();
-  }
-
-
-  else if (userLevel < 8 || (r < (49.0/lv2))) {
-    currentBoardLevel = 7;
-    level_7a();
-    //r = Math.random();
-    //if (r < 0.5) level_7a();
-    //else level_7b();
-  }
-
-
-  else if (userLevel < 9 || (r < (64.0/lv2))) {
-    currentBoardLevel = 8;
-    level_8();
-  }
-
-  else if (userLevel < 10 || (r < (81.0/lv2))) {
-    currentBoardLevel = 9;
-    level_9();
-  }
-
-  else {
-    currentBoardLevel = 10;
-    level_10();
-  }
+//  else if ((userLevel < 2) || (r < (2.0/lv2))) {
+//    currentBoardLevel = 1;
+//    level_1();
+//  }
+//
+//  else if ((userLevel < 3) || (r < (4.0/lv2))) {
+//    currentBoardLevel = 2;
+//    level_2();
+//  }
+//
+//  else if (userLevel < 4 || (r < (9.0/lv2))) {
+//    currentBoardLevel = 3;
+//    level_3();
+//  }
+//
+//  else if (userLevel < 5 || (r < (16.0/lv2))) {
+//    currentBoardLevel = 4;
+//    r = Math.random();
+//    if (r < 0.33) level_4a();
+//    else if (r < 0.66) level_4b();
+//    else level_4c();
+//  }
+//
+//  else if (userLevel < 6 || (r < (25.0/lv2))) {
+//    currentBoardLevel = 5;
+//    level_5();
+//  }
+//
+//
+//  else if (userLevel < 7 || (r < (36.0/lv2))) {
+//    currentBoardLevel = 6;
+//    level_6();
+//  }
+//
+//
+//  else if (userLevel < 8 || (r < (49.0/lv2))) {
+//    currentBoardLevel = 7;
+//    level_7a();
+//    //r = Math.random();
+//    //if (r < 0.5) level_7a();
+//    //else level_7b();
+//  }
+//
+//
+//  else if (userLevel < 9 || (r < (64.0/lv2))) {
+//    currentBoardLevel = 8;
+//    level_8();
+//  }
+//
+//  else if (userLevel < 10 || (r < (81.0/lv2))) {
+//    currentBoardLevel = 9;
+//    level_9();
+//  }
+//
+//  else {
+//    currentBoardLevel = 10;
+//    level_10();
+//  }
 
   currentlyAnimating = true;
 
@@ -174,14 +178,7 @@ function level_1() {
 
 
   var monoCount = 6 + rInt(6)
-  var count = 0;
-  while (count < monoCount) {
-    var x = rInt(gridSize);
-    var y = rInt(gridSize);
-    if (spawnGrid[x][y] != CELL_EMPTY) continue;
-    spawnStartingBlock(spawnGrid, 1, false, ++delay, x, y);
-    count++;
-  }
+  addMonominos(spawnGrid, monoCount, delay);
 
 //  var x=0;  var y=0; var x2= 0;
 //  for (var i = 0; i < 16; i++) {
@@ -221,14 +218,7 @@ function level_2() {
   spawnStartingBlock(spawnGrid, 3, true, delay, x, y);
 
   var monoCount = 6 + rInt(6)
-  var count = 0;
-  while (count < monoCount) {
-    var x = rInt(gridSize);
-    var y = rInt(gridSize);
-    if (spawnGrid[x][y] != CELL_EMPTY) continue;
-    spawnStartingBlock(spawnGrid, 1, false, ++delay, x, y);
-    count++;
-  }
+  addMonominos(spawnGrid, monoCount, delay);
 }
 
 
@@ -384,14 +374,7 @@ function level_4c() {
 
 
   var monoCount = 6 + rInt(6)
-  var count = 0;
-  while (count < monoCount) {
-    x = rInt(gridSize);
-    y = rInt(gridSize);
-    if (spawnGrid[x][y] != CELL_EMPTY) continue;
-    spawnStartingBlock(spawnGrid, 1, false, ++delay, x, y);
-    count++;
-  }
+  addMonominos(spawnGrid, monoCount, delay);
 }
 
 
@@ -415,14 +398,7 @@ function level_5() {
   }
 
   var monoCount = 6 + rInt(6)
-  var count = 0;
-  while (count < monoCount) {
-    var x = rInt(gridSize);
-    var y = rInt(gridSize);
-    if (spawnGrid[x][y] != CELL_EMPTY) continue;
-    spawnStartingBlock(spawnGrid, 1, false, ++delay, x, y);
-    count++;
-  }
+  addMonominos(spawnGrid, monoCount, delay);
 }
 
 
@@ -442,14 +418,7 @@ function level_6() {
   }
 
   var monoCount = 6 + rInt(6)
-  var count = 0;
-  while (count < monoCount) {
-    var x = rInt(gridSize);
-    var y = rInt(gridSize);
-    if (spawnGrid[x][y] != CELL_EMPTY) continue;
-    spawnStartingBlock(spawnGrid, 1, false, ++delay, x, y);
-    count++;
-  }
+  addMonominos(spawnGrid, monoCount, delay);
 }
 
 
@@ -477,14 +446,7 @@ function level_7a() {
 
 
   var monoCount = 6 + rInt(6)
-  var count = 0;
-  while (count < monoCount) {
-    var x = rInt(gridSize);
-    var y = rInt(gridSize);
-    if (spawnGrid[x][y] != CELL_EMPTY) continue;
-    spawnStartingBlock(spawnGrid, 1, false, ++delay, x, y);
-    count++;
-  }
+  addMonominos(spawnGrid, monoCount, delay);
 }
 
 //
@@ -547,14 +509,7 @@ function level_8() {
     }
 
     var monoCount = 6 + rInt(6)
-    var count = 0;
-    while (count < monoCount) {
-      var x = rInt(gridSize);
-      var y = rInt(gridSize);
-      if (spawnGrid[x][y] != CELL_EMPTY) continue;
-      spawnStartingBlock(spawnGrid, 1, false, ++delay, x, y);
-      count++;
-    }
+    addMonominos(spawnGrid, monoCount, delay);
 }
 
 
@@ -677,17 +632,24 @@ function level_10() {
   var animateGrid = matrixCopy(spawnGrid);
   animateSpawn(5, animateGrid, id, true, delay);
 
-  var count=0;
-  while (count < 10)
-  {
+  addMonominos(spawnGrid, 10, delay);
+}
+
+//=======================================================================================
+function addMonominos(spawnGrid, count, delay) {
+//=======================================================================================
+  var n = 0;
+  while (n < count) {
     x = rInt(gridSize);
     y = rInt(gridSize);
     if (spawnGrid[x][y] != CELL_EMPTY) continue;
 
     var id = spawnStartingBlock(spawnGrid, 1, false, ++delay, x, y);
-    if (id) count++;
+    if (id) n++;
   }
 }
+
+
 
 ////=======================================================================================
 //function level_4() {
